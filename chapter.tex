@@ -26,6 +26,7 @@
 \usepackage{lscape}
 
 \usepackage[draft]{fixme}
+\fxusetheme{color}
 
 %%%%%%%%%%%% Custom macros %%%%%%%%%%%%%
 
@@ -69,6 +70,10 @@ Julien Guitton
 }
 
 \maketitle
+
+\listoffixmes
+
+\clearpage
 
 \setcounter{minitocdepth}{2}
 \dominitoc
@@ -601,7 +606,12 @@ same set of components.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Situation assessment and context management}\label{sec:situ}
+\section{Situation assessment and context management}
+\label{sec:situ}
+
+\fxfatal[author=Severin]{Review/reorganize this section.
+Add a section on Migthabilities Maps as well (keeping in mind the paper must
+focus on link between continous and symbolic worlds)}
 
 This activity involves the geometric and temporal reasoning component,
 the symbolic facts and belief management component and the dedicated
@@ -1356,7 +1366,8 @@ expires, ORO automatically removes it.
 \subsubsection{The Events Framework} 
 \label{events} 
 
-Lastly, ORO allows external modules to be triggered when specific events occur. For instance, when a logical sentence becomes true or false, or if a new
+Lastly, ORO allows external modules to be triggered when specific events occur.
+For instance, when a logical sentence becomes true or false, or if a new
 instance of a certain class is added. One immediate application is reactive
 supervision: a component could for instance subscribe to events of kind
 \setstmt{?agent isVisible true, ?agent type Human}. As soon as the perception
@@ -1375,7 +1386,12 @@ ORO.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Application 1: Goal and Plan Management}\label{sec:plan}
+\section{Application 1: Goal and Plan Management}
+\label{sec:plan}
+
+\fxfatal[author=Severin]{Reformulate this section to put emphasis on 'How we
+use the whole architecture to make symbolic planning grounded into the real
+physical world.'}
 
 The Goal and Plan Management activity involves the human-aware
 symbolic task planner component and the dedicated robot controller
