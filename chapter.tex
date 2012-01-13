@@ -1386,7 +1386,7 @@ ORO.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Application 1: Goal and Plan Management}
+\section{First Application: Goal and Plan Management}
 \label{sec:plan}
 
 \fxfatal[author=Severin]{Reformulate this section to put emphasis on 'How we
@@ -1525,16 +1525,30 @@ action precondition or effect assessment.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Application 2: Natural Language Grounding}
+\section{Second Application: Natural Language Grounding}
 \label{dialog}
+
 
 Verbal interaction with human presents two categories of challenges: syntactic
 ones, and semantic ones. The robot must be able to process and analyze the
 structure of human utterances, \ie natural language sentences, and then make
-sense of them. As stated in the introduction, we process three categories of
-sentences: \emph{statements}, \emph{desires} and \emph{questions} that can be
-answered from the declarative knowledge present in the robot knowledge base (a
-choice similar to the \emph{Behaviour Cycle} in the GLAIR
+sense of them. 
+
+In this second application of our cognitive architecture, we show how we
+harness the symbolic knowledge base to ground, interpret and act on verbal
+instructions.
+
+Furthermore, this process takes full advantage of the embodied nature of the
+interaction: because deitic gestures and postures are also available in the
+symbolic knowledge base (as presented in section~\ref{spark-deitic}) and
+dynamically updated during the interactions, verbal dialogue processing turns
+into a truely multi-modal communication processing, leading to more robust
+interpretation.
+
+We present here the processing of three categories of sentences:
+\emph{statements}, \emph{desires} and \emph{questions} that can be answered
+from the declarative knowledge present in the robot knowledge base (a choice
+similar to the \emph{Behaviour Cycle} in the GLAIR
 architecture~\cite{Shapiro2009}). In our work, the grounding process of the
 human discourse consists in extracting either the \emph{informational} content
 of the sentence to produce statements or its \emph{intentional} content (\ie
