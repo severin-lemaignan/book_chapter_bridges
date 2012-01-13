@@ -1077,10 +1077,10 @@ FUNCTION {article}
       format.pages output
     }
   if$
-%%  format.doi output
-%%  format.url output
-%%  format.note output
-%%  format.eprint output
+  format.doi output
+  format.url output
+  format.note output
+  format.eprint output
   fin.entry
 }
 FUNCTION {book}
@@ -1112,10 +1112,10 @@ FUNCTION {book}
       format.book.crossref output.nonnull
     }
   if$
-%  format.doi output
-%  format.url output
-%  format.note output
-%  format.eprint output
+  format.doi output
+  format.url output
+  format.note output
+  format.eprint output
   fin.entry
 }
 FUNCTION {booklet}
@@ -1166,10 +1166,10 @@ FUNCTION {inbook}
       format.book.crossref output.nonnull
     }
   if$
-%  format.doi output
-%  format.url output
-%  format.note output
-%  format.eprint output
+  format.doi output
+  format.url output
+  format.note output
+  format.eprint output
   fin.entry
 }
 
@@ -1193,10 +1193,10 @@ FUNCTION {incollection}
       format.chapter.pages output
     }
   if$
-%  format.doi output
-%  format.url output
-%  format.note output
-%  format.eprint output
+  format.doi output
+  format.url output
+  format.note output
+  format.eprint output
   fin.entry
 }
 FUNCTION {inproceedings}
@@ -1223,10 +1223,10 @@ FUNCTION {inproceedings}
       format.pages output
     }
   if$
-%  format.doi output
-%  format.url output
-%  format.note output
-%  format.eprint output
+  format.doi output
+  format.url output
+  format.note output
+  format.eprint output
   fin.entry
 }
 FUNCTION {conference} { inproceedings }
@@ -1241,10 +1241,10 @@ FUNCTION {manual}
   organization "organization" bibinfo.check output
   address "address" bibinfo.check output
   format.edition output
-%  format.doi output
-%  format.url output
-%  format.note output
-%  format.eprint output
+  format.doi output
+  format.url output
+  format.note output
+  format.eprint output
   fin.entry
 }
 
