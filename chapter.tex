@@ -2461,75 +2461,75 @@ the \emph{verbalization} module, and uttered to the human.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{An illustrative example}\label{sec:expes}
+%\section{An illustrative example}\label{sec:expes}
 
-We assume here that the robot (and the human) has been given the joint goal
-``CLEAN TABLE''. For HATP, this means putting all tapes that are
-currently on the table in the trashbin. Depending on the state of the
-world and agent preferences, different plans are produced.
+%We assume here that the robot (and the human) has been given the joint goal
+%``CLEAN TABLE''. For HATP, this means putting all tapes that are
+%currently on the table in the trashbin. Depending on the state of the
+%world and agent preferences, different plans are produced.
 
-Figure~\ref{plan-etat2} shows a plan produced to clean the table based on the initial the initial state given in  \S~\ref{sub:gtrc}.
+%Figure~\ref{plan-etat2} shows a plan produced to clean the table based on the initial the initial state given in  \S~\ref{sub:gtrc}.
 
-\begin{figure*}[thpb]
-  \centering
-  \includegraphics[width=1.0\textwidth]{./figs/plan3.pdf} \\
-  \caption {A plan produced by HATP for clean the table based on the initial state given in \S~\ref{sub:gtrc}}
-  \label{plan-etat2}
-\end{figure*}
+%\begin{figure*}[thpb]
+  %\centering
+  %\includegraphics[width=1.0\textwidth]{./figs/plan3.pdf} \\
+  %\caption {A plan produced by HATP for clean the table based on the initial state given in \S~\ref{sub:gtrc}}
+  %\label{plan-etat2}
+%\end{figure*}
 
-Let us now take a simpler example to illustrate a full run of the
-system. We have only one tape on the table and it is is reachable only
-by the robot while the throw position on top of the trashbin is
-reachable only by the human.
+%Let us now take a simpler example to illustrate a full run of the
+%system. We have only one tape on the table and it is is reachable only
+%by the robot while the throw position on top of the trashbin is
+%reachable only by the human.
 
-% \begin{landscape}
-% \begin{figure*}[thpb]
-%   \centering
-% %  \includegraphics[width=1.0\textwidth]{./figs/manip_run.pdf} \\
-%   \includegraphics[width=17cm]{./figs/manip_run.pdf} \\
-% \begin{center}
-%   \caption {An example of a human-robot collaborative goal achievement}
-% \end{center}
-%   \label{manip_run_fg}
-% \end{figure*}
-% \end{landscape}
+%% \begin{landscape}
+%% \begin{figure*}[thpb]
+%%   \centering
+%% %  \includegraphics[width=1.0\textwidth]{./figs/manip_run.pdf} \\
+%%   \includegraphics[width=17cm]{./figs/manip_run.pdf} \\
+%% \begin{center}
+%%   \caption {An example of a human-robot collaborative goal achievement}
+%% \end{center}
+%%   \label{manip_run_fg}
+%% \end{figure*}
+%% \end{landscape}
 
-\begin{figure*}[thpb]
-  \centering
-\includegraphics[width=1.0\textwidth]{./figs/rotated-rachid_manip_run-v2.pdf} \\
-%  \includegraphics[width=17cm]{./figs/manip_run-vertical.pdf} \\
-\begin{center}
-  \caption {An example of a human-robot collaborative goal achievement}
-\end{center}
-  \label{manip_run_fg}
-\end{figure*}
+%\begin{figure*}[thpb]
+  %\centering
+%\includegraphics[width=1.0\textwidth]{./figs/rotated-rachid_manip_run-v2.pdf} \\
+%%  \includegraphics[width=17cm]{./figs/manip_run-vertical.pdf} \\
+%\begin{center}
+  %\caption {An example of a human-robot collaborative goal achievement}
+%\end{center}
+  %\label{manip_run_fg}
+%\end{figure*}
 
 
-%\subsection{successful execution}
+%%\subsection{successful execution}
 
-Figure~\ref{manip_run_fg} illustrates the main processes occurring
-during a multi-step human-robot collaborative goal achievement.  The
-plan produced is quite straightforward and is shown in the third row
-called ``Goal and Plan''. It consists in 4 successive actions
-involving the robot and the human. Robot grasps the tape and then
-places it on the table at a position where it is visible and reachable
-for the human. Human then is asked to pick the tape and throw it in
-the trashbin. The first row, named ``Cameras'', shows several
-snapshots corresponding to various execution steps. Snapshot~1
-presents the initial situation. Snapshots~2, 3, 4 and 5 give the state
-after the successive achievement of the four actions in the plan. The
-second row, named ``3D Model'', shows the display of SPARK at the same
-instants. The fourth, row called ``Robot Speech Acts'', gives robot
-speech acts produced along the execution to inform the human partner
-about goal and plan creation and status and to verbalize the actions
-that the human is asked to execute. The fifth row illustrates robot
-knowledge on itself and on the objects. The sixth row illustrates the
-robot knowledge about the human state. The seventh row gives ongoing
-robot action with action preconditions and effects assessment as well
-as motion execution tasks. Motion trajectory typology can be found
-between the 3D Model views. The eighth row gives ongoing human action
-with action preconditions and effects assessment and monitoring
-activity.
+%Figure~\ref{manip_run_fg} illustrates the main processes occurring
+%during a multi-step human-robot collaborative goal achievement.  The
+%plan produced is quite straightforward and is shown in the third row
+%called ``Goal and Plan''. It consists in 4 successive actions
+%involving the robot and the human. Robot grasps the tape and then
+%places it on the table at a position where it is visible and reachable
+%for the human. Human then is asked to pick the tape and throw it in
+%the trashbin. The first row, named ``Cameras'', shows several
+%snapshots corresponding to various execution steps. Snapshot~1
+%presents the initial situation. Snapshots~2, 3, 4 and 5 give the state
+%after the successive achievement of the four actions in the plan. The
+%second row, named ``3D Model'', shows the display of SPARK at the same
+%instants. The fourth, row called ``Robot Speech Acts'', gives robot
+%speech acts produced along the execution to inform the human partner
+%about goal and plan creation and status and to verbalize the actions
+%that the human is asked to execute. The fifth row illustrates robot
+%knowledge on itself and on the objects. The sixth row illustrates the
+%robot knowledge about the human state. The seventh row gives ongoing
+%robot action with action preconditions and effects assessment as well
+%as motion execution tasks. Motion trajectory typology can be found
+%between the 3D Model views. The eighth row gives ongoing human action
+%with action preconditions and effects assessment and monitoring
+%activity.
 
 
 
