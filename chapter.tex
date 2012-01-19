@@ -1552,12 +1552,11 @@ similar to the \emph{Behaviour Cycle} in the GLAIR
 architecture~\cite{Shapiro2009}). In our work, the grounding process of the
 human discourse consists in extracting either the \emph{informational} content
 of the sentence to produce statements or its \emph{intentional} content (\ie
-performative value) to collect orders and questions. We do not claim any
-contribution to the field of computational linguists (see \cite{Kruijff2010}
-for a survey of formal approaches to natural language processing in the
-robotics field). Our main contribution here is the grounding (we call it
+performative value) to collect orders and questions. We focus this application on the grounding (we call it
 \emph{resolution}) of concepts involved in the human discourse through the
-robot's own knowledge.
+robot's own knowledge: refer to Kruijff et al.~\cite{Kruijff2010}
+for a broader survey of formal approaches to natural language processing in the
+robotics field.
 
 \begin{figure}[!t]
 \centering
@@ -1569,12 +1568,13 @@ robot's own knowledge.
   \label{fig|dialog}
 \end{figure}
 
-To this end we have developed a dedicated module called {\sc Dialogs} that processes human
+Our dialogue processing is done by a module called {\sc Dialogs} (Figure~\ref{fig|dialog}) that processes human
 input in natural language, grounds the concepts in the robot's knowledge and
 eventually translates the discourse in a set of queries or declarative OWL/RDF
-statements. Figure~\ref{fig|dialog} shows the {\sc Dialogs} module architecture. The user's
-input is first pre-processed. For instance, \emph{I'm} constructs are expanded
-into \emph{I am} and then parsed. The parser is a custom-made, rule-based (\ie
+statements.  
+
+The user's input is first pre-processed. For instance, \emph{I'm} constructs are expanded
+into \emph{I am} and then parsed by a rule-based (\ie
 grammar-free) tool that extracts the grammatical structure from the user's
 sentence. Figure~\ref{dialog|parser_output} shows an example of the raw output of the parser for a moderately complex sentence.
 
