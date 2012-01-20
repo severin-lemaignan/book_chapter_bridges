@@ -1487,38 +1487,6 @@ of cooperation
   actions towards a human-robot joint goal.
 \end{itemize}
 
-\subsection{ Goal and plan Controller}
-Figure~\ref{goal_plans_fg} sums up the Goal and Plan Management as
-implemented in the robot controller.  When an event announcing a new
-goal is caught by the controller, the validity of this goal is tested:
-does it corresponds to capabilities of agents? is it not already
-achieved? Then, the goal is sent to HATP which produces a first plan.
-A goal is considered achievable as long as the planner computes a
-valid plan and it is not abandoned by the human.
-
-Plan execution consists in the management of all the actions of the
-plan. Human and robot are not acting both at the same time.  In case
-of plan failure a new plan is requested and executed.
-
-The management at the action level is done in three steps. First, the
-action preconditions are tested over the current state of the
-world. Then the action is executed and monitored (only monitored of it
-corresponds to a human action).  Finally, the expected effects are
-verified in order to acknowledge the action achievement.
-
-Concerning the speech acts during plan management, the robot informs
-its partners on the goal existence and status, plan existence and
-status, ongoing plan action, plan action failure, failing facts for
-action precondition or effect assessment.
-
-\begin{figure}[thpb]
-  \centering
-  \includegraphics[width=0.8\columnwidth]{./figs/plan_management.pdf}
-  \caption {Automaton for goal and plan management}
-  \label{goal_plans_fg}
-\end{figure}
-
-
 
 
 
