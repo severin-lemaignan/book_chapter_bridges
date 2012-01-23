@@ -14,6 +14,8 @@
 \usepackage{enumerate}
 \usepackage{paralist} %for inline lists
 
+\usepackage{array}
+
 \usepackage{subfigure}
 
 \usepackage{pseudocode}
@@ -848,6 +850,737 @@ level information on goals, intentions and plans and some exploration to
 achieve complex human action and activity monitoring.  In the current
 implementation, these primitive actions are over-optimistically interpreted as
 the corresponding actions \emph{pick} object and \emph{throw} object.
+
+\subsection{Computed symbolic facts}
+\label{list_facts}
+
+\begin{itemize}
+
+	\item "$\rightarrow$" means "sub-property" (for instance, \emph{toy isOn
+	table} $\Rightarrow$ \emph{toy isAt table}: \emph{isOn} is a sub-property
+	of \emph{isAt}). 
+
+	\item \emph{Updated by module} means either that module directly updates
+	this value, or that the value is inferred from a value that module sets. 
+	
+	\item All these properties are computed independently for each agents
+	(except the ones noted as \emph{Agent independent}). 
+	
+	\item Boolean properties (like \emph{isVisible}) are always from the point
+	of view of the ontology owner (for instance, in the robot model, \emph{box
+	isVisible true} means that the robot currently sees the box. At the same
+	time, in the human model, you can have \emph{box isVisible false}). 
+
+\end{itemize}
+
+
+\subsubsection{Spatial relations}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{p{3cm}p{6cm}p{3cm}l}
+
+    \textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\ 
+    \hline
+	 a location \par (\concept{Location})  & \textbf{is at} \par (\concept{isAt} $\equiv$ \concept{cyc:objectFoundInLocation})  &  a location \par (\concept{Location})  &  SPARK \\ 
+	 &  $\rightarrow$ \textbf{is on} \par (\concept{isOn} $\equiv$ \concept{cyc:above\_Touching})  &  &  SPARK  \\ 
+	 &  $\rightarrow$ \textbf{is in} \par (\concept{isIn})  &  &  SPARK  \\ 
+	 &  $\rightarrow$ \textbf{is next to} \par (\concept{isNextTo})  &  &  SPARK  \\ 
+	 a location \par (\concept{Location})  & \textbf{is above} \par (\concept{isAbove} $\equiv$ \concept{cyc:above-Generally})  &  a location \par (\concept{Location})  &  SPARK \par (inverse of isBelow)  \\ 
+	 a location \par (\concept{Location})  & \textbf{is under} \par (\concept{isBelow})  &  a location \par (\concept{Location})  &  SPARK \par (inverse of isAbove)
+	\end{tabular}
+   \caption{List of facts describing spatial relationships between objects.}
+\end{table}
+
+
+
+Anonymous locations are represented by the mean of new randomly generated
+location IDs. 
+
+For instance, location of BottleA has no name $\rightarrow$ \texttt{bottleA
+isAt loc12578}, with \texttt{loc12578} a random ID. 
+
+If the position is actually completely unknown, \texttt{loc12578} has no
+further informations attached to it (and can be omitted altogether). 
+
+If the position is known but has no name, it is possible to add details to the
+location. For instance: \texttt{loc12578 owl:differentFrom MyNiceTable}. 
+
+
+
+\subsubsection{Agent independent world dynamics}
+\begin{table}[h]
+   \centering
+   \begin{tabular}{p{3cm}p{6cm}p{3cm}l}
+
+	\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\ 
+	\hline
+
+	 a spatial enduring thing
+	\\ (\emph{EnduringThing-Localized})  & 
+
+	\textbf{isMoving}
+	\\ (\emph{isMoving})  & 
+
+	 a boolean
+	\\ (\emph{xsd:boolean})  & 
+
+	 SPARK 
+	\end{tabular}
+   \caption{List of facts describing spatial relationships between objects.}
+\end{table}
+
+
+
+
+\subsubsection{Agent relative spatial relations}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{p{3cm}p{6cm}p{3cm}l}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\
+		\hline
+
+
+	 a location
+	\\ (\emph{Location})  & 
+
+	\textbf{has relative position}
+	\\ (\emph{hasRelativePosition})  & 
+
+	 a location
+	\\ (\emph{Location})  & 
+
+	 SPARK ?  \\ 
+
+
+	 & 
+
+	 $\rightarrow$ \textbf{is behind}
+	\\ (\emph{behind} $\equiv$ \emph{cyc:behind-Generally})  & 
+
+	 & 
+
+	 SPARK ? (inverse of inFrontOf)  \\ 
+
+
+	 & 
+
+	 $\rightarrow$ \textbf{is in front of}
+	\\ (\emph{inFrontOf} $\equiv$ \emph{cyc:inFrontOf-Generally})  & 
+
+	 & 
+
+	 SPARK ? (inverse of behind)  \\ 
+
+
+	 & 
+
+	 $\rightarrow$ \textbf{is left of}
+	\\ (\emph{leftOf})  & 
+
+	 & 
+
+	 SPARK ? (inverse of rightOf) \\ 
+
+
+	 & 
+
+	 $\rightarrow$ \textbf{is right of}
+	\\ (\emph{rightOf})  & 
+
+	 & 
+
+	 SPARK ? (inverse of leftOf)  \\ 
+
+
+	 a object
+	\\ (\emph{Object})  & 
+
+	\textbf{is far from}
+	\\ (\emph{cyc:farFrom})  & 
+
+	 a agent
+	\\ (\emph{Agent})  & 
+
+	 SPARK ? SPARK  \\ 
+
+
+	 a object
+	\\ (\emph{Object})  & 
+
+	\textbf{is near of}
+	\\ (\emph{cyc:near})  & 
+
+	 a agent
+	\\ (\emph{Agent})  & 
+
+	 SPARK ? SPARK 
+
+	\end{tabular}
+	\caption{List of facts describing relative spatial relationships between objects and agents.}
+\end{table}
+
+
+\subsubsection{Agent attention}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{p{3cm}p{6cm}p{3cm}lp{3cm}}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} & Details\\
+		\hline
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{looks at}
+\\ (\emph{looksAt})  & 
+
+ a spatial enduring thing
+\\ (\emph{EnduringThing-Localized})  & 
+
+ SPARK  & 
+
+\emph{looksAt} is interpreted as an object \emph{being in the field of attention} of an agent.  \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{sees}
+\\ (\emph{sees})  & 
+
+ a spatial enduring thing
+\\ (\emph{EnduringThing-Localized})  & 
+
+ SPARK & 
+
+ An object is \emph{seen} if it is visible for the agent without moving the head (ie, in \emph{field of view}).  \\ 
+
+
+ a spatial enduring thing
+\\ (\emph{EnduringThing-Localized})  & 
+
+\textbf{is in field of view}
+\\ (\emph{isInFieldOfView})  & 
+
+ a boolean
+\\ (\emph{xsd:boolean})  & 
+
+  ORO  & 
+
+ via inference: 
+\\ myself sees * $\Rightarrow$ * isInFieldOfView true  \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{points at}
+\\ (\emph{pointsAt} $\equiv$ \emph{cyc:pointingToward})  & 
+
+ a spatial enduring thing
+\\ (\emph{EnduringThing-Localized})  & 
+
+ SPARK  \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{focuses on}
+\\ (\emph{focusesOn})  & 
+
+ a spatial enduring thing
+\\ (\emph{EnduringThing-Localized})  & 
+
+ ORO  & 
+
+ Via inference: 
+\\ looksAt $\wedge$ pointsAt $\Rightarrow$ focusesOn
+
+	\end{tabular}
+	\caption{List of facts describing the attentional state of an agent.}
+\end{table}
+
+
+
+\subsubsection{Agent mightabilities}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{p{3cm}p{6cm}p{3cm}l}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\
+		\hline
+
+
+ a spatial enduring thing
+\\ (\emph{EnduringThing-Localized})  & 
+
+\textbf{is visible (with possibly a head movement)}
+\\ (\emph{isVisibleByMovingHead})  & 
+
+ a boolean
+\\ (\emph{xsd:boolean})  & 
+
+ SPARK  \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{sees (with possible a head movement)}
+\\ (\emph{seesWithHeadMovement})  & 
+
+ a object
+\\ (\emph{Object})   & 
+
+ SPARK (via inference: 
+\\ myself seesWithHeadMovement * $\Rightarrow$ * isVisibleByMovingHead true) \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{can not see (with possible a head movement)}
+\\ (\emph{cannotSeeWithHeadMovement})  & 
+
+ a object
+\\ (\emph{Object})   & 
+
+ SPARK (via inference: 
+\\ myself cannotSeeWithHeadMovement * $\Rightarrow$ * isVisibleByMovingHead false) \\ 
+
+
+ a object
+\\ (\emph{Object})  & 
+
+\textbf{is reachable}
+\\ (\emph{isReachable})  & 
+
+ a boolean
+\\ (\emph{xsd:boolean})  & 
+
+ SPARK  \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{reaches}
+\\ (\emph{reaches})  & 
+
+ a object
+\\ (\emph{Object})   & 
+
+ SPARK (via inference: 
+\\ myself reaches * $\Rightarrow$ * isReachable true) \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{can not reach}
+\\ (\emph{cannotReach})  & 
+
+ a object
+\\ (\emph{Object})   & 
+
+ SPARK (via inference: 
+\\ myself cannotReach * $\Rightarrow$ * isReachable false)
+
+	\end{tabular}
+	\caption{List of facts describing action potentialities for an agent.}
+\end{table}
+
+\subsubsection{Agent state}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{p{3cm}p{6cm}p{3cm}l}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\
+		\hline
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{has in left/right hand}
+\\ (\emph{hasIn\{Left|Right\}Hand})  & 
+
+ a GraspableObject
+\\ (\emph{GraspableObject})  & 
+
+ SHARY \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{has posture}
+\\ (\emph{hasPosture})  & 
+
+ a posture
+\\ (\emph{Posture})  & 
+
+ SPARK  \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{currently 'bodily' does}
+\\ (\emph{currentlyBodilyDoes})  & 
+
+ An action  & 
+
+ SPARK
+ 
+	\end{tabular}
+	\caption{List of facts describing the state of an agent in general.}
+\end{table}
+
+
+
+\subsubsection{Robot state}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{p{3cm}p{6cm}p{3cm}l}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\
+		\hline
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{currently performs}
+\\ (\emph{currentlyPerforms})  & 
+
+ a action
+\\ (\emph{Action})  & 
+
+ SHARY ?
+
+	\end{tabular}
+	\caption{List of facts describing the current state of a robot.}
+\end{table}
+
+
+
+\subsubsection{Action description}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{p{3cm}p{6cm}p{3cm}l}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\
+		\hline
+
+ a purposeful action
+\\ (\emph{PurposefulAction})  & 
+
+\textbf{acts on}
+\\ (\emph{actsOnObject})  & 
+
+ a object
+\\ (\emph{Object})  & 
+
+ Dialogs/SHARY  \\ 
+
+
+ a purposeful action
+\\ (\emph{PurposefulAction})  & 
+
+\textbf{is received by}
+\\ (\emph{receivedBy})  & 
+
+ a location
+\\ (\emph{SpatialThing-Localized})  & 
+
+ Dialogs/SHARY  \\ 
+
+
+ a purposeful action
+\\ (\emph{PurposefulAction})  & 
+
+\textbf{is performed by}
+\\ (\emph{performedBy})  & 
+
+ a agent
+\\ (\emph{Agent})  & 
+
+ Dialogs/SHARY  \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{desires}
+\\ (\emph{desires})  & 
+
+ a situation
+\\ (\emph{Situation})  & 
+
+ Dialogs/SHARY \\ 
+
+
+ a situation
+\\ (\emph{Situation})  & 
+
+\textbf{isDesired}
+\\ (\emph{isDesired})  & 
+
+ a boolean
+\\ (\emph{xsd:boolean})  & 
+
+ ORO (inverse of desires) \\ 
+
+
+ a situation
+\\ (\emph{Situation})  & 
+
+\textbf{involves}
+\\ (\emph{involves})  & 
+
+ a thing
+\\ (\emph{owl:Thing})  & 
+
+ Dialogs/SHARY  \\ 
+
+
+ a static situation
+\\ (\emph{StaticSituation})  & 
+
+\textbf{static situation involves}
+\\ (\emph{staticSituationInvolves})  & 
+
+ a agent
+\\ (\emph{Agent})  & 
+
+
+	\end{tabular}
+	\caption{List of facts describing actions.}
+\end{table}
+
+
+
+\subsubsection{Other predicates}
+
+Some of these predicates are not used anymore. 
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{p{3cm}p{6cm}p{3cm}l}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\
+		\hline
+
+
+ a Task
+\\ (\emph{Task})  & 
+
+\textbf{is a task of plan}
+\\ (\emph{taskOfPlan})  & 
+
+ a Plan-ExpectedSituationType
+\\ (\emph{Plan-ExpectedSituationType})  & 
+
+ \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{is able to}
+\\ (\emph{isAbleTo})  & 
+
+ a purposeful action
+\\ (\emph{PurposefulAction})  & 
+
+ \\ 
+
+
+ a action
+\\ (\emph{Action})  & 
+
+\textbf{leads to the static situation}
+\\ (\emph{bringsToStaticSituation})  & 
+
+ a static situation
+\\ (\emph{StaticSituation})  & 
+
+ \\ 
+
+
+ a thing
+\\ (\emph{owl:Thing})  & 
+
+\textbf{holds-Underspecified}
+\\ (\emph{holds-Underspecified})  & 
+
+ a thing
+\\ (\emph{owl:Thing})  & 
+
+ \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{can perform}
+\\ (\emph{canPerform})  & 
+
+ a purposeful action
+\\ (\emph{PurposefulAction})  & 
+
+ \\ 
+
+
+ a agent
+\\ (\emph{Agent})  & 
+
+\textbf{can undertake now}
+\\ (\emph{canUndertakeNow})  & 
+
+ a purposeful action
+\\ (\emph{PurposefulAction})  & 
+
+ \\ 
+
+
+ a temporal thing
+\\ (\emph{TemporalThing})  & 
+
+\textbf{starts after ending of}
+\\ (\emph{startsAfterEndingOf})  & 
+
+ a temporal thing
+\\ (\emph{TemporalThing})  & 
+
+ \\ 
+
+
+ a temporal thing
+\\ (\emph{TemporalThing})  & 
+
+\textbf{lasts}
+\\ (\emph{duration})  & 
+
+ a time interval
+\\ (\emph{TimeInterval})  & 
+
+ \\ 
+
+
+ a thing with a temporal extend
+\\ (\emph{TemporallyExtendedThing})  & 
+
+\textbf{ending point}
+\\ (\emph{endingPoint})  & 
+
+ a time point
+\\ (\emph{TimePoint})  & 
+
+ \\ 
+
+
+ a time point
+\\ (\emph{TimePoint})  & 
+
+\textbf{after}
+\\ (\emph{after})  & 
+
+ a time point
+\\ (\emph{TimePoint})  & 
+
+ \\ 
+
+
+ a thing with a temporal extend
+\\ (\emph{TemporallyExtendedThing})  & 
+
+\textbf{startingPoint}
+\\ (\emph{startingPoint})  & 
+
+ a time point
+\\ (\emph{TimePoint})  & 
+
+ \\ 
+
+
+ a object
+\\ (\emph{Object})  & 
+
+\textbf{isMovable}
+\\ (\emph{isMovable})  & 
+
+ a boolean
+\\ (\emph{xsd:boolean})  & 
+
+Statically asserted in scenario-specific ontology  \\ 
+
+
+ a object
+\\ (\emph{Object})  & 
+
+\textbf{isHolder}
+\\ (\emph{isHolder})  & 
+
+ a boolean
+\\ (\emph{xsd:boolean})  & 
+
+Statically asserted in scenario-specific ontology  \\ 
+
+
+ a spatial enduring thing
+\\ (\emph{EnduringThing-Localized})  & 
+
+\textbf{isTraversable}
+\\ (\emph{isTraversable})  & 
+
+ a boolean
+\\ (\emph{xsd:boolean})  & 
+
+Statically asserted in scenario-specific ontology  \\ 
+
+
+ a object
+\\ (\emph{PartiallyTangible})  & 
+
+\textbf{hasCharacteristicDimension}
+\\ (\emph{hasCharacteristicDimension})  & 
+
+ a integer
+\\ (\emph{xsd:integer})  & 
+
+Statically asserted in scenario-specific ontology  \\ 
+
+
+ a object
+\\ (\emph{PartiallyTangible})  & 
+
+\textbf{canBeManipulated}
+\\ (\emph{canBeManipulated})  & 
+
+ a boolean
+\\ (\emph{xsd:boolean})  & 
+
+Statically asserted in scenario-specific ontology  \\ 
+
+
+ a object
+\\ (\emph{PartiallyTangible})  & 
+
+\textbf{hasCharacteristicWeight}
+\\ (\emph{hasCharacteristicWeight})  & 
+
+ a integer
+\\ (\emph{xsd:integer})  & 
+
+Statically asserted in scenario-specific ontology 
+	\end{tabular}
+	\caption{Other computed predicates}
+\end{table}
+
 
 \subsection{Geometric Reasoning for Situation Assessment}
 \label{spark}
