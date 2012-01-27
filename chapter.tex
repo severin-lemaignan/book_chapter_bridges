@@ -1295,6 +1295,8 @@ and reachable by the human from his current position.
 \section{Explicit Knowledge Management}
 \label{cognitivekernel}
 
+\subsection{ORO: The OpenRobots Ontology server}
+
 A key element of this cognitive architecture is how knowledge is explicitely
 exposed, stored and handled between component.
 
@@ -1303,6 +1305,23 @@ the most commonly found approach in the litterature, other, more distributed
 approaches exist, like \cite{Jacobsson2008}). Our knowledge base is called
 ORO~\cite{Lemaignan2010}.
 
+The ORO platform is primarily designed as a central
+knowledge storage service implemented as a server where the robot
+components can add or query statements at run-time. Figure~\ref{fig|oro-overview}
+illustrates the overall architecture. The \emph{front-end} accepts and manages
+connections from client components. The clients' requests are processed by a
+set of internal modules: basic operations on statements, but also higher
+cognitive and human-robot interaction related functionalities are available
+(detailed thereafter). External plugins can also be easily added. The modules
+rely on several parallel ontology \emph{back-ends} where the knowledge is
+actually stored.
+
+\begin{figure}[!t]
+\centering
+  \includegraphics[width=0.8\linewidth]{figs/oro_architecture_functional.pdf}
+  \caption{Overview of the ORO architecture.}
+  \label{fig|oro-overview}
+\end{figure}
 
 Besides acting as a facts database, the ORO platform exposes several functions:
 operations on knowledge statements relying on inference (through a continuous
@@ -1337,176 +1356,14 @@ event framework also takes advantage of the inference capabilities of
 ORO. Thus an event can be indirectly triggered if its triggering
 conditions can be inferred to be true.
 
-
-\subsection{On Knowledge Representation}
-\label{knowledge_representation}
-
-While \emph{knowledge} has no general definition that researchers agree on, for
-our own purposes we define knowledge as \emph{information interpreted in the
-cultural and social context of the robot}, where information is a
-\emph{statement} or an \emph{assertion} about the world\footnote{In this paper,
-statements are always triples \stmt{subject predicate object}, \ie binary
-relations between entities.}. In practical terms, knowledge is made of
-statements that are \emph{contextualized}, if possible \emph{synthesized}, and
-\emph{limited} to a domain of validity. These three features have important 
-consequences for the way a knowledge representation and storage system must 
-be designed. Let us examine them:
-
-\paragraph{Contextualizing} is the ability for a cognitive system to connect a
-fact with a \emph{cultural context}, an \emph{interpretive scope} and the set
-of other facts previously acquired by the agent.
-%~ Since machines are limited to syntactic (in contrast to semantic)
-%processing, we are mostly looking for a syntactic (\ie, based on symbols)
-%matching between concepts representations (in our case, sets of alphanumeric
-%characters).\fxfatal{il faut sans doute évoquer ici la relation
-%sémantique/syntactique que propose Choamsky}.
-
-We call \textit{cultural context} a broad set of common, general facts that are
-considered widely accepted among the interactors (\eg ``bottles may contain
-water''). This knowledge is often referred as \emph{common-sense knowledge}.
-
-By \emph{interpretive scope} we mean that a concept may have different
-interpretations depending on the agent, the current situation or the time frame
-the statement belongs to. Since a fact in one scope can be different (or even
-inconsistent) with a fact in another scope (for instance, one object can be
-visible for the robot and invisible for another agent), the underlying
-knowledge representation system must properly handle these interpretive
-frameworks.
-
-Note that the focus of ORO is on enabling such context to be
-effectively represented rather than actually identifying the current context.
-While several approaches for building contextualized knowledge are proposed in this
-paper (symbolic environment interpretation, perspective taking, grounded
-natural language resolution, self-awareness of its own activity), much remains
-to be done for a robot to actually identify its current context as well as
-contexts that may be referred to.
-
-\paragraph{Synthesis} corresponds to the identification of facts and their
-components (concepts and predicates) with respect to other facts. For instance,
-if the robot observes a human sitting down at a table, and at the same time, we
-tell it that ``Peter is sitting at the table'', we would like the robot to
-infer that ``Peter'' may be the name of the human. \textit{Synthesis}
-refers to the fact that several, \textit{a priori} uncorrelated, facts
-must be associated with the same common concept. This process requires the
-ability to control the logical consistency of the knowledge corpus. To
-continue with the previous example,  if we add the fact that the human that
-is sitting is a woman, the synthesis ``Peter is the name of the human'' is
-not valid anymore.
-
-\paragraph{Domain of validity} specifies the scope in which
- information is (believed to be) true. It covers several aspects: temporal,
-situational and probabilistic. While related to the previous concept of
-\emph{interpretive scopes}, the domain of validity addresses the question
-whether a fact must be or not considered in a given context. This validity
-limitation is not usually carried by the fact itself. In the previous example,
-for instance, the robot observes a human sitting at a table.  The fact ``a
-human is sitting at the table'' is true only for a limited period of time,
-until the human stands up. This period of time is not directly accessible
-(the robot does not know how long the human plans to stay), but the
-knowledge representation must be able to deal with this uncertainty and
-should explicitly label this fact as being limited in time.
-%~ ~ To know if a fact is permanent or transitional (as defined by Pollock
-%\fxfatal{citation de Langage et Cognition, page 50}) is difficult (especially
-%considering that a feature may be considered as permanent or not depending of
-%the context: within the situation ``a familly meal''\fxfatal{Check
-%translation!}, the fact ``the human is sitting at the table'' could be
-%considered as permanent. Conversely, ``ground is static'' is generally
-%considered as a static fact, expect if we are talking of planetary mechanics
-%for instance. The difficulty lies in the selection of the relevant situation
-%in which reasoning must be carried out at a given time) and have currently to
-%be defined in the cultural background of the robot.
-
-These three aspects lead us to envisage a knowledge representation system
-characterized by the following abilities: 
-\begin{itemize}
-	\item represent raw information,
-	\item render a general cultural background, in the form of common-sense knowledge,
-	\item attach interpretive scopes to new statements,
-	\item add and connect new statements to knowledge already present,
-	\item store restrictions on the domain of validity of the knowledge.
-\end{itemize}
-
-Besides, the following active processes would be desirable:
-\begin{itemize}
-	\item acquire and maintain knowledge perceived from the physical world or
-	retrieved from other sources (interaction with other agents, web-based contents,...)
-	\item synthesize facts as much as possible,
-	\item monitor contexts and accordingly manage the validity of the stored knowledge,
-	\item ensure the logical consistency of the knowledge repository, and
-	explicit inconsistencies when required\footnote{One may argue that the real world is 
-	inherently inconsistent. In this article, we make a
-	\textit{consistent world} assumption, in order to leverage reasoning
-	capabilities of the first-order logics. This is supported by the natural
-	tendency of humans themselves to provide a consistent explanation of their
-	world.}.
-\end{itemize}
-
-This list does not cover all the possible features that could be exposed by a
-symbolic knowledge management system. Bio-inspired memory management (the
-ability to forget or reinforce knowledge) or curiosity (the ability to identify
-lacking knowledge and actively trigger behaviours to acquire it --Hawes et
-al.~\cite{Hawes2011} have contributed in this area with \emph{Dora}, a
-robot endowed with motivation mechanisms to explore unknown regions of
-the environment--), to give some examples, could arguably be added to the list.
-However, this first analysis sets a convenient reference frame to understand
-and evaluate knowledge representation systems, including the \textsc{ORO}
-knowledge management system we propose.
-
-%\begin{figure}[!ht]
-%\centering
-%  \includegraphics[width=\columnwidth]{figs/snapshot_oroview.png}
-%  \caption{Live snapshot from the \emph{oro-view} viewer depicting the
-%  knowledge model of the robot during an experiment. Dots represent
-%  instances (ABox), while circles pyramids are classes (TBox)}
-%  \label{fig|oro-view}
-%\end{figure}
-
-\subsection{ORO Architecture}
-
-The ORO platform~\cite{Lemaignan2010} is primarily designed as a central
-knowledge storage service implemented as a server where the robot
-components can add or query statements at run-time. Figure~\ref{fig|oro-overview}
-illustrates the overall architecture. The \emph{front-end} accepts and manages
-connections from client components. The clients' requests are processed by a
-set of internal modules: basic operations on statements, but also higher
-cognitive and human-robot interaction related functionalities are available
-(detailed thereafter). External plugins can also be easily added. The modules
-rely on several parallel ontology \emph{back-ends} where the knowledge is
-actually stored.
-
-Knowledge is represented in ORO in the Description Logics formalism (using the
-OWL-DL --\emph{Web Ontology Language - Description Logics}-- language), as
-RDF (\emph{Resource Description Framework}) triples (for instance \stmt{robot
-isIn kitchen}). We use the Jena\footnote{\url{http://jena.sourceforge.net/}}
-framework as the underlying library to load and build an in-memory OWL model. We
-use it in conjunction with the
-Pellet\footnote{\url{http://clarkparsia.com/pellet/}} reasoner to ensure the
-continuous classification of the OWL concept graph: at run-time, newly added
-statements are continuously reasoned about (\emph{classified}), and at any time,
-the server exposes a complete set of statements, both the asserted ones and the
-inferred ones. For instance, if \stmt{socrates type Human} and \stmt{Human
-subClassOf Mortal} are asserted, the server transparently adds the inferred
-statement \stmt{socrates type Mortal}, and a later query retrieving all mortal
-entities would return \concept{socrates} as well. The language of the OWL
-family make the \emph{Open World Assumption} (if a fact can not be inferred as
-true, it does not mean that it is inferred to be false), and the Pellet
-reasoner honors this assumption as well.
-
-\begin{figure}[!t]
-\centering
-  \includegraphics[width=0.8\linewidth]{figs/oro_architecture_functional.pdf}
-  \caption{Overview of the ORO architecture.}
-  \label{fig|oro-overview}
-\end{figure}
-
 \subsection{The OpenRobots Common-Sense Ontology}
 \label{ontology}
 
-The first requirement identified in section~\ref{knowledge_representation}
-refers to the modeling of a cultural background, a common-sense knowledge
-assumed to be shared by all agents.
-The ORO server can be loaded with an initial set of statements which we call
-the \emph{OpenRobots Common Sense Ontology}. It defines a small set of concepts
+For the robot to interpret and come up with new inferences based on the facts
+coming from the perceptual layers, it need a \emph{cultural background}, a
+common-sense knowledge assumed to be shared by all agents. The ORO server is
+loaded at startup with an initial set of statements which we call the
+\emph{OpenRobots Common Sense Ontology}. It defines a small set of concepts
 (and implicitly, a vocabulary) that can be used by all the modules of the robot
 to unambiguously add or query facts. Moreover, the same ontology declares rules
 and logical properties that are later on used for inference.
@@ -1569,49 +1426,8 @@ restrictions (except the SWRL rules) at run-time. This allows
 knowledge introspection and enables the robot to alter its own knowledge
 structures (the so-called \emph{T-Box} model) during its life-time by adding
 new constraints and properties to classes and predicates.
-The \emph{Naming} experiment (section~\ref{naming}) gives a simple example of
-such knowledge restructuring.
 
-\subsection{ORO Features}
-\label{features}
-
-Besides storing and reasoning about knowledge, we have developed in ORO several
-features to manage knowledge at higher level: 
-%independent cognitive models for
-%each agent the robot interacts with, categorization capabilities, different
-%profiles of memory and events registration.
-
-\subsubsection{Base Functionalities}
-\label{base}
-
-ORO offers an extended set of methods to process facts at the triples level,
-including:
-\begin{itemize}
-	\item statement (\ie RDF triples) insertion, removal, update,
-
-	\item pattern-based statements removal,
-
-	\item pattern-based queries (for instance, \stmt{ * isOn
-	table}, which means ``return me all objects on table'') and filters (for
-	instance, \concept{weight < 150.0}),
-
-	\item consistency check, insertion of statements with consistency
-	constraint (only if the new fact does not lead to inconsistencies),
-	
-	\item fast concept lookup, with possible multi-lingual support (through the
-	\concept{@lang} XML annotation, labels of concept can be translated, and
-	specific translations can be queried for),
-
-	\item standard SPARQL queries.
-
-\end{itemize}
-
-While these basic functionalities enable the incremental construction (and
-exploitation) of a consistent knowledge model, the \emph{Common Sense Ontology}
-helps build assertions that are related to previous ones by offering
-a predefined vocabulary.
-
-\subsubsection{Representation of Alternative Cognitive Models}
+\subsection{Representation of Alternative Cognitive Models}
 \label{alterite}
 
 As pictured in Figure~\ref{fig|oro-overview}, ORO stores independent cognitive
@@ -1639,49 +1455,21 @@ make sense of user sentences from his/her point of view. Moreover,
 these multiple models can be viewed as different interpretive scopes,
 allowing the robot to interpret the same reality from different points of view.
 
-\subsubsection{Categorization}
-\label{categorization}
-
-We have implemented several algorithms (common ancestors, computation of the
-best discriminant~\cite{Ros2010b}) to help the robot cluster a set of
-concepts based on their symbolic similarities. One particular application of these functions is discrimination.
-While interacting with a user, the robot quite often needs to clarify an
-ambiguity produced by its human partner. For instance, a user may refer to a
-``bottle'' where two bottles are currently visible. Discrimination routines
-can identify possible (symbolic) differences (\eg the color or the size of the
-bottles) that permit the robot to ask an accurate question to the user in order
-to solve the ambiguity. This discrimination can occur from the robot's
-perspective or from a specific agent's perspective. Usage of these
-categorization abilities are illustrated in Sections~\ref{dialogs:disamb} and~\ref{spygame}.
-
-\subsubsection{Memory Profiles}
-\label{memory}
-
-We have designed a simplified bio-inspired memory model to store
-statements in different \emph{memory profiles}. These include \emph{short term
-memory} and \emph{long term memory}. Each profile is characterized with a
-lifetime, which is assigned to the stored facts. When the lifetime of a fact
-expires, ORO automatically removes it.
-
-\subsubsection{The Events Framework} 
-\label{events} 
-
-Lastly, ORO allows external modules to be triggered when specific events occur.
-For instance, when a logical sentence becomes true or false, or if a new
-instance of a certain class is added. One immediate application is reactive
-supervision: a component could for instance subscribe to events of kind
-\setstmt{?agent isVisible true, ?agent type Human}. As soon as the perception
-layer detects a human in the robot's field of view and accordingly updates the
-knowledge base, the supervision component would be triggered back. The event
-framework also takes advantage of the inference capabilities of ORO. Thus an
-event can be indirectly triggered if its triggering conditions can be inferred
-to be true.
-
-The next sections describe how symbolic knowledge is actually produced and added to
-ORO.
-
-
-
+% \subsection{Categorization}
+% \label{categorization}
+% 
+% We have implemented several algorithms (common ancestors, computation of the
+% best discriminant~\cite{Ros2010b}) to help the robot cluster a set of
+% concepts based on their symbolic similarities. One particular application of these functions is discrimination.
+% While interacting with a user, the robot quite often needs to clarify an
+% ambiguity produced by its human partner. For instance, a user may refer to a
+% ``bottle'' where two bottles are currently visible. Discrimination routines
+% can identify possible (symbolic) differences (\eg the color or the size of the
+% bottles) that permit the robot to ask an accurate question to the user in order
+% to solve the ambiguity. This discrimination can occur from the robot's
+% perspective or from a specific agent's perspective. Usage of these
+% categorization abilities are illustrated in Sections~\ref{dialogs:disamb} and~\ref{spygame}.
+% 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
