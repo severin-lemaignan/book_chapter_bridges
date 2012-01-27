@@ -137,39 +137,26 @@ Working in a situated context, we need to \emph{resolve} these semantics atoms,
 ``\textit{that}'' is a demonstrative pronoun that refers in this context to the
 object the human is focusing on.
 
-The next step is to extract and understand the \emph{intended meaning} of the utterance
-as thought by the agent. In our example, Thomas obviously wants an action to be
-performed by the robot. The action parametrization is conveyed by the semantics
-attached to the words and the grammatical structure of the sentence. In our
-example, the type of action is given by the verb ``\textit{give}''. Assuming
-the robot has some procedural knowledge attached to this symbol, the action
-type can be considered as grounded for the robot. We can as well understand
-that the recipient of the action is the human, the performer is the robot
-itself, and the object acted upon is the tape. The recipient, performer and object are three of the
-\emph{thematic roles}~\cite{Gruber1965} that qualify the \emph{give} action. They are necessary to fully ground the sentence\footnote{This analysis has been
-inspired on the work of Austin et al.~\cite{Austin1962}, where this type of
-sentences correspond to \emph{speech acts}, comprising of \emph{locutionary
-act} (the meaning), \emph{illocutionary} (the intent) and possibly
-\emph{perlocutionary acts} (implicit speaker's expectation).}.
+The next step is to extract and understand the \emph{intended meaning} of the
+utterance as thought by the agent. In our example, Thomas obviously wants an
+action to be performed by the robot. The action parametrization is conveyed by
+the semantics attached to the words and the grammatical structure of the
+sentence. In our example, the type of action is given by the verb
+``\textit{give}''. Assuming the robot has some procedural knowledge attached to
+this symbol, the action type can be considered as grounded for the robot. We
+can as well understand that the recipient of the action is the human, the
+performer is the robot itself, and the object acted upon is the tape. The
+recipient, performer and object are three of the \emph{thematic
+roles}~\cite{Gruber1965} that qualify the \emph{give} action. They are
+necessary to fully ground the sentence\footnote{This analysis has been inspired
+on the work of Austin et al.~\cite{Austin1962}, where this type of sentences
+correspond to \emph{speech acts}, comprising of \emph{locutionary act} (the
+meaning), \emph{illocutionary} (the intent) and possibly \emph{perlocutionary
+acts} (implicit speaker's expectation).}.
 
 
-%\footnote{The third class of speech acts, the \emph{perlocutionary acts}, deal
-%with implicit speaker's expectations. We will not consider it further in this
-%article}.
-%Austin~\cite{Austin1962} would have at first glance analyzed this kind of
-%sentence as a \emph{speech act}, comprising of \emph{locutionary},
-%\emph{illocutionary} and possibly \emph{perlocutionary} acts. 
-%Firstly, we want to understand the direct meaning of the sentence (\emph{locutionary act}): 
-%Second, the \emph{illocutionary force}, \ie the \emph{intent} of the utterance
-%as thought by the agent, must be extracted and understood. 
-%Finally, the implicit speaker's expectation can sometimes be conveyed --the
-%\emph{perlocutionary act}-- and should be taken into account. If Thomas would
-%have said instead ``Jido, this box is too heavy for me'', he may implicitly
-%expect the robot to memorize the fact that the box's weight is over his
-%capabilities, and it may as well imply that Thomas is requiring help to carry
-%the box.
-
-\subsection{A typical human-robot interaction problem}\label{sec:problem}
+\subsection*{A typical human-robot interaction problem}
+\label{sec:problem}
 
 \fxfatal{Merge the section with previous one}
 
@@ -208,13 +195,27 @@ ranging from teammate behavior to assistant or proactive helper.
 
 \subsection{Approach}
 
-In this work we propose an approach aiming at grounding the interaction with
-users (Figure~\ref{fig|overall-process} illustrates the general context). To this end, we have
-developed three distinct, inter-related cognitive components:
+\begin{figure}[htb]
+\centering
+\includegraphics[width=9cm]{figs/grounding_robot.pdf}
+\caption{Robot reasoning about HRI and anticipation of human activities:
+  sources of information are multi-modal dialogue, and observation of
+  environment and human activity}
+\label{fig|hri-dec}
+\end{figure}
 
-\begin{inparaenum}[\itshape 1)]
+We envision HRI in a context where two agents (a human and a robot)
+share a common space and exchange information through various
+modalities. Our aim is to endow the robot with an explicit
+consideration of the human and with the ability to manage its
+interactions with him (Figure~\ref{fig|hri-dec}). This must be
+considered at the architecture level as well as at the task/motion
+planning and execution level. 
 
-\item \emph{Physical environment modeling} and \emph{spatial reasoning}
+\fxfatal{rewrite this paragraph}
+
+
+\emph{Physical environment modeling} and \emph{spatial reasoning}
 (grouped under the term \emph{situation assessment}): this component is in
 charge of building and maintaining a coherent model of the physical world. This
 model is realistic in the sense that it relies on accurate 3D models of both
@@ -226,7 +227,7 @@ visibility state, gestures (such as pointing), etc.  Assuming that other agents
 are also represented in the model, the same computations are applied to analyze
 the scene from each agent's point of view (\ie from their \emph{perspectives}).
 
-\item \emph{Knowledge representation and management}: the robot is endowed with
+\emph{Knowledge representation and management}: the robot is endowed with
 an active knowledge base that provides a symbolic model of its beliefs of the
 world, as well as models for each cognitive agent the robot interacts with.
 Used in combination with the situation assessment framework, this proves an
@@ -239,56 +240,69 @@ Description Logics}, a decidable subset of the first-order logics,
 storage, querying and event triggering over the pool of facts known by the
 robot.
 
-\item \emph{Dialogue processing}: the third component includes natural
-language parsing capabilities, interactive disambiguation routines and concept
-anchoring. We focused our efforts on three classes of utterances commonly found
-in human-robot interaction: \emph{statements} (\ie new facts the human wants to
-inform the robot), \emph{orders} (or more generically \emph{desires}) and
-\emph{questions on declarative knowledge} (whose answers do not require
-planning or prediction)\footnote{This would roughly cover the \emph{representative}
-(sometimes referred as \emph{assertive}) and \emph{directive} illocutionary
-acts in Searle's~\cite{Searle1976} classification.}.
+\subsubsection{An architecture for grounding}
+\label{sec:Framework}
 
-\end{inparaenum}
 
-\begin{figure}[!t]
-\centering
-  \includegraphics[width=0.8\linewidth]{figs/grounding_robot.png}
-  \caption{Generic model of cognitive abilities interactions for grounding}
-  \label{fig|overall-process}
-\end{figure}
+Interaction happens as a consequence of an explicit request of the
+human to satisfy a goal or because the robot finds itself in a
+situation where it is useful if not mandatory. In both cases, the
+robot has a goal to satisfy.  An important issue is the notion of
+engagement, a process in which the robot will have to establish,
+maintain and terminate a connection with a human partner. 
+This covers goal establishment, selection of an incremental refinement
+of the task that is intended to be achieved, and execution control
+including monitoring, and even influencing, human task performance and
+his/her commitment to the goal. The human involvement may range from a
+direct participation to the task achievement, to a simple
+``acceptance'' of robot activity in his/her close vicinity.
+ 
+\begin{figure*}[thpb]
+  \centering
+  \includegraphics[width=1.0\textwidth]{./figs/architecture-overview.pdf} \\
+  \caption {Architecture of the robot control system}
+  \label{architecture_fg}
+\end{figure*}
+ 
+Our robot is controlled by a three layer
+architecture~\cite{Alami1998}.  We present briefly its decisional
+layer. The proposed decisional framework consists of several entities,
+having each a specific role as illustrated by
+Figure~\ref{architecture_fg}.  We describe how the robot is controlled
+through an analysis of the three main activities performed by the
+robot controller:
 
-%\begin{figure}[!ht]
-%\centering
-%  \includegraphics[width=0.9\linewidth]{figs/grounding.png}
-%  \caption{The three main components of our architecture and their connections. Submodules are presented in subsequent sections.}
-%  \label{fig|main-components}
-%\end{figure}
+\begin {enumerate}
+	\item Situation assessment and context management 
+	\item Goals and plans management
+	\item Action refinement, execution and monitoring
+\end {enumerate}
 
-%~ The system we describe here relies on two distinct activities that run concurrently and continuously: maintenance of a symbolic model from real world interpretation on one hand, and verbal interaction with agents on the other hand.
-%~ 
-%~ The first activity consists in two main steps:
-%~ 
-%~ \renewcommand{\labelenumi}{(\alph{enumi})}
-%~ \begin{enumerate}
-%~ \item The \emph{Object Identification} step is expected to provide consistent identification of objects in the environment. It does not involve any semantic functionality like automatic labelling, classification or annotation capabilities. It is in charge of solving what is merely a perception issue related to the ability to assign some identifier consistently. This is in the general case an open research issue that is outside of the scope of this paper. In our experiments, we will use simplified approaches (like tag-based object identification and motion capture).
-%~ 
-%~ Besides identification, other perceptual informations are extracted at this step, such as absolute size, color, and more importantly, its spatial position relative to the robot.
-%~ 
-%~ \item \emph{Physical environment modeling} and \emph{spatial reasoning} are then in charge of rebuilding a coherent physical model of the world based on information extracted in the first step. Once available, the geometric model is used to compute several spatial properties of the scene that actually convert the original sensory data into symbolic beliefs. This includes relative locations of objects, visibility state, gestures like pointing, etc. Assuming that other agents are as well represented in the model, the same computations can be applied to analyze the scene from each agents' point of view (\ie from their \emph{perspectives}).
-%~ \end{enumerate}
-%~ 
-%~ The output of this second step needs to be stored for later reuse: we introduce to that end a general-purpose knowledge management system that relies on a sound logical system (the Description Logics) to store, manipulate and reason about symbolic knowledge. This system is described at length in the next section.
-%~ 
-%~ The verbal interaction activity relies on three main steps:
-%~ 
-%~ \begin{enumerate}
-%~ \item The \emph{parsing} of natural language aimed at extracting grammatical structures from a sentence,
-%~ 
-%~ \item The \emph{resolution} of concepts, where words used by the user are associated with the underlying concept they represent, as stored in the robot knowledge base. This step may require an additional interactive disambiguation step if the robot can not successfully bind a word to the concept it represents.
-%~ 
-%~ \item Finally, the \emph{content analysis} step extracts the \emph{intention} of the sentence and handles it. Orders, questions, statements (new information) are separately processed.
-%~ \end{enumerate}
+The next three sections describe the three robot controller
+activities and how they make use of a number of key components in the
+architecture:
+
+\fxfatal{Completely rewrite this section. Mention Dialogs as a first class citizen!}
+
+\begin{itemize}
+\item SPARK: Spatial Reasoning and Knowledge module \cite{Sisbot2011}
+\item ORO: a knowledge management module \cite{Lemaignan2010}
+\item HATP: a Human-Aware Task Planner \cite{Alili2008}
+\item A set of Human aware motion, placement and manipulation planners
+ \cite{Sisbot2008, Mainprice2011, Pandey2010}
+\end{itemize}
+
+
+\subsubsection{Symbolic Facts and Beliefs Management}
+
+The facts produced by the geometric and temporal reasoning component are stored
+in a central symbolic knowledge base, called ORO. This key component is
+describe at length in section~\ref{cognitivekernel}. We briefly introduce here
+its main interaction channels with the other components, in particular those
+related to geometric and temporal reasoning.
+
+\fxfatal{To do!}
+
 
 \subsection{Related Work}
 
@@ -402,7 +416,7 @@ in real world scenarios. A probabilistic extension of \textsc{KnowRob}, called
 possible, currently the CRAM architecture does not provide explicit support for
 interacting with humans.
 
-\subsection{Related work and vision}\label{sec:soa}
+\subsection*{Related work}
 
 \fxfatal{Merge the section with previous one}
 
@@ -450,176 +464,52 @@ grounding~\cite{Tellex10}.~\cite{Skubic2004} presented a spatial
 reasoner integrated in a robot which computes symbolic positions of
 objects.
 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=9cm]{figs/grounding_robot.pdf}
-\caption{Robot reasoning about HRI and anticipation of human activities:
-  sources of information are multi-modal dialogue, and observation of
-  environment and human activity}
-\label{fig:hri-dec}
-\end{figure}
-
-We envision HRI in a context where two agents (a human and a robot)
-share a common space and exchange information through various
-modalities. Our aim is to endow the robot with an explicit
-consideration of the human and with the ability to manage its
-interactions with him (Figure~\ref{fig:hri-dec}). This must be
-considered at the architecture level as well as at the task/motion
-planning and execution level. 
-
-We have devised a decisional framework for human-robot interactive
-task achievement that is aimed to allow the robot not only to
-accomplish its tasks but also to produce behaviors that support its
-engagement vis-a-vis its human partner and to interpret human
-behaviors and intentions. 
-Together and in coherence with this framework, we have developed
-and experimented various task planners and interaction schemes that
-allow the robot to select and perform its tasks while taking into
-account explicitly the human abilities as well as the constraints
-imposed by the presence of humans, their needs and preferences. 
-
-
-%\subsection{Contributions}
-
-%Besides proposing a new integration model for sensor data, natural language and
-%symbolic knowledge repositories, our work extends these previous contributions
-%by tackling more realistic human-robot interactions: less restricted speech
-%understanding; ability to deal with complex, partially unknown human
-%environments; and fully embodied (with arms, head,...) autonomous robots that
-%manipulate a large range of household objects.
-
-%Three specific contributions are presented in this work: first, we introduce a
-%versatile and light-weighted knowledge base that models in a formal framework,
-%based on first-order logics, not only the robot's own beliefs but also every
-%other cognitive agent the robot interacts with.  This explicit modeling of
-%other agents' belief states is used for the interaction and eases the
-%implementation of various advanced cognitive behaviors like
-%False-Beliefs~\cite{Leslie2000} or interactive object discrimination.
-
-%Second, we have implemented a framework to extract symbolic facts from complex
-%real scenes. It is based on a 3D model of the world that the robot builds
-%on-line by merging different sensor modalities. It computes spatial relations
-%between perceived objects in real-time and it allows for virtually \emph{viewing}
-%of the same scene from different points of view, enabling \emph{visual} and
-%\emph{spatial agent perspective taking}.
-
-%Third, the same symbolic knowledge base enables richer language capabilities
-%for the robot.  We propose a new approach to natural language grounding that is
-%robust, situated and more generic than what can be found in previous work
-%on situated language grounding. We present several examples that include
-%recognition and semantic validation of thematic roles or disambiguation
-%based on attention foci.
-
-%Communcation between these components is build as streams of symbolic facts,
-%where knowledge manipulated by the robot is made explicit.
-%This leads us to the idea of a \emph{knowledge-oriented architecture}, which is
-%discussed at the end of the article.
-
-%These points highlight some original aspects of a larger cognitive architecture
-%that has been deployed and tested on several mobile robotic platforms
-%(including both humanoid robots and service robots), demonstrating the
-%versatility and hardware-agnosticism of these developments.
 
 \subsection{Chapter overview}
 
-In the next section we present the {\sc ORO}
-(\emph{OpenRobots Ontology} server) knowledge base. We present it first, along with its objectives,
-since it is the knowledge \textit{hub} of the system, used pervasively by other
-components.
+The introduction  of this chapter already presented the overall approach for
+grounding, reasoning and making decision in human-robot interaction context.
+
 Section~\ref{spark} presents {\sc SPARK} (for \emph{SPAtial Reasoning \& Knowledge}), the
 component that merges perceptual information with a coherent geometric model and
 builds a symbolic interpretation of the world from the robot's point of view,
 as well as an individual symbolic model for each agent currently present in the
 environment. 
-Section~\ref{dialog} covers in detail the dialogue processing component and its 
-relation with ORO.
-Section~\ref{experiments} presents three use-cases that were conducted on two 
-different robotic platforms: the \emph{Naming} experiment, where a robot anchors new
-knowledge in its model through verbal interaction; the \emph{Spy Game}, where
-either the user or the robot tries to guess which object the other player is
-thinking of; and a more complex experiment situated in an everyday setup, where
-the robot builds models for several agents and interacts with the users using
-this knowledge. 
+
+The next section we present the {\sc ORO}
+(\emph{OpenRobots Ontology} server) knowledge base. We present it first, along with its objectives,
+since it is the knowledge \textit{hub} of the system, used pervasively by other
+components.
+
+We then present two advanced applications:
+
+\begin{inparaenum}
+
+\item \emph{Symbolic task planing} (section~\ref{sec:plan}): ...\fxfatal{to do!}
+
+\item \emph{Natural language processing} (section~\ref{dialog}): the third component includes natural
+language parsing capabilities, interactive disambiguation routines and concept
+anchoring. We focused our efforts on three classes of utterances commonly found
+in human-robot interaction: \emph{statements} (\ie new facts the human wants to
+inform the robot), \emph{orders} (or more generically \emph{desires}) and
+\emph{questions on declarative knowledge} (whose answers do not require
+planning or prediction)\footnote{This would roughly cover the \emph{representative}
+(sometimes referred as \emph{assertive}) and \emph{directive} illocutionary
+acts in Searle's~\cite{Searle1976} classification.}.
+
+\end{inparaenum}
+
+
+
+
 Finally, Section~\ref{conclusion} concludes and discusses the work presented 
 in this paper.
 
 
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{An architecture for grounding}
-\label{sec:Framework}
-
-\subsection{A robotic architecture}
-
-Interaction happens as a consequence of an explicit request of the
-human to satisfy a goal or because the robot finds itself in a
-situation where it is useful if not mandatory. In both cases, the
-robot has a goal to satisfy.  An important issue is the notion of
-engagement, a process in which the robot will have to establish,
-maintain and terminate a connection with a human partner. 
-This covers goal establishment, selection of an incremental refinement
-of the task that is intended to be achieved, and execution control
-including monitoring, and even influencing, human task performance and
-his/her commitment to the goal. The human involvement may range from a
-direct participation to the task achievement, to a simple
-``acceptance'' of robot activity in his/her close vicinity.
- 
-\begin{figure*}[thpb]
-  \centering
-  \includegraphics[width=1.0\textwidth]{./figs/architecture-overview.pdf} \\
-  \caption {Architecture of the robot control system}
-  \label{architecture_fg}
-\end{figure*}
- 
-Our robot is controlled by a three layer
-architecture~\cite{Alami1998}.  We present briefly its decisional
-layer. The proposed decisional framework consists of several entities,
-having each a specific role as illustrated by
-Figure~\ref{architecture_fg}.  We describe how the robot is controlled
-through an analysis of the three main activities performed by the
-robot controller:
-
-\begin {enumerate}
-	\item Situation assessment and context management 
-	\item Goals and plans management
-	\item Action refinement, execution and monitoring
-\end {enumerate}
-
-The next three sections describe the three robot controller
-activities and how they make use of a number of key components in the
-architecture:
-
-\fxfatal{Completely rewrite this section. Mention Dialogs as a first class citizen!}
-
-\begin{itemize}
-\item SPARK: Spatial Reasoning and Knowledge module \cite{Sisbot2011}
-\item ORO: a knowledge management module \cite{Lemaignan2010}
-\item HATP: a Human-Aware Task Planner \cite{Alili2008}
-\item A set of Human aware motion, placement and manipulation planners
- \cite{Sisbot2008, Mainprice2011, Pandey2010}
-\end{itemize}
-
-
-\subsection{Symbolic Facts and Beliefs Management}
-
-The facts produced by the geometric and temporal reasoning component are stored
-in a central symbolic knowledge base, called ORO. This key component is
-describe at length in section~\ref{cognitivekernel}. We briefly introduce here
-its main interaction channels with the other components, in particular those
-related to geometric and temporal reasoning.
-
-\fxfatal{To do!}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Situation assessment of the environment}
+\section{Building a Symbolic Model of the Environment}
 \label{sec:situ}
 
 Building, updating and maintaining a correct state of the world at
@@ -1271,21 +1161,21 @@ current implementation the first highest weighted candidate cell which
 satisfies all the feasibility tests is accepted as the feasible solution of
 highest weight, as shown in step (i). 
 
-Figure~\ref{fig|pr2-giving} show PR2 robot performing the task of giving an
-object to the human by finding the feasible solution through the presented
-framework. 
-
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.8\textwidth]{./figs/mightabilities/5.png}
-  \caption { 
-PR2 giving an object to the human at a feasible place, which is easily visible
-and reachable by the human from his current position.
-}
-  \label{fig|pr2-giving}
-\end{figure}
-
+%Figure~\ref{fig|pr2-giving} show PR2 robot performing the task of giving an
+%object to the human by finding the feasible solution through the presented
+%framework. 
+%
+%
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=0.8\textwidth]{./figs/mightabilities/5.png}
+%  \caption { 
+%PR2 giving an object to the human at a feasible place, which is easily visible
+%and reachable by the human from his current position.
+%}
+%  \label{fig|pr2-giving}
+%\end{figure}
+%
 
 
 
