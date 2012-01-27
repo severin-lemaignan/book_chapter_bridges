@@ -604,9 +604,197 @@ architecture:
  \cite{Sisbot2008, Mainprice2011, Pandey2010}
 \end{itemize}
 
-Other decisional activities, such as situated dialog (\cite{Ros2010b,
-  Lemaignan2011}, not presented here) have been developed that use the
-same set of components.
+
+\subsection{Symbolic Facts and Beliefs Management}
+
+The facts produced by the geometric and temporal reasoning component are stored
+in a central symbolic knowledge base, called ORO. This key component is
+describe at length in section~\ref{cognitivekernel}. We briefly introduce here
+its main interaction channels with the other components, in particular those
+related to geometric and temporal reasoning.
+
+\fxfatal{To do!}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Situation assessment of the environment}
+\label{sec:situ}
+
+Building, updating and maintaining a correct state of the world at
+geometric and symbolic level is crucial to the capacity of the robot
+to carry on successfully a multi-step interaction with a human. Tight
+integration between the robot controller and the geometric and
+temporal reasoning functions in SPARK and symbolic facts and beliefs
+management in ORO is central.
+
+
+Anchoring perceptions in a symbolic model requires perception abilities
+and their symbolic interpretation. In this section we present
+SPARK (\emph{SPAtial Reasoning \& Knowledge}~\cite{Sisbot2011}), a situation assessment reasoner
+that generates relevant symbolic information from the geometry of the
+environment with respect to relations between objects, robots and humans.
+Moreover, the notion of \emph{Perspective
+Taking}~\cite{Flavell1992,Tversky1999} is employed at the heart of the
+reasoner to provide the robot with the ability to put itself at the human's
+place and to reason about the world from different perspectives.
+
+
+\subsection{Locations}
+
+One way of referring to object's positions is based on human's symbolic 
+descriptors, instead of using their precise position. In fact, in many cases, 
+this information is the most precise information available since humans do not 
+store the numeric coordinates of objects. These type of descriptors have been 
+studied in the context of language grounding 
+(\cite{O'Keefe1999,Matuszek2010,Regier2001,Kelleher2009,Blisard2005}). In this 
+work we focus on the following relations which are computed with respect to the 
+position of the agents and the objects:
+
+\begin{itemize} 
+
+\item \emph{Location according to an agent}: The predicate
+\concept{isLocatedAt} represents spatial locations between agents and objects.
+For example we say ``it is on my right, on your left, ...'' We compute these
+spatial locations by dividing the space around the referent (an agent) into $n$
+regions based on arbitrary angle values relative to the referent orientation.
+For example, for $n = 4$ we would have the space divided into \emph{front,
+left, right} and \emph{back}. Additionally, two proximity values, \emph{near}
+and \emph{far}, may also be considered. The number of regions and proximity
+values can be chosen depending on the context where the interaction takes
+place.
+
+\item \emph{Location according to an object}: We can also refer to object
+locations with respect to other objects in the environment, such as \emph{above,
+next to, in}, etc. In this work we compute three main relations based on the
+bounding box and center of mass of the objects 
+(Figure~\ref{fig::sprelations}\emph{c}): 
+
+\begin{itemize}
+	\item \concept{isOn}: computes if an object $O_1$ is on another object $O_2$ by
+	evaluating the center of mass of $O_1$ according to the bounding box of $O_2$.
+
+	\item \concept{isIn}: evaluates if an object $O_1$ is inside another object
+	$O_2$ based on their bounding boxes $BB_{O_1}$ and $BB_{O_2}$.
+
+	\item \concept{isNextTo}: indicates whether an object $O_1$ is next to another
+	object $O_2$. We cannot use a simple distance threshold to determine if two
+	objects are next to each other since the relation is highly dependent on the
+	dimensions of the objects. For instance, the maximum distance between large
+	objects (\eg two houses) to consider them as being next to each other is much
+	larger than the maximum distance we would consider for two small objects (\eg
+	two bottles). Thus, the relation between the dimensions and the distances of
+	the objects are taken into account.  
+
+\begin{figure} 
+	\centering
+	\includegraphics[width=0.6\columnwidth]{figs/spatial_relation.png}
+	\caption{Spatial relations between two objects: A) \concept{isOn} relation, 
+	B) \concept{isIn} relation, and C) \concept{isNextTo} relation.} 
+	\label{fig::sprelation} 
+\end{figure}
+
+\end{itemize} 
+\end{itemize}
+
+To ensure the different agent models are up-to-date, all these properties are
+always computed on-line, each time the current state of the world changes.
+
+SPARK can be compared to the \emph{Grounded Situation Model} (GSM) introduced
+by Mavridis and Roy~\cite{Mavridis2005} in the sense that they both provide an
+amodal physical representation of the world used as a mediator between the
+sensor space and symbolic models. They have however different features: while
+GSM enables representation of time and imaginary objects (whose existence is
+hinted by verbal assertions from a human, also called \emph{presupposition
+accomodation}), SPARK offers a richer 3D model that enables the computation of
+several spatial relationships between objects and an effective implementation
+of perspective taking capabilities.
+
+Table~\ref{facts|sprelations} lists all the symbolic relationships that are
+currently computed by the system.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{p{2cm}p{5cm}p{2cm}l}
+	\rowcolor{white}
+    \textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\ 
+    \hline
+	 a location \par (\concept{Location})  & \textbf{is at} \par (\concept{isAt} $\equiv$ \concept{cyc:objectFoundInLocation})  &  a location \par (\concept{Location}) & \\ 
+	 &  $\rightarrow$ \textbf{is on} \par (\concept{isOn} $\equiv$ \concept{cyc:above\_Touching})  &  & \\ 
+	 &  $\rightarrow$ \textbf{is in} \par (\concept{isIn})  &  & \\ 
+	 &  $\rightarrow$ \textbf{is next to} \par (\concept{isNextTo})  & &  \\ 
+	 a location \par (\concept{Location})  & \textbf{is above} \par (\concept{isAbove} $\equiv$ \concept{cyc:above-Generally})  &  a location \par (\concept{Location})  &  inverse of \concept{isBelow} \\ 
+	 a location \par (\concept{Location})  & \textbf{is under} \par (\concept{isBelow})  &  a location \par (\concept{Location})  &  inverse of \concept{isAbove}
+	\end{tabular}
+   \caption{List of facts describing spatial relationships between objects.}
+   \label{facts|sprelations}
+\end{table}
+
+Anonymous locations are represented by the mean of new randomly generated
+location IDs. 
+
+For instance, location of \concept{BottleA} has no name $\rightarrow$ \stmt{bottleA
+isAt loc12578}, with \concept{loc12578} a random ID. 
+
+If the position is actually completely unknown, \concept{loc12578} has no
+further informations attached to it (and can be omitted altogether). 
+
+If the position is known but has no name, it is possible to add details to the
+location. For instance: \stmt{loc12578 owl:differentFrom MyNiceTable}. 
+
+
+
+\subsubsection{Agent independent world dynamics}
+\begin{table}[h]
+   \centering
+   \begin{tabular}{p{2cm}p{5cm}p{2cm}l}
+	\rowcolor{white}
+
+	\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\ 
+	\hline
+	 a spatial enduring thing \par (\concept{EnduringThing-Localized})  & \textbf{is moving} \par (\concept{isMoving})  &  a boolean \par (\concept{xsd:boolean})  
+	\end{tabular}
+   \caption{List of facts describing agent independent world dynamics.}
+\end{table}
+
+
+\subsection{Exploration and search policies}
+
+The robot controller has access to the symbolic facts in ORO that are
+automatically updated whenever object and agent positions are changed.
+Robot controller can also access geometric perceived or inferred
+positions of objects and geometric positions and postures of the human
+that will be used to orient its cameras.  Building and updating the
+state of the world first relies on perceiving objects. Robot
+controller can use:
+
+\begin {itemize}
+\item Exploration policies: robot will exhaustively scan the table to
+  see all what can be seen.
+
+\item Search policies: robot will search an object until it is
+  detected if possible, scanning all the table and looking in human
+  hand.
+
+\end {itemize}
+
+Robot reasons on possible positions for non perceived
+objects. These hypotheses could be updated using new input from dialogue, human
+action and focus of attention. Currently, we manage at most one hypothesis per
+object. This hypothesis is produced by robot controller through an inference on
+robot or human action. In case of perception conflicts with low probability for
+the current hypothesis, robot controller will break this hypothesis and delete
+corresponding symbolic fact in the ontology.
+
+Robot must reacts to change in the world not linked to robot
+action to drive world update. Robot controller uses SPARK to monitor human hand
+motion and primitive action recognition for \emph{pick} and \emph{throw}. As
+mentioned above these primitive action recognition should be used with higher
+level information on goals, intentions and plans and some exploration to
+achieve complex human action and activity monitoring.  In the current
+implementation, these primitive actions are over-optimistically interpreted as
+the corresponding actions \emph{pick} object and \emph{throw} object.
 
 
 
@@ -614,13 +802,280 @@ same set of components.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Building a symbolic representation of agents}
+\section{Building a Symbolic Representation of Agents}
 \label{grounding_agents}
 
+\fxfatal{Introduction: 2 aspects: situation assessment -> current agent capabilities,
+planning assessment -> ''mightabilities''}
+
+\subsection{Agent Capabilities}
+
+There are a number of common properties for a robot and a human related to
+their capabilities in a given situation: they can both reach, grasp, look at,
+point at, etc. In our context, we group robots and humans into a single category.
+Thus, we define agents as entities that can act in the environment and
+manipulate it. In this work we focus on the following capabilities from each
+agent's perspective\footnote{Note that each of the capabilities described are
+computed from each agent point of view, and therefore, also stored in different
+models in ORO for further use at the decisional level.}:
+
+\begin{itemize}
+
+\item \emph{Sees}: An important ability to know about an agent is to predict
+``what it can see'', \ie what is within its field of view (FOV). A robot being
+able to compute this information can then act accordingly. An example
+would be a clarification scenario where the human is searching for an object
+and the robot is able to infer that he/she is looking for the one that is not
+visible (otherwise the user would not be searching for it).
+In Figure~\ref{fig::sparkRepresentations}\emph{a} the field of view of a person is illustrated with a
+grey cone (broader one). While he is able to see the two small boxes on the
+table in front of him, the big box on his right is out of his FOV, and
+therefore, he is not able to see it. 
+
+\item \emph{Looks At}: this relation corresponds to what the agent is focused
+on, \ie where its focus of attention is directed. This model is based on a
+narrower field of view, the field of attention (FOA). 
+Figure~\ref{fig::sparkRepresentations}\emph{a}
+shows the field of attention of a person with a green cone (narrower one). In
+this example only the grey box satisfies the \concept{looksAt} relation.
+
+\item \emph{Points At}: verifies whether an object is pointed at by an agent.
+This relation is particularly useful during interaction when one of the agents
+is referring to an object saying ``this" or ``that" while pointing at it.
+Section~\ref{disamb-gestures} describes in more detail the combination of both
+sources of information (verbal and non-verbal).
+ 
+If a big object occludes a smaller one, and an agent is pointing at them, the
+outcome of the evaluation will result only in one relation, \ie \stmt{agent\_01
+pointsAt object\_01} since the small one is not visible to the agent.  On the
+contrary, if the small object is in front of the big one, then both objects
+will satisfy the relation, which may generate an ambiguity (which object the
+agent refers to?) that should be solved through higher level reasoning (\eg
+context analysis or clarification through verbal interaction).
+
+\item \emph{Reachable}: it allows the robot to estimate the agent's capability
+to reach an object, which is fundamental for task planning. For example, if the
+user asks the robot to give him/her an object, the robot must compute a transfer
+point where the user is able to get the object afterward. 
+Figure~\ref{fig::sparkRepresentations}\emph{b} shows different reachability postures for each object
+on the table. In the example, the bottle and the box are both reachable for the
+human, but the teddy bear is too far. Instead, from the robot's perspective,
+the teddy bear is reachable for it, while the bottle is not.
+
+\end{itemize}
+
+\begin{figure*}[!t]
+	\begin{center}
+	\subfigure[]{
+		\includegraphics[width=0.35\linewidth]{figs/looks.jpg} 
+		\label{(a)}
+	}
+	\subfigure[]{
+		\includegraphics[width=0.3\linewidth]{figs/reach.jpg}
+		\label{(b)}
+	} 
+	\caption{(a) Field of view (FOV) and the field of attention (FOA) of the human. (b) Different reaching postures for the human.}
+	\label{fig::sparkRepresentations}
+	\end{center}
+\end{figure*} 
+
+
+While the first three relations (\concept{sees}, \concept{looksAt} and
+\concept{pointsAt}) are computed through a model based approach, the latter one
+is based on the Generalized Inverse Kinematics with pseudo inverse
+method~\cite{Nakamura90,Baerlocher04} to find a collision free posture for the
+agent where its end-effector is at the center of the object within a given
+tolerance. The details of these computations are out of the scope of this
+article.
+
+Figure~\ref{fig::reach-ex} illustrates different situations for the
+\textit{reachable} relation. In this case, the robot and its human partner
+are placed face to face, in a table-top setup (Figure~\ref{fig::reach-ex}.1).
+The robot first estimates if the small grey box is reachable to itself. This is
+done by finding a collision free posture to reach the object
+(Figure~\ref{fig::reach-ex}.2). Next the robot switches to the human's
+perspective to estimate if the same object is reachable to the human as well.
+In the last scene, the human moves towards his left, farther from the object
+(Figure~\ref{fig::reach-ex}.4). The situation is then reevaluated. In this
+occasion though, the reasoner cannot find a satisfactory posture for the human
+to reach the box because he is too far from the target.
+
+\begin{figure*}[!t]
+	\centering
+	\includegraphics[width=1.0\textwidth]{figs/reachex.jpg}	
+	\caption{An example illustrating the \textit{reachable} relation. The relation is computed from the perspectives of both the robot and the human. The computed posture at each step is illustrated with a global view of the scene (top), and from a closest view (bottom).}
+\label{fig::reach-ex}
+\end{figure*}
+
+\begin{figure}[ht!]
+   \label{fig:sparkSubfigures}
+   \begin{center}
+%
+       \subfigure[Initial state]{%
+%           \label{fig:wuweiPhoto}
+           \includegraphics[width=0.5\textwidth]{./figs/etat2-P1010769_brightened-v2.jpg}
+       }%
+       \subfigure[3d model view of initial state]{%
+%          \label{fig:sparkScreenshot}
+          \includegraphics[width=0.43\textwidth]{./figs/etat2_photo.png}
+       }\\ %  ------- End of the first row ----------------------%
+%
+   \end{center}
+
+   \caption{%
+     In this situation, there are three tapes on the table. Two tapes
+     are only reachable by the robot: the LOTR\_TAPE (black in the 3d
+     model) and GREY\_TAPE. The third tape WALLE\_TAPE (white in the
+     3d model) and the trashbin PINK\_TRASHBIN are only reachable by
+     the human HUMAN1. All tapes are on the table TABLE.  }%
+
+\end{figure}
+
+The set of facts computed in the situation depicted by
+Figure~\ref{fig:sparkSubfigures} is the following:
+\begin{footnotesize}
+%\begin{small}
+\begin{verbatim}
+                ROBOT                          HUMAN1
+PINK_TRASHBIN isReachable false    PINK_TRASHBIN isReachable true 
+WALLE_TAPE isReachable false       WALLE_TAPE isVisible true 
+LOTR_TAPE isReachable true         LOTR_TAPE isReachable false 
+GREY_TAPE isReachable true         GREY_TAPE isReachable false
+WALLE_TAPE isVisible true          WALLE_TAPE isReachable true 
+LOTR_TAPE isVisible true           LOTR_TAPE isVisible true 
+GREY_TAPE isVisible true           GREY_TAPE isVisible true 
+WALLE_TAPE isOn TABLE              WALLE_TAPE isOn TABLE 
+LOTR_TAPE isOn TABLE               LOTR_TAPE isOn TABLE 
+GREY_TAPE isOn TABLE               GREY_TAPE isOn TABLE 
+\end{verbatim}
+%\end{small}
+\end{footnotesize}
+
+
+The following tables provide the exhaustive list of agent-related symbolic facts
+currently produced by the system.
+
+\begin{table}[h]
+	\centering
+	    \begin{tabular}{p{2cm}p{5cm}p{2cm}l}
+		\rowcolor{white}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\
+		\hline
+	 a location	\par (\concept{Location})  & \textbf{has relative position}	\par (\concept{hasRelativePosition})  &  a location	\par (\concept{Location}) & \\ 
+	 & 	$\rightarrow$ \textbf{is behind} \par (\concept{behind} $\equiv$ \concept{cyc:behind-Generally})  &  & inverse of \concept{inFrontOf}  \\ 
+	 &  $\rightarrow$ \textbf{is in front of} \par (\concept{inFrontOf} $\equiv$ \concept{cyc:inFrontOf-Generally})  & 	 & 	 inverse of \concept{behind}  \\ 
+	 &  $\rightarrow$ \textbf{is left of} \par (\concept{leftOf})  &  &  inverse of \concept{rightOf} \\ 
+	 &  $\rightarrow$ \textbf{is right of} \par (\concept{rightOf})  & 	 & 	 inverse of \concept{leftOf}  \\ 
+	 a object \par (\concept{Object})  & \textbf{is far from}	\par (\concept{cyc:farFrom})  &  a agent \par (\concept{Agent}) & \\ 
+	 a object \par (\concept{Object})  & \textbf{is near of} \par (\concept{cyc:near})  &  a agent \par (\concept{Agent}) & 
+	\end{tabular}
+	\caption{List of facts describing relative spatial relationships between objects and agents.}
+\end{table}
+
+
+\begin{table}[h]
+	\centering
+		\begin{tabular}{p{3cm}p{5cm}p{3cm}p{3cm}}
+		\rowcolor{white}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\
+		\hline
+		 a agent \par (\concept{Agent})  & \textbf{looks at} \par (\concept{looksAt})  & a spatial enduring thing \par (\concept{EnduringThing-Localized}) \\
+		 a agent \par (\concept{Agent})  & \textbf{sees} \par (\concept{sees})  &  a spatial enduring thing \par (\concept{EnduringThing-Localized})  &    \\ 
+		 a spatial enduring thing \par (\concept{EnduringThing-Localized})  & \textbf{is in field of view} \par (\concept{isInFieldOfView})  &  a boolean \par (\concept{xsd:boolean})  & via inference: \par \stmt{myself sees *} $\Leftrightarrow$ \stmt{* isInFieldOfView true} \\ 
+		 a agent \par (\concept{Agent})  & \textbf{points at} \par (\concept{pointsAt} $\equiv$ \concept{cyc:pointingToward})  &  a spatial enduring thing
+\par (\concept{EnduringThing-Localized}) \\ 
+		a agent \par (\concept{Agent})  & \textbf{focuses on} \par (\concept{focusesOn})  &  a spatial enduring thing \par (\concept{EnduringThing-Localized})  &  via inference: \par \concept{looksAt} $\wedge$ \concept{pointsAt} $\Rightarrow$ \concept{focusesOn}
+
+	\end{tabular}
+	\caption{List of facts describing the attentional state of an agent. \concept{looksAt} is interpreted as an object \emph{being in the field of attention} of an agent. An object is \concept{see}n if it is visible for the agent without moving the head (ie, in \emph{field of view}).}
+\end{table}
+
+
+\begin{table}[h]
+	\centering
+		\begin{tabular}{p{2cm}p{5cm}p{2cm}l}
+		\rowcolor{white}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\
+		\hline
+		a spatial enduring thing \par (\concept{EnduringThing-Localized})  & \textbf{is visible (with possibly a head movement)} \par (\concept{isVisibleByMovingHead})  &  a boolean \par (\concept{xsd:boolean})  \\ 
+		a agent \par (\concept{Agent})  & \textbf{sees (with possible a head movement)} \par (\concept{seesWithHeadMovement})  &  a object \par (\concept{Object})   & via inference: \par \stmt{myself seesWithHeadMovement *} $\Leftrightarrow$ \stmt{* isVisibleByMovingHead true}) \\
+		a agent \par (\concept{Agent})  & \textbf{can not see (with possible a head movement)} \par (\concept{cannotSeeWithHeadMovement})  & a object \par (\concept{Object})   &  via inference: \par \stmt{myself cannotSeeWithHeadMovement *} $\Leftrightarrow$ \stmt{* isVisibleByMovingHead false}) \\ 
+		a object \par (\concept{Object})  & \textbf{is reachable} \par (\concept{isReachable})  &  a boolean \par (\concept{xsd:boolean})  \\ 
+		a agent \par (\concept{Agent})  & \textbf{reaches} \par (\concept{reaches})  &  a object \par (\concept{Object})   & via inference: \par \stmt{myself reaches *} $\Leftrightarrow$ \stmt{* isReachable true}) \\ 
+		a agent \par (\concept{Agent})  & \textbf{can not reach} \par (\concept{cannotReach})  & a object \par (\concept{Object})   & via inference: \par \stmt{myself cannotReach *} $\Leftrightarrow$ \stmt{* isReachable false})
+
+	\end{tabular}
+	\caption{List of facts describing action potentialities for an agent.}
+\end{table}
+
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{p{2cm}p{5cm}p{2cm}}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
+		\hline
+		a agent \par (\concept{Agent})  & \textbf{has in left/right hand} \par (\concept{hasIn\{Left|Right\}Hand})  &  a GraspableObject \par (\concept{GraspableObject}) \\ 
+		a agent \par (\concept{Agent})  & \textbf{has posture} \par (\concept{hasPosture})  &  a posture \par (\concept{Posture})  \\
+		a agent \par (\concept{Agent})  & \textbf{currently 'bodily' does} \par (\concept{currentlyBodilyDoes})  &  an action \par (\concept{Action})
+	\end{tabular}
+	\caption{List of facts describing the state of an agent in general.}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{p{2cm}p{5cm}p{2cm}}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
+		\hline
+		a agent \par (\concept{Agent})  & \textbf{currently performs} \par (\concept{currentlyPerforms})  &  a action \par (\concept{Action})
+	\end{tabular}
+	\caption{List of facts describing the current state of a robot.}
+\end{table}
+
+\subsection{Hypotheses on objects states and positions}
+
+It is sometimes difficult or even impossible to see and/or track an object in
+certain states. This happens, for instance, when the object has been put in a
+container, when it is in the robot gripper or in the human hand, and more
+generally in any state in which it is hidden by something else. Our robot has a
+model of the possible symbolic states for an object (whether the object is on a
+furniture, in an agent hand, in a container, etc.).  According to the robot
+perception of what has happened since the object was last seen, the robot tries
+to maintain a belief of the current possible symbolic states and their
+associated probabilities for this object. Such information can be used to
+update the beliefs using input from exploration, dialog, human visual focus,
+etc.
+
+SPARK currently provides a simple implementation of such a functionality. The
+only managed hypotheses are \emph{in container} and \emph{in agent hand}. We
+can have only one hypothesis at the same time. Hypothesis validity is checked
+geometrically in case of incoming perception values.
+
+
+\subsection{Primitive action recognition}
+
+Monitoring human activity is crucial to maintain a coherent state of the world.
+Full human action and activity monitoring is a difficult task that requires
+knowledge and reasoning both on high level facts like goals, intentions and
+plans, as well as bottom-up data from agent and object motions. Simple temporal
+and geometric reasoning on human hand trajectories and potential objects
+placements can provide some useful clues for high level human monitoring
+processes. We call this temporal and geometric reasoning \emph{primitive action
+recognition}.
+
+For example, a \emph{pick}, a \emph{throw} or a \emph{place} action can be
+recognized by observing that an object on table and an empty human hand are
+close to each other, or that the human hand holding an object is close to a
+container, etc. Human hand position is either directly perceived or inferred
+from its initial perceived trajectory.  We have a simple implementation of such
+a primitive action recognition in SPARK that relies on monitoring human hand
+and its motion near objects or above containers.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Mightabilities: pro-active analysis of potentialities}
 
-%Mightability Analysis: Multi-State Visuo-Spatial perspective taking
+\fxfatal{Write an introduction that glues this section with the previous ones}
 
 In human movement and behavioral psychology literatures, different types of
 reach actions of the human have been identified and analyzed,
@@ -832,181 +1287,29 @@ and reachable by the human from his current position.
 \end{figure}
 
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Situation assessment and context management}
-\label{sec:situ}
+\section{Explicit Knowledge Management}
+\label{cognitivekernel}
 
-\fxfatal[author=Severin]{Review/reorganize this section.
-Add a section on Migthabilities Maps as well (keeping in mind the paper must
-focus on link between continous and symbolic worlds)}
+A key element of this cognitive architecture is how knowledge is explicitely
+exposed, stored and handled between component.
 
-This activity involves the geometric and temporal reasoning component,
-the symbolic facts and belief management component and the dedicated
-robot controller activity (Figure~\ref{architecture_fg}).
-
-We assume that perception provides in real-time the identity and the
-position of objects when they are in the field of view of the sensors.
-In our implemented examples, the robot is localised using a standard
-horizontal laser-scanning based localisation system, the objects are
-identified and localized using ARToolkit \cite{ARToolkit} and the
-humans are tracked using a commercial motion capture system and a
-Kinect device from Microsoft.
-
-\subsection{Geometric and Temporal Reasoning component}\label{sub:gtrc}
-
-The geometric reasoning component plays a central role in our
-architecture. It is called SPARK (Spatial Reasoning and
-Knowledge~\cite{Sisbot2011}) in the current implementation. It is
-responsible for geometric information gathering and it embeds a number
-of decisional activities linked to abstraction (symbolic facts
-production) and inference based on geometric and temporal reasoning.
-SPARK maintains all geometric positions and configurations of agents,
-objects and furniture coming from perception and previous or {\it a
-  priori} knowledge.
-
- %\subsubsection*{Symbolic facts production:} 
-\vspace{0.3cm}
-\noindent
-\textbf{Symbolic facts production:} 
-Geometric state of the world is abstracted in symbolic facts that can
-be classified in three different categories.
-
-\begin {itemize}
-\item Relative positions of object and agents, e.g.  \stmt{GREY\_TAPE
-    isOn TABLE}.
-
-\item Perception and manipulation capacity and state of agents,
-  e.g. \stmt{ROBOT looksAt GREY\_TAPE}, \stmt{GREY\_TAPE isVisibleBy
-    HUMAN1}.
-
-\item Motion status for object or agent parts, e.g.  \stmt{GREY\_TAPE
-    isMoving true},\\ \stmt{ROBOT\_HEAD isTurning true}.
-\end {itemize} 
-
-Reasoning about human perspective allow to compute facts such as:
-\stmt{GREY\_TAPE isBehind HUMAN1}, \stmt{GREY\_TAPE isVisibleBy
-  HUMAN1}.
-
-Figure~\ref{fig::reach-ex} illustrates different situations for the
-\textit{reachable} relation. In this case, the robot and its human partner
-are placed face to face, in a table-top setup (Figure~\ref{fig::reach-ex}.1).
-The robot first estimates if the small grey box is reachable to itself. This is
-done by finding a collision free posture to reach the object
-(Figure~\ref{fig::reach-ex}.2). Next the robot switches to the human's
-perspective to estimate if the same object is reachable to the human as well.
-In the last scene, the human moves towards his left, farther from the object
-(Figure~\ref{fig::reach-ex}.4). The situation is then reevaluated. In this
-occasion though, the reasoner cannot find a satisfactory posture for the human
-to reach the box because he is too far from the target.
-
-\begin{figure*}[!t]
-	\centering
-	\includegraphics[width=1.0\textwidth]{figs/reachex.jpg}	
-	\caption{An example illustrating the \textit{reachable} relation. The relation is computed from the perspectives of both the robot and the human. The computed posture at each step is illustrated with a global view of the scene (top), and from a closest view (bottom).}
-\label{fig::reach-ex}
-\end{figure*}
-
-\begin{figure}[ht!]
-   \label{fig:sparkSubfigures}
-   \begin{center}
-%
-       \subfigure[Initial state]{%
-%           \label{fig:wuweiPhoto}
-           \includegraphics[width=0.5\textwidth]{./figs/etat2-P1010769_brightened-v2.jpg}
-       }%
-       \subfigure[3d model view of initial state]{%
-%          \label{fig:sparkScreenshot}
-          \includegraphics[width=0.43\textwidth]{./figs/etat2_photo.png}
-       }\\ %  ------- End of the first row ----------------------%
-%
-   \end{center}
-
-   \caption{%
-     In this situation, there are three tapes on the table. Two tapes
-     are only reachable by the robot: the LOTR\_TAPE (black in the 3d
-     model) and GREY\_TAPE. The third tape WALLE\_TAPE (white in the
-     3d model) and the trashbin PINK\_TRASHBIN are only reachable by
-     the human HUMAN1. All tapes are on the table TABLE.  }%
-
-\end{figure}
-
-The set of facts computed in the situation depicted by
-Figure~\ref{fig:sparkSubfigures} is the following:
-\begin{footnotesize}
-%\begin{small}
-\begin{verbatim}
-                ROBOT                          HUMAN1
-PINK_TRASHBIN isReachable false    PINK_TRASHBIN isReachable true 
-WALLE_TAPE isReachable false       WALLE_TAPE isVisible true 
-LOTR_TAPE isReachable true         LOTR_TAPE isReachable false 
-GREY_TAPE isReachable true         GREY_TAPE isReachable false
-WALLE_TAPE isVisible true          WALLE_TAPE isReachable true 
-LOTR_TAPE isVisible true           LOTR_TAPE isVisible true 
-GREY_TAPE isVisible true           GREY_TAPE isVisible true 
-WALLE_TAPE isOn TABLE              WALLE_TAPE isOn TABLE 
-LOTR_TAPE isOn TABLE               LOTR_TAPE isOn TABLE 
-GREY_TAPE isOn TABLE               GREY_TAPE isOn TABLE 
-\end{verbatim}
-%\end{small}
-\end{footnotesize}
-
-%\newline\newline
-%\subsubsection*{Hypotheses on objects states and positions}
-\vspace{0.3cm}
-\noindent
-\textbf{Hypotheses on objects states and positions:}
-It is sometimes difficult or even impossible to see and/or track an
-object in certain states. This happens, for instance, when the object
-has been put in a container, when it is in the robot gripper or in the
-human hand, and more generally in any state in which it is hidden by
-something else. Our robot has a model of the possible symbolic states
-for an object (whether the object is on a furniture, in an agent hand,
-in a container, etc.).  According to the robot perception of what has
-happened since the object was last seen, the robot tries to maintain a
-belief of the current possible symbolic states and their associated
-probabilities for this object. Such information can be used to update
-the beliefs using input from exploration, dialog, human visual
-focus,\ldots
-SPARK currently provides a simple implementation of such a functionality. The
-only managed hypotheses are \emph{in container} and \emph{in agent hand}. We
-can have only one hypothesis at the same time. Hypothesis validity is checked
-geometrically in case of incoming perception values.
+We have adopted a centralized approach for knowledge management (while this is
+the most commonly found approach in the litterature, other, more distributed
+approaches exist, like \cite{Jacobsson2008}). Our knowledge base is called
+ORO~\cite{Lemaignan2010}.
 
 
-%\subsubsection*{Primitive action recognition}
-\vspace{0.3cm}
-\noindent {\bf Primitive action recognition:} 
-Monitoring human activity is crucial to maintain a coherent state of
-the world. Full human action and activity monitoring is a difficult
-task that requires knowledge and reasoning both on high level facts
-like goals, intentions and plans, as well as bottom-up data from agent
-and object motions. Simple temporal and geometric reasoning on human
-hand trajectories and potential objects placements can provide some
-useful clues for high level human monitoring processes. We call this
-temporal and geometric reasoning \emph{primitive action recognition}.
-
-For example, a \emph{pick}, a \emph{throw} or a \emph{place} action
-can be recognized by observing that an object on table and an empty
-human hand are close to each other, or that the human hand holding an
-object is close to a container, etc. Human hand position is either
-directly perceived or inferred from its initial perceived trajectory.
-We have a simple implementation of such a primitive action recognition
-in SPARK that relies on monitoring human hand and its motion near
-objects or above containers.
-
-\subsection{Symbolic facts and beliefs management}
-
-The facts produced by the geometric and temporal reasoning component
-are stored in a central symbolic knowledge base, called ORO. Besides
-acting as a facts database, the ORO platform~\cite{Lemaignan2010}
-exposes several functions: operations on knowledge statements relying
-on inference (through a continuous first-order logic classification
-process), management of \emph{per-agent} symbolic models, and also
-higher cognitive and human-robot interaction related functionalities
-like categorization of sets of concepts, profiles of memory (that
-enable the robot to ``forget'' about some facts), natural language
+Besides acting as a facts database, the ORO platform exposes several functions:
+operations on knowledge statements relying on inference (through a continuous
+first-order logic classification process), management of \emph{per-agent}
+symbolic models, and also higher cognitive and human-robot interaction related
+functionalities like categorization of sets of concepts, profiles of memory
+(that enable the robot to ``forget'' about some facts), natural language
 grounding~\cite{Lemaignan2011}\ldots.
 
 ORO stores independent knowledge models (in our implementation, as
@@ -1034,761 +1337,9 @@ event framework also takes advantage of the inference capabilities of
 ORO. Thus an event can be indirectly triggered if its triggering
 conditions can be inferred to be true.
 
-\subsection{Situation Assessment and Context Management Controller} 
 
-Building, updating and maintaining a correct state of the world at
-geometric and symbolic level is crucial to the capacity of the robot
-to carry on successfully a multi-step interaction with a human. Tight
-integration between the robot controller and the geometric and
-temporal reasoning functions in SPARK and symbolic facts and beliefs
-management in ORO is central.
- 
-The robot controller has access to the symbolic facts in ORO that are
-automatically updated whenever object and agent positions are changed.
-Robot controller can also access geometric perceived or inferred
-positions of objects and geometric positions and postures of the human
-that will be used to orient its cameras.  Building and updating the
-state of the world first relies on perceiving objects. Robot
-controller can use:
-
-\begin {itemize}
-\item Exploration policies: robot will exhaustively scan the table to
-  see all what can be seen.
-
-\item Search policies: robot will search an object until it is
-  detected if possible, scanning all the table and looking in human
-  hand.
-
-\end {itemize}
-
-Robot reasons on possible positions for non perceived
-objects. These hypotheses could be updated using new input from dialogue, human
-action and focus of attention. Currently, we manage at most one hypothesis per
-object. This hypothesis is produced by robot controller through an inference on
-robot or human action. In case of perception conflicts with low probability for
-the current hypothesis, robot controller will break this hypothesis and delete
-corresponding symbolic fact in the ontology.
-
-Robot must reacts to change in the world not linked to robot
-action to drive world update. Robot controller uses SPARK to monitor human hand
-motion and primitive action recognition for \emph{pick} and \emph{throw}. As
-mentioned above these primitive action recognition should be used with higher
-level information on goals, intentions and plans and some exploration to
-achieve complex human action and activity monitoring.  In the current
-implementation, these primitive actions are over-optimistically interpreted as
-the corresponding actions \emph{pick} object and \emph{throw} object.
-
-\subsection{Computed symbolic facts}
-\label{list_facts}
-
-\begin{itemize}
-
-	\item "$\rightarrow$" means "sub-property" (for instance, \emph{toy isOn
-	table} $\Rightarrow$ \emph{toy isAt table}: \emph{isOn} is a sub-property
-	of \emph{isAt}). 
-
-	\item \emph{Updated by module} means either that module directly updates
-	this value, or that the value is inferred from a value that module sets. 
-	
-	\item All these properties are computed independently for each agents
-	(except the ones noted as \emph{Agent independent}). 
-	
-	\item Boolean properties (like \emph{isVisible}) are always from the point
-	of view of the ontology owner (for instance, in the robot model, \emph{box
-	isVisible true} means that the robot currently sees the box. At the same
-	time, in the human model, you can have \emph{box isVisible false}). 
-
-\end{itemize}
-
-
-\subsubsection{Spatial relations}
-
-
-
-\begin{table}[h]
-    \centering
-    \begin{tabular}{p{2cm}p{5cm}p{2cm}l}
-	\rowcolor{white}
-    \textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\ 
-    \hline
-	 a location \par (\concept{Location})  & \textbf{is at} \par (\concept{isAt} $\equiv$ \concept{cyc:objectFoundInLocation})  &  a location \par (\concept{Location}) & \\ 
-	 &  $\rightarrow$ \textbf{is on} \par (\concept{isOn} $\equiv$ \concept{cyc:above\_Touching})  &  & \\ 
-	 &  $\rightarrow$ \textbf{is in} \par (\concept{isIn})  &  & \\ 
-	 &  $\rightarrow$ \textbf{is next to} \par (\concept{isNextTo})  & &  \\ 
-	 a location \par (\concept{Location})  & \textbf{is above} \par (\concept{isAbove} $\equiv$ \concept{cyc:above-Generally})  &  a location \par (\concept{Location})  &  inverse of \concept{isBelow} \\ 
-	 a location \par (\concept{Location})  & \textbf{is under} \par (\concept{isBelow})  &  a location \par (\concept{Location})  &  inverse of \concept{isAbove}
-	\end{tabular}
-   \caption{List of facts describing spatial relationships between objects.}
-\end{table}
-
-
-
-Anonymous locations are represented by the mean of new randomly generated
-location IDs. 
-
-For instance, location of \concept{BottleA} has no name $\rightarrow$ \stmt{bottleA
-isAt loc12578}, with \concept{loc12578} a random ID. 
-
-If the position is actually completely unknown, \concept{loc12578} has no
-further informations attached to it (and can be omitted altogether). 
-
-If the position is known but has no name, it is possible to add details to the
-location. For instance: \stmt{loc12578 owl:differentFrom MyNiceTable}. 
-
-
-
-\subsubsection{Agent independent world dynamics}
-\begin{table}[h]
-   \centering
-   \begin{tabular}{p{2cm}p{5cm}p{2cm}l}
-	\rowcolor{white}
-
-	\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\ 
-	\hline
-	 a spatial enduring thing \par (\concept{EnduringThing-Localized})  & \textbf{is moving} \par (\concept{isMoving})  &  a boolean \par (\concept{xsd:boolean})  
-	\end{tabular}
-   \caption{List of facts describing agent independent world dynamics.}
-\end{table}
-
-
-\subsubsection{Agent relative spatial relations}
-
-\begin{table}[h]
-	\centering
-	    \begin{tabular}{p{2cm}p{5cm}p{2cm}l}
-		\rowcolor{white}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\
-		\hline
-	 a location	\par (\concept{Location})  & \textbf{has relative position}	\par (\concept{hasRelativePosition})  &  a location	\par (\concept{Location}) & \\ 
-	 & 	$\rightarrow$ \textbf{is behind} \par (\concept{behind} $\equiv$ \concept{cyc:behind-Generally})  &  & inverse of \concept{inFrontOf}  \\ 
-	 &  $\rightarrow$ \textbf{is in front of} \par (\concept{inFrontOf} $\equiv$ \concept{cyc:inFrontOf-Generally})  & 	 & 	 inverse of \concept{behind}  \\ 
-	 &  $\rightarrow$ \textbf{is left of} \par (\concept{leftOf})  &  &  inverse of \concept{rightOf} \\ 
-	 &  $\rightarrow$ \textbf{is right of} \par (\concept{rightOf})  & 	 & 	 inverse of \concept{leftOf}  \\ 
-	 a object \par (\concept{Object})  & \textbf{is far from}	\par (\concept{cyc:farFrom})  &  a agent \par (\concept{Agent}) & \\ 
-	 a object \par (\concept{Object})  & \textbf{is near of} \par (\concept{cyc:near})  &  a agent \par (\concept{Agent}) & 
-	\end{tabular}
-	\caption{List of facts describing relative spatial relationships between objects and agents.}
-\end{table}
-
-
-\subsubsection{Agent attention}
-\begin{table}[h]
-	\centering
-		\begin{tabular}{p{3cm}p{5cm}p{3cm}p{3cm}}
-		\rowcolor{white}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\
-		\hline
-		 a agent \par (\concept{Agent})  & \textbf{looks at} \par (\concept{looksAt})  & a spatial enduring thing \par (\concept{EnduringThing-Localized}) \\
-		 a agent \par (\concept{Agent})  & \textbf{sees} \par (\concept{sees})  &  a spatial enduring thing \par (\concept{EnduringThing-Localized})  &    \\ 
-		 a spatial enduring thing \par (\concept{EnduringThing-Localized})  & \textbf{is in field of view} \par (\concept{isInFieldOfView})  &  a boolean \par (\concept{xsd:boolean})  & via inference: \par \stmt{myself sees *} $\Leftrightarrow$ \stmt{* isInFieldOfView true} \\ 
-		 a agent \par (\concept{Agent})  & \textbf{points at} \par (\concept{pointsAt} $\equiv$ \concept{cyc:pointingToward})  &  a spatial enduring thing
-\par (\concept{EnduringThing-Localized}) \\ 
-		a agent \par (\concept{Agent})  & \textbf{focuses on} \par (\concept{focusesOn})  &  a spatial enduring thing \par (\concept{EnduringThing-Localized})  &  via inference: \par \concept{looksAt} $\wedge$ \concept{pointsAt} $\Rightarrow$ \concept{focusesOn}
-
-	\end{tabular}
-	\caption{List of facts describing the attentional state of an agent. \concept{looksAt} is interpreted as an object \emph{being in the field of attention} of an agent. An object is \concept{see}n if it is visible for the agent without moving the head (ie, in \emph{field of view}).}
-\end{table}
-
-
-\subsubsection{Agent mightabilities}
-
-\begin{table}[h]
-	\centering
-		\begin{tabular}{p{2cm}p{5cm}p{2cm}l}
-		\rowcolor{white}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\
-		\hline
-		a spatial enduring thing \par (\concept{EnduringThing-Localized})  & \textbf{is visible (with possibly a head movement)} \par (\concept{isVisibleByMovingHead})  &  a boolean \par (\concept{xsd:boolean})  \\ 
-		a agent \par (\concept{Agent})  & \textbf{sees (with possible a head movement)} \par (\concept{seesWithHeadMovement})  &  a object \par (\concept{Object})   & via inference: \par \stmt{myself seesWithHeadMovement *} $\Leftrightarrow$ \stmt{* isVisibleByMovingHead true}) \\
-		a agent \par (\concept{Agent})  & \textbf{can not see (with possible a head movement)} \par (\concept{cannotSeeWithHeadMovement})  & a object \par (\concept{Object})   &  via inference: \par \stmt{myself cannotSeeWithHeadMovement *} $\Leftrightarrow$ \stmt{* isVisibleByMovingHead false}) \\ 
-		a object \par (\concept{Object})  & \textbf{is reachable} \par (\concept{isReachable})  &  a boolean \par (\concept{xsd:boolean})  \\ 
-		a agent \par (\concept{Agent})  & \textbf{reaches} \par (\concept{reaches})  &  a object \par (\concept{Object})   & via inference: \par \stmt{myself reaches *} $\Leftrightarrow$ \stmt{* isReachable true}) \\ 
-		a agent \par (\concept{Agent})  & \textbf{can not reach} \par (\concept{cannotReach})  & a object \par (\concept{Object})   & via inference: \par \stmt{myself cannotReach *} $\Leftrightarrow$ \stmt{* isReachable false})
-
-	\end{tabular}
-	\caption{List of facts describing action potentialities for an agent.}
-\end{table}
-
-\subsubsection{Agent state}
-
-\begin{table}[h]
-	\centering
-	\begin{tabular}{p{3cm}p{6cm}p{3cm}l}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\
-		\hline
-
-
- a agent
-\\ (\concept{Agent})  & 
-
-\textbf{has in left/right hand}
-\\ (\concept{hasIn\{Left|Right\}Hand})  & 
-
- a GraspableObject
-\\ (\concept{GraspableObject})  & 
-
- SHARY \\ 
-
-
- a agent
-\\ (\concept{Agent})  & 
-
-\textbf{has posture}
-\\ (\concept{hasPosture})  & 
-
- a posture
-\\ (\concept{Posture})  & 
-
- SPARK  \\ 
-
-
- a agent
-\\ (\concept{Agent})  & 
-
-\textbf{currently 'bodily' does}
-\\ (\concept{currentlyBodilyDoes})  & 
-
- An action  & 
-
- SPARK
- 
-	\end{tabular}
-	\caption{List of facts describing the state of an agent in general.}
-\end{table}
-
-
-
-\subsubsection{Robot state}
-
-\begin{table}[h]
-	\centering
-	\begin{tabular}{p{3cm}p{6cm}p{3cm}l}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\
-		\hline
-
-
- a agent
-\\ (\concept{Agent})  & 
-
-\textbf{currently performs}
-\\ (\concept{currentlyPerforms})  & 
-
- a action
-\\ (\concept{Action})  & 
-
- SHARY ?
-
-	\end{tabular}
-	\caption{List of facts describing the current state of a robot.}
-\end{table}
-
-
-
-\subsubsection{Action description}
-
-\begin{table}[h]
-	\centering
-	\begin{tabular}{p{3cm}p{6cm}p{3cm}l}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\
-		\hline
-
- a purposeful action
-\\ (\emph{PurposefulAction})  & 
-
-\textbf{acts on}
-\\ (\emph{actsOnObject})  & 
-
- a object
-\\ (\emph{Object})  & 
-
- Dialogs/SHARY  \\ 
-
-
- a purposeful action
-\\ (\emph{PurposefulAction})  & 
-
-\textbf{is received by}
-\\ (\emph{receivedBy})  & 
-
- a location
-\\ (\emph{SpatialThing-Localized})  & 
-
- Dialogs/SHARY  \\ 
-
-
- a purposeful action
-\\ (\emph{PurposefulAction})  & 
-
-\textbf{is performed by}
-\\ (\emph{performedBy})  & 
-
- a agent
-\\ (\emph{Agent})  & 
-
- Dialogs/SHARY  \\ 
-
-
- a agent
-\\ (\emph{Agent})  & 
-
-\textbf{desires}
-\\ (\emph{desires})  & 
-
- a situation
-\\ (\emph{Situation})  & 
-
- Dialogs/SHARY \\ 
-
-
- a situation
-\\ (\emph{Situation})  & 
-
-\textbf{isDesired}
-\\ (\emph{isDesired})  & 
-
- a boolean
-\\ (\emph{xsd:boolean})  & 
-
- ORO (inverse of desires) \\ 
-
-
- a situation
-\\ (\emph{Situation})  & 
-
-\textbf{involves}
-\\ (\emph{involves})  & 
-
- a thing
-\\ (\emph{owl:Thing})  & 
-
- Dialogs/SHARY  \\ 
-
-
- a static situation
-\\ (\emph{StaticSituation})  & 
-
-\textbf{static situation involves}
-\\ (\emph{staticSituationInvolves})  & 
-
- a agent
-\\ (\emph{Agent})  & 
-
-
-	\end{tabular}
-	\caption{List of facts describing actions.}
-\end{table}
-
-
-
-\subsubsection{Other predicates}
-
-Some of these predicates are not used anymore. 
-
-\begin{table}[h]
-	\centering
-	\begin{tabular}{p{3cm}p{6cm}p{3cm}l}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Computed by} \\
-		\hline
-
-
- a Task
-\\ (\emph{Task})  & 
-
-\textbf{is a task of plan}
-\\ (\emph{taskOfPlan})  & 
-
- a Plan-ExpectedSituationType
-\\ (\emph{Plan-ExpectedSituationType})  & 
-
- \\ 
-
-
- a agent
-\\ (\emph{Agent})  & 
-
-\textbf{is able to}
-\\ (\emph{isAbleTo})  & 
-
- a purposeful action
-\\ (\emph{PurposefulAction})  & 
-
- \\ 
-
-
- a action
-\\ (\emph{Action})  & 
-
-\textbf{leads to the static situation}
-\\ (\emph{bringsToStaticSituation})  & 
-
- a static situation
-\\ (\emph{StaticSituation})  & 
-
- \\ 
-
-
- a thing
-\\ (\emph{owl:Thing})  & 
-
-\textbf{holds-Underspecified}
-\\ (\emph{holds-Underspecified})  & 
-
- a thing
-\\ (\emph{owl:Thing})  & 
-
- \\ 
-
-
- a agent
-\\ (\emph{Agent})  & 
-
-\textbf{can perform}
-\\ (\emph{canPerform})  & 
-
- a purposeful action
-\\ (\emph{PurposefulAction})  & 
-
- \\ 
-
-
- a agent
-\\ (\emph{Agent})  & 
-
-\textbf{can undertake now}
-\\ (\emph{canUndertakeNow})  & 
-
- a purposeful action
-\\ (\emph{PurposefulAction})  & 
-
- \\ 
-
-
- a temporal thing
-\\ (\emph{TemporalThing})  & 
-
-\textbf{starts after ending of}
-\\ (\emph{startsAfterEndingOf})  & 
-
- a temporal thing
-\\ (\emph{TemporalThing})  & 
-
- \\ 
-
-
- a temporal thing
-\\ (\emph{TemporalThing})  & 
-
-\textbf{lasts}
-\\ (\emph{duration})  & 
-
- a time interval
-\\ (\emph{TimeInterval})  & 
-
- \\ 
-
-
- a thing with a temporal extend
-\\ (\emph{TemporallyExtendedThing})  & 
-
-\textbf{ending point}
-\\ (\emph{endingPoint})  & 
-
- a time point
-\\ (\emph{TimePoint})  & 
-
- \\ 
-
-
- a time point
-\\ (\emph{TimePoint})  & 
-
-\textbf{after}
-\\ (\emph{after})  & 
-
- a time point
-\\ (\emph{TimePoint})  & 
-
- \\ 
-
-
- a thing with a temporal extend
-\\ (\emph{TemporallyExtendedThing})  & 
-
-\textbf{startingPoint}
-\\ (\emph{startingPoint})  & 
-
- a time point
-\\ (\emph{TimePoint})  & 
-
- \\ 
-
-
- a object
-\\ (\emph{Object})  & 
-
-\textbf{isMovable}
-\\ (\emph{isMovable})  & 
-
- a boolean
-\\ (\emph{xsd:boolean})  & 
-
-Statically asserted in scenario-specific ontology  \\ 
-
-
- a object
-\\ (\emph{Object})  & 
-
-\textbf{isHolder}
-\\ (\emph{isHolder})  & 
-
- a boolean
-\\ (\emph{xsd:boolean})  & 
-
-Statically asserted in scenario-specific ontology  \\ 
-
-
- a spatial enduring thing
-\\ (\emph{EnduringThing-Localized})  & 
-
-\textbf{isTraversable}
-\\ (\emph{isTraversable})  & 
-
- a boolean
-\\ (\emph{xsd:boolean})  & 
-
-Statically asserted in scenario-specific ontology  \\ 
-
-
- a object
-\\ (\emph{PartiallyTangible})  & 
-
-\textbf{hasCharacteristicDimension}
-\\ (\emph{hasCharacteristicDimension})  & 
-
- a integer
-\\ (\emph{xsd:integer})  & 
-
-Statically asserted in scenario-specific ontology  \\ 
-
-
- a object
-\\ (\emph{PartiallyTangible})  & 
-
-\textbf{canBeManipulated}
-\\ (\emph{canBeManipulated})  & 
-
- a boolean
-\\ (\emph{xsd:boolean})  & 
-
-Statically asserted in scenario-specific ontology  \\ 
-
-
- a object
-\\ (\emph{PartiallyTangible})  & 
-
-\textbf{hasCharacteristicWeight}
-\\ (\emph{hasCharacteristicWeight})  & 
-
- a integer
-\\ (\emph{xsd:integer})  & 
-
-Statically asserted in scenario-specific ontology 
-	\end{tabular}
-	\caption{Other computed predicates}
-\end{table}
-
-
-\subsection{Geometric Reasoning for Situation Assessment}
-\label{spark}
-
-\fxfatal{Merge with previous sections}
-
-Anchoring perceptions in a symbolic model requires perception abilities
-and their symbolic interpretation. In this section we present
-SPARK (\emph{SPAtial Reasoning \& Knowledge}~\cite{Sisbot2011}), a situation assessment reasoner
-that generates relevant symbolic information from the geometry of the
-environment with respect to relations between objects, robots and humans.
-Moreover, the notion of \emph{Perspective
-Taking}~\cite{Flavell1992,Tversky1999} is employed at the heart of the
-reasoner to provide the robot with the ability to put itself at the human's
-place and to reason about the world from different perspectives.
-
-As mentioned in the introduction, this paper does not focus on the sensor-level
-perception. We rather assume that the perception of the humans and the objects
-is provided as a list of unique identifiers with associated 3D meshes and 6DOF
-poses.
-
-\subsection{Capabilities}
-
-There are a number of common properties for a robot and a human related to
-their capabilities in a given situation: they can both reach, grasp, look at,
-point at, etc. In our context, we group robots and humans into a single category.
-Thus, we define agents as entities that can act in the environment and
-manipulate it. In this work we focus on the following capabilities from each
-agent's perspective\footnote{Note that each of the capabilities described are
-computed from each agent point of view, and therefore, also stored in different
-models in ORO for further use at the decisional level.}:
-
-\begin{itemize}
-
-\item \emph{Sees}: An important ability to know about an agent is to predict
-``what it can see'', \ie what is within its field of view (FOV). A robot being
-able to compute this information can then act accordingly. An example
-would be a clarification scenario where the human is searching for an object
-and the robot is able to infer that he/she is looking for the one that is not
-visible (otherwise the user would not be searching for it).
-In Figure~\ref{fig::sparkRepresentations}\emph{a} the field of view of a person is illustrated with a
-grey cone (broader one). While he is able to see the two small boxes on the
-table in front of him, the big box on his right is out of his FOV, and
-therefore, he is not able to see it. 
-
-\item \emph{Looks At}: this relation corresponds to what the agent is focused
-on, \ie where its focus of attention is directed. This model is based on a
-narrower field of view, the field of attention (FOA). 
-Figure~\ref{fig::sparkRepresentations}\emph{a}
-shows the field of attention of a person with a green cone (narrower one). In
-this example only the grey box satisfies the \concept{looksAt} relation.
-
-%\begin{figure}%[!t] 
-%\centering
-%\includegraphics[width=0.8\columnwidth]{figs/looks.jpg} \caption{Representation
-%of the field of view (FOV) and the field of attention (FOA) of the human.}
-%\label{fig::vis} 
-%\end{figure}
-
-\item \emph{Points At}: verifies whether an object is pointed at by an agent.
-This relation is particularly useful during interaction when one of the agents
-is referring to an object saying ``this" or ``that" while pointing at it.
-Section~\ref{disamb-gestures} describes in more detail the combination of both
-sources of information (verbal and non-verbal).
- 
-If a big object occludes a smaller one, and an agent is pointing at them, the
-outcome of the evaluation will result only in one relation, \ie \stmt{agent\_01
-pointsAt object\_01} since the small one is not visible to the agent.  On the
-contrary, if the small object is in front of the big one, then both objects
-will satisfy the relation, which may generate an ambiguity (which object the
-agent refers to?) that should be solved through higher level reasoning (\eg
-context analysis or clarification through verbal interaction).
-
-\item \emph{Reachable}: it allows the robot to estimate the agent's capability
-to reach an object, which is fundamental for task planning. For example, if the
-user asks the robot to give him/her an object, the robot must compute a transfer
-point where the user is able to get the object afterward. 
-Figure~\ref{fig::sparkRepresentations}\emph{b} shows different reachability postures for each object
-on the table. In the example, the bottle and the box are both reachable for the
-human, but the teddy bear is too far. Instead, from the robot's perspective,
-the teddy bear is reachable for it, while the bottle is not.
-
-%\begin{figure}%[!t] 
-%	\centering
-%	\includegraphics[width=0.8\columnwidth]{figs/reach.jpg} 
-%	\caption{Different reaching postures for the human: the bottle and the 
-%	box are reachable, while the teddy bear is not.} 
-%	\label{fig::reach} 
-%\end{figure} 
-
-\end{itemize}
-
-\begin{figure*}[!t]
-	\subfigure[]
-	{\includegraphics[width=0.35\linewidth]{figs/looks.jpg} \label{(a)}} \quad
-	\subfigure[]
-	{\includegraphics[width=0.3\linewidth]{figs/reach.jpg} \label{(b)}}\qquad	
-	\subfigure[]
-	{\includegraphics[width=0.25\linewidth]{figs/spatial_relation.png} \label{(c)}} 
-	
-	\caption{(a) Field of view (FOV) and the field of attention (FOA) of the human. (b) Different reaching postures for the human. (c) Spatial relations between two objects: A) \concept{isOn} relation, B) \concept{isIn} relation, and C) \concept{isNextTo} relation.}
-	\label{fig::sparkRepresentations}
-\end{figure*} 
-
-
-While the first three relations (\concept{sees}, \concept{looksAt} and
-\concept{pointsAt}) are computed through a model based approach, the latter one
-is based on the Generalized Inverse Kinematics with pseudo inverse
-method~\cite{Nakamura90,Baerlocher04} to find a collision free posture for the
-agent where its end-effector is at the center of the object within a given
-tolerance. The details of these computations are out of the scope of this
-article.
-
-\subsection{Locations}
-
-One way of referring to object's positions is based on human's symbolic 
-descriptors, instead of using their precise position. In fact, in many cases, 
-this information is the most precise information available since humans do not 
-store the numeric coordinates of objects. These type of descriptors have been 
-studied in the context of language grounding 
-(\cite{O'Keefe1999,Matuszek2010,Regier2001,Kelleher2009,Blisard2005}). In this 
-work we focus on the following relations which are computed with respect to the 
-position of the agents and the objects:
-
-\begin{itemize} 
-
-\item \emph{Location according to an agent}: The predicate
-\concept{isLocatedAt} represents spatial locations between agents and objects.
-For example we say ``it is on my right, on your left, ...'' We compute these
-spatial locations by dividing the space around the referent (an agent) into $n$
-regions based on arbitrary angle values relative to the referent orientation.
-For example, for $n = 4$ we would have the space divided into \emph{front,
-left, right} and \emph{back}. Additionally, two proximity values, \emph{near}
-and \emph{far}, may also be considered. The number of regions and proximity
-values can be chosen depending on the context where the interaction takes
-place.
-
-\item \emph{Location according to an object}: We can also refer to object
-locations with respect to other objects in the environment, such as \emph{above,
-next to, in}, etc. In this work we compute three main relations based on the
-bounding box and center of mass of the objects 
-(Figure~\ref{fig::sparkRepresentations}\emph{c}): 
-
-\begin{itemize}
-	\item \concept{isOn}: computes if an object $O_1$ is on another object $O_2$ by
-	evaluating the center of mass of $O_1$ according to the bounding box of $O_2$.
-
-	\item \concept{isIn}: evaluates if an object $O_1$ is inside another object
-	$O_2$ based on their bounding boxes $BB_{O_1}$ and $BB_{O_2}$.
-
-	\item \concept{isNextTo}: indicates whether an object $O_1$ is next to another
-	object $O_2$. We cannot use a simple distance threshold to determine if two
-	objects are next to each other since the relation is highly dependent on the
-	dimensions of the objects. For instance, the maximum distance between large
-	objects (\eg two houses) to consider them as being next to each other is much
-	larger than the maximum distance we would consider for two small objects (\eg
-	two bottles). Thus, the relation between the dimensions and the distances of
-	the objects are taken into account.  
-
-%\begin{figure} 
-%	\centering
-%	\includegraphics[width=0.6\columnwidth]{figs/spatial_relation.png}
-%	\caption{Spatial relations between two objects: A) \concept{isOn} relation, 
-%	B) \concept{isIn} relation, and C) \concept{isNextTo} relation.} 
-%	\label{fig::sprelation} 
-%\end{figure}
-
-\end{itemize} 
-\end{itemize}
-
-To ensure the different agent models are up-to-date, all these properties are
-always computed on-line, each time the current state of the world changes.
-
-SPARK can be compared to the \emph{Grounded Situation Model} (GSM) introduced
-by Mavridis and Roy~\cite{Mavridis2005} in the sense that they both provide an
-amodal physical representation of the world used as a mediator between the
-sensor space and symbolic models. They have however different features: while GSM enables representation of time and imaginary objects (whose
-existence is hinted by verbal assertions from a human, also called
-\emph{presupposition accomodation}), SPARK offers a richer 3D model that
-enables the computation of several spatial relationships between
-objects and an effective implementation of perspective taking capabilities.
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Explicit Knowledge Management} \label{cognitivekernel}
-
-\subsection{On Knowledge Representation} \label{knowledge_representation}
+\subsection{On Knowledge Representation}
+\label{knowledge_representation}
 
 While \emph{knowledge} has no general definition that researchers agree on, for
 our own purposes we define knowledge as \emph{information interpreted in the
