@@ -554,6 +554,8 @@ in this paper.
 \section{An architecture for grounding}
 \label{sec:Framework}
 
+\subsection{A robotic architecture}
+
 Interaction happens as a consequence of an explicit request of the
 human to satisfy a goal or because the robot finds itself in a
 situation where it is useful if not mandatory. In both cases, the
@@ -566,7 +568,14 @@ including monitoring, and even influencing, human task performance and
 his/her commitment to the goal. The human involvement may range from a
 direct participation to the task achievement, to a simple
 ``acceptance'' of robot activity in his/her close vicinity.
-  
+ 
+\begin{figure*}[thpb]
+  \centering
+  \includegraphics[width=1.0\textwidth]{./figs/architecture-overview.pdf} \\
+  \caption {Architecture of the robot control system}
+  \label{architecture_fg}
+\end{figure*}
+ 
 Our robot is controlled by a three layer
 architecture~\cite{Alami1998}.  We present briefly its decisional
 layer. The proposed decisional framework consists of several entities,
@@ -575,22 +584,17 @@ Figure~\ref{architecture_fg}.  We describe how the robot is controlled
 through an analysis of the three main activities performed by the
 robot controller:
 
-\begin{figure*}[thpb]
-  \centering
-  \includegraphics[width=1.0\textwidth]{./figs/architecture-overview.pdf} \\
-  \caption {Architecture of the robot control system}
-  \label{architecture_fg}
-\end{figure*}
-
 \begin {enumerate}
-\item Situation assessment and context management 
-\item Goals and plans management
-\item Action refinement, execution and monitoring
+	\item Situation assessment and context management 
+	\item Goals and plans management
+	\item Action refinement, execution and monitoring
 \end {enumerate}
 
 The next three sections describe the three robot controller
 activities and how they make use of a number of key components in the
 architecture:
+
+\fxfatal{Completely rewrite this section. Mention Dialogs as a first class citizen!}
 
 \begin{itemize}
 \item SPARK: Spatial Reasoning and Knowledge module \cite{Sisbot2011}
