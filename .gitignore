@@ -1,0 +1,10 @@
+~*
+*.swp
+*.log
+*.out
+*.aux
+*.idx
+*.lox
+*.t1
+*.blg
+*.bbl
