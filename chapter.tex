@@ -297,24 +297,28 @@ dedicated to the grounding of human-robot interaction, along with some reference
 \section{Building a Symbolic Model of the Environment}
 \label{sec:situ}
 
-Building, updating and maintaining a correct state of the world at
-geometric and symbolic level is crucial to the capacity of the robot
-to carry on successfully a multi-step interaction with a human. Tight
-integration between the robot controller and the geometric and
-temporal reasoning functions in SPARK and symbolic facts and beliefs
-management in ORO is central.
-
-
 Anchoring perceptions in a symbolic model requires perception abilities
 and their symbolic interpretation. In this section we present
 SPARK (\emph{SPAtial Reasoning \& Knowledge}~\cite{Sisbot2011}), a situation assessment reasoner
 that generates relevant symbolic information from the geometry of the
 environment with respect to relations between objects, robots and humans.
-Moreover, the notion of \emph{Perspective
-Taking}~\cite{Flavell1992,Tversky1999} is employed at the heart of the
-reasoner to provide the robot with the ability to put itself at the human's
-place and to reason about the world from different perspectives.
 
+\begin{figure}[ht!]
+   \begin{center}
+%
+       \subfigure{
+           \includegraphics[width=0.5\textwidth]{./figs/etat2-P1010769_brightened-v2.jpg}
+       }%
+       \subfigure{%
+          \includegraphics[width=0.43\textwidth]{./figs/etat2_photo.png}
+       }\\ %  ------- End of the first row ----------------------%
+%
+   \end{center}
+
+   \caption{The robot represents at runtime its environment in a 3D model resulting of the sensors' inputs fusion.}%
+   \label{fig|spark}
+
+\end{figure}
 
 \subsection{Locations}
 
@@ -391,19 +395,23 @@ currently computed by the system.
 
 \begin{table}[h]
     \centering
-    \begin{tabular}{p{2cm}p{5cm}p{2cm}l}
+    \begin{tabular}{p{1.5cm}p{5cm}p{2cm}l}
 	\rowcolor{white}
-    \textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\ 
+    \textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Notes} \\ 
     \hline
-	 a location \par (\concept{Location})  & \textbf{is at} \par (\concept{isAt} $\equiv$ \concept{cyc:objectFoundInLocation})  &  a location \par (\concept{Location}) & \\ 
-	 &  $\rightarrow$ \textbf{is on} \par (\concept{isOn} $\equiv$ \concept{cyc:above\_Touching})  &  & \\ 
-	 &  $\rightarrow$ \textbf{is in} \par (\concept{isIn})  &  & \\ 
-	 &  $\rightarrow$ \textbf{is next to} \par (\concept{isNextTo})  & &  \\ 
-	 a location \par (\concept{Location})  & \textbf{is above} \par (\concept{isAbove} $\equiv$ \concept{cyc:above-Generally})  &  a location \par (\concept{Location})  &  inverse of \concept{isBelow} \\ 
-	 a location \par (\concept{Location})  & \textbf{is under} \par (\concept{isBelow})  &  a location \par (\concept{Location})  &  inverse of \concept{isAbove}
+	 \concept{Location} & \concept{isAt} $\equiv$ \concept{cyc:objectFoundInLocation}  &  \concept{Location} & \\ 
+	 &  $\rightarrow$ \concept{isOn} $\equiv$ \concept{cyc:above\_Touching}  &  & \\ 
+	 &  $\rightarrow$ \concept{isIn}  &  & \\ 
+	 &  $\rightarrow$ \concept{isNextTo}  & &  \\ 
+	 \concept{Location}  & \concept{isAbove} $\equiv$ \concept{cyc:above-Generally}  &  \concept{Location}  &  inverse of \concept{isBelow} \\ 
+	 \concept{Location}  & \concept{isBelow}  & \concept{Location}  &  inverse of \concept{isAbove}
 	\end{tabular}
-   \caption{List of facts describing spatial relationships between objects.}
-   \label{facts|sprelations}
+
+	\caption{List of statements describing spatial relationships between
+	objects. ``$\rightarrow$'' indicates sub-properties. When existing, the
+	equivalent predicate in the {\sc OpenCyc} standard has been added.}
+
+\label{facts|sprelations}
 \end{table}
 
 Anonymous locations are represented by the mean of new randomly generated
@@ -423,14 +431,15 @@ location. For instance: \stmt{loc12578 owl:differentFrom MyNiceTable}.
 \subsubsection{Agent independent world dynamics}
 \begin{table}[h]
    \centering
-   \begin{tabular}{p{2cm}p{5cm}p{2cm}l}
+   \begin{tabular}{p{5cm}p{5cm}l}
 	\rowcolor{white}
 
 	\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\ 
 	\hline
-	 a spatial enduring thing \par (\concept{EnduringThing-Localized})  & \textbf{is moving} \par (\concept{isMoving})  &  a boolean \par (\concept{xsd:boolean})  
+	 \concept{SpatialThing}  & \concept{isMoving}  &  \concept{xsd:boolean}  
 	\end{tabular}
-   \caption{List of facts describing agent independent world dynamics.}
+   \caption{Description of agent independent world dynamics.}
+   \label{facts|dynamics}
 \end{table}
 
 
@@ -485,11 +494,56 @@ objects.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Building a Symbolic Representation of Agents}
+\section{Building a Model of Agents}
 \label{grounding_agents}
 
-\fxfatal{Introduction: 2 aspects: situation assessment -> current agent capabilities,
-planning assessment -> ''mightabilities''}
+Building a grounded symbolic model of the physical environment does not suffice
+in general to fully ground the human-robot interaction.
+
+We divide the process of building models for agents into two categories:
+operations related to the assessment of the current situation (for instance,
+\emph{What does the human do? What does he see?}), and operations related to
+the estimation of potential actions (for instance, \emph{Which regions could
+the human reach if I want to hand over an object?}). We call these
+potentialities of action \emph{Mightabilities}.
+
+In order to correctly interpret the other agents' messages, the robt must be
+able to build a model of the agents' state and capabilities and, for each
+agent, a model of the environment as perceived by this agent.
+
+To build such an agent-dependent model of the world, \emph{Perspective
+Taking}~\cite{Flavell1992,Tversky1999} is employed by the reasoner to provide
+the robot with the ability to put itself at the human's place (by moving a
+camera in the geometric model) and to reason about the world from different
+perspectives.
+
+
+\subsection{Relative placements}
+
+While in previous section we listed several \emph{absolute} location predicate,
+many topological relations are directly dependent from the observation point.
+
+Through perspective taking, SPARK computes for each agent a symbolic
+description of the relative positioning of objects in the environment (table
+\ref{facts|relative}).
+
+\begin{table}[h]
+	\centering
+	    \begin{tabular}{p{1.5cm}p{6cm}p{1.5cm}l}
+		\rowcolor{white}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Notes} \\
+		\hline
+	 \concept{Location}  & \concept{hasRelativePosition}  & \concept{Location} & \\ 
+	 & 	$\rightarrow$ \concept{behind} $\equiv$ \concept{cyc:behind-Generally}  &  & inverse of \concept{inFrontOf}  \\ 
+	 &  $\rightarrow$ \concept{inFrontOf} $\equiv$ \concept{cyc:inFrontOf-Generally}  & 	 & 	 inverse of \concept{behind}  \\ 
+	 &  $\rightarrow$ \concept{leftOf}  &  &  inverse of \concept{rightOf} \\ 
+	 &  $\rightarrow$ \concept{rightOf}  & 	 & 	 inverse of \concept{leftOf}  \\ 
+	 \concept{Object}  & \concept{cyc:farFrom}  &  \concept{Agent} & \\ 
+	 \concept{Object}  & \concept{cyc:near}  &  \concept{Agent} & 
+	\end{tabular}
+	\caption{List of statements describing relative spatial relationships between objects and agents.}
+	\label{table|relative}
+\end{table}
 
 \subsection{Agent Capabilities}
 
@@ -506,14 +560,14 @@ models in ORO for further use at the decisional level.}:
 
 \item \emph{Sees}: An important ability to know about an agent is to predict
 ``what it can see'', \ie what is within its field of view (FOV). A robot being
-able to compute this information can then act accordingly. An example
-would be a clarification scenario where the human is searching for an object
-and the robot is able to infer that he/she is looking for the one that is not
-visible (otherwise the user would not be searching for it).
-In Figure~\ref{fig::sparkRepresentations}\emph{a} the field of view of a person is illustrated with a
-grey cone (broader one). While he is able to see the two small boxes on the
-table in front of him, the big box on his right is out of his FOV, and
-therefore, he is not able to see it. 
+able to compute this information can then act accordingly. An example would be
+a clarification scenario where the human is searching for an object and the
+robot is able to infer that he/she is looking for the one that is not visible
+(otherwise the user would not be searching for it).  In
+Figure~\ref{fig::sparkRepresentations}\emph{a} the field of view of a person is
+illustrated with a grey cone (broader one). While he is able to see the two
+small boxes on the table in front of him, the big box on his right is out of
+his FOV, and therefore, he is not able to see it. 
 
 \item \emph{Looks At}: this relation corresponds to what the agent is focused
 on, \ie where its focus of attention is directed. This model is based on a
@@ -550,11 +604,11 @@ the teddy bear is reachable for it, while the bottle is not.
 \begin{figure*}[!t]
 	\begin{center}
 	\subfigure[]{
-		\includegraphics[width=0.35\linewidth]{figs/looks.jpg} 
+		\includegraphics[width=0.4\linewidth]{figs/looks.jpg} 
 		\label{(a)}
 	}
 	\subfigure[]{
-		\includegraphics[width=0.3\linewidth]{figs/reach.jpg}
+		\includegraphics[width=0.35\linewidth]{figs/reach.jpg}
 		\label{(b)}
 	} 
 	\caption{(a) Field of view (FOV) and the field of attention (FOA) of the human. (b) Different reaching postures for the human.}
@@ -568,127 +622,45 @@ While the first three relations (\concept{sees}, \concept{looksAt} and
 is based on the Generalized Inverse Kinematics with pseudo inverse
 method~\cite{Nakamura90,Baerlocher04} to find a collision free posture for the
 agent where its end-effector is at the center of the object within a given
-tolerance. The details of these computations are out of the scope of this
-article.
+tolerance.
 
-Figure~\ref{fig::reach-ex} illustrates different situations for the
-\textit{reachable} relation. In this case, the robot and its human partner
-are placed face to face, in a table-top setup (Figure~\ref{fig::reach-ex}.1).
-The robot first estimates if the small grey box is reachable to itself. This is
-done by finding a collision free posture to reach the object
-(Figure~\ref{fig::reach-ex}.2). Next the robot switches to the human's
-perspective to estimate if the same object is reachable to the human as well.
-In the last scene, the human moves towards his left, farther from the object
-(Figure~\ref{fig::reach-ex}.4). The situation is then reevaluated. In this
-occasion though, the reasoner cannot find a satisfactory posture for the human
-to reach the box because he is too far from the target.
-
-\begin{figure*}[!t]
-	\centering
-	\includegraphics[width=1.0\textwidth]{figs/reachex.jpg}	
-	\caption{An example illustrating the \textit{reachable} relation. The relation is computed from the perspectives of both the robot and the human. The computed posture at each step is illustrated with a global view of the scene (top), and from a closest view (bottom).}
-\label{fig::reach-ex}
-\end{figure*}
-
-\begin{figure}[ht!]
-   \label{fig:sparkSubfigures}
-   \begin{center}
-%
-       \subfigure[Initial state]{%
-%           \label{fig:wuweiPhoto}
-           \includegraphics[width=0.5\textwidth]{./figs/etat2-P1010769_brightened-v2.jpg}
-       }%
-       \subfigure[3d model view of initial state]{%
-%          \label{fig:sparkScreenshot}
-          \includegraphics[width=0.43\textwidth]{./figs/etat2_photo.png}
-       }\\ %  ------- End of the first row ----------------------%
-%
-   \end{center}
-
-   \caption{%
-     In this situation, there are three tapes on the table. Two tapes
-     are only reachable by the robot: the LOTR\_TAPE (black in the 3d
-     model) and GREY\_TAPE. The third tape WALLE\_TAPE (white in the
-     3d model) and the trashbin PINK\_TRASHBIN are only reachable by
-     the human HUMAN1. All tapes are on the table TABLE.  }%
-
-\end{figure}
-
-The set of facts computed in the situation depicted by
-Figure~\ref{fig:sparkSubfigures} is the following:
-\begin{footnotesize}
-%\begin{small}
-\begin{verbatim}
-                ROBOT                          HUMAN1
-PINK_TRASHBIN isReachable false    PINK_TRASHBIN isReachable true 
-WALLE_TAPE isReachable false       WALLE_TAPE isVisible true 
-LOTR_TAPE isReachable true         LOTR_TAPE isReachable false 
-GREY_TAPE isReachable true         GREY_TAPE isReachable false
-WALLE_TAPE isVisible true          WALLE_TAPE isReachable true 
-LOTR_TAPE isVisible true           LOTR_TAPE isVisible true 
-GREY_TAPE isVisible true           GREY_TAPE isVisible true 
-WALLE_TAPE isOn TABLE              WALLE_TAPE isOn TABLE 
-LOTR_TAPE isOn TABLE               LOTR_TAPE isOn TABLE 
-GREY_TAPE isOn TABLE               GREY_TAPE isOn TABLE 
-\end{verbatim}
-%\end{small}
-\end{footnotesize}
-
-
-The following tables provide the exhaustive list of agent-related symbolic facts
-currently produced by the system.
+Table~\ref{facts|capabilites} summarizes the predicates produced by SPARK
+during the agent capabilities analysis phase.
 
 \begin{table}[h]
 	\centering
-	    \begin{tabular}{p{2cm}p{5cm}p{2cm}l}
+		\begin{tabular}{p{2cm}p{4.5cm}p{2cm}p{3.5cm}}
 		\rowcolor{white}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Notes} \\
 		\hline
-	 a location	\par (\concept{Location})  & \textbf{has relative position}	\par (\concept{hasRelativePosition})  &  a location	\par (\concept{Location}) & \\ 
-	 & 	$\rightarrow$ \textbf{is behind} \par (\concept{behind} $\equiv$ \concept{cyc:behind-Generally})  &  & inverse of \concept{inFrontOf}  \\ 
-	 &  $\rightarrow$ \textbf{is in front of} \par (\concept{inFrontOf} $\equiv$ \concept{cyc:inFrontOf-Generally})  & 	 & 	 inverse of \concept{behind}  \\ 
-	 &  $\rightarrow$ \textbf{is left of} \par (\concept{leftOf})  &  &  inverse of \concept{rightOf} \\ 
-	 &  $\rightarrow$ \textbf{is right of} \par (\concept{rightOf})  & 	 & 	 inverse of \concept{leftOf}  \\ 
-	 a object \par (\concept{Object})  & \textbf{is far from}	\par (\concept{cyc:farFrom})  &  a agent \par (\concept{Agent}) & \\ 
-	 a object \par (\concept{Object})  & \textbf{is near of} \par (\concept{cyc:near})  &  a agent \par (\concept{Agent}) & 
-	\end{tabular}
-	\caption{List of facts describing relative spatial relationships between objects and agents.}
-\end{table}
-
-
-\begin{table}[h]
-	\centering
-		\begin{tabular}{p{3cm}p{5cm}p{3cm}p{3cm}}
-		\rowcolor{white}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\
-		\hline
-		 a agent \par (\concept{Agent})  & \textbf{looks at} \par (\concept{looksAt})  & a spatial enduring thing \par (\concept{EnduringThing-Localized}) \\
-		 a agent \par (\concept{Agent})  & \textbf{sees} \par (\concept{sees})  &  a spatial enduring thing \par (\concept{EnduringThing-Localized})  &    \\ 
-		 a spatial enduring thing \par (\concept{EnduringThing-Localized})  & \textbf{is in field of view} \par (\concept{isInFieldOfView})  &  a boolean \par (\concept{xsd:boolean})  & via inference: \par \stmt{myself sees *} $\Leftrightarrow$ \stmt{* isInFieldOfView true} \\ 
-		 a agent \par (\concept{Agent})  & \textbf{points at} \par (\concept{pointsAt} $\equiv$ \concept{cyc:pointingToward})  &  a spatial enduring thing
-\par (\concept{EnduringThing-Localized}) \\ 
-		a agent \par (\concept{Agent})  & \textbf{focuses on} \par (\concept{focusesOn})  &  a spatial enduring thing \par (\concept{EnduringThing-Localized})  &  via inference: \par \concept{looksAt} $\wedge$ \concept{pointsAt} $\Rightarrow$ \concept{focusesOn}
+		 \concept{Agent}  & \concept{looksAt}  & \concept{SpatialThing} \\
+		 \concept{Agent}  & \concept{sees}  &  \concept{SpatialThing}  &    \\ 
+		 \concept{SpatialThing}  & \concept{isInFieldOfView}  &  \concept{xsd:boolean}  & via inference: \par \stmt{myself sees *} $\Leftrightarrow$ \stmt{* isInFieldOfView true} \\ 
+		 \concept{Agent}  & \concept{pointsAt} $\equiv$ \concept{cyc:pointingToward}  & \concept{SpatialThing} \\ 
+		 \concept{Agent}  & \concept{focusesOn}  &  \concept{SpatialThing}  &  via inference: \par \concept{looksAt} $\wedge$ \concept{pointsAt} $\Rightarrow$ \concept{focusesOn}
 
 	\end{tabular}
 	\caption{List of facts describing the attentional state of an agent. \concept{looksAt} is interpreted as an object \emph{being in the field of attention} of an agent. An object is \concept{see}n if it is visible for the agent without moving the head (ie, in \emph{field of view}).}
+	\label{facts|capabilites}
 \end{table}
+
 
 
 \begin{table}[h]
 	\centering
-		\begin{tabular}{p{2cm}p{5cm}p{2cm}l}
+		\begin{tabular}{p{2cm}p{4.5cm}p{2cm}p{3.5cm}}
 		\rowcolor{white}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Details} \\
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Notes} \\
 		\hline
-		a spatial enduring thing \par (\concept{EnduringThing-Localized})  & \textbf{is visible (with possibly a head movement)} \par (\concept{isVisibleByMovingHead})  &  a boolean \par (\concept{xsd:boolean})  \\ 
-		a agent \par (\concept{Agent})  & \textbf{sees (with possible a head movement)} \par (\concept{seesWithHeadMovement})  &  a object \par (\concept{Object})   & via inference: \par \stmt{myself seesWithHeadMovement *} $\Leftrightarrow$ \stmt{* isVisibleByMovingHead true}) \\
-		a agent \par (\concept{Agent})  & \textbf{can not see (with possible a head movement)} \par (\concept{cannotSeeWithHeadMovement})  & a object \par (\concept{Object})   &  via inference: \par \stmt{myself cannotSeeWithHeadMovement *} $\Leftrightarrow$ \stmt{* isVisibleByMovingHead false}) \\ 
-		a object \par (\concept{Object})  & \textbf{is reachable} \par (\concept{isReachable})  &  a boolean \par (\concept{xsd:boolean})  \\ 
-		a agent \par (\concept{Agent})  & \textbf{reaches} \par (\concept{reaches})  &  a object \par (\concept{Object})   & via inference: \par \stmt{myself reaches *} $\Leftrightarrow$ \stmt{* isReachable true}) \\ 
-		a agent \par (\concept{Agent})  & \textbf{can not reach} \par (\concept{cannotReach})  & a object \par (\concept{Object})   & via inference: \par \stmt{myself cannotReach *} $\Leftrightarrow$ \stmt{* isReachable false})
+		\concept{SpatialThing}  & \concept{isVisibleByMovingHead}  &  \concept{xsd:boolean}  \\ 
+		\concept{Agent} & \concept{seesWithHeadMovement} &  \concept{Object} & via inference: \par \stmt{myself seesWithHeadMovement *} $\Leftrightarrow$ \stmt{* isVisibleByMovingHead true} \\
+		\concept{Agent} & \concept{cannotSeeWithHeadMovement} & \concept{Object} &  via inference: \par \stmt{myself cannotSeeWithHeadMovement *} $\Leftrightarrow$ \stmt{* isVisibleByMovingHead false} \\ 
+		\concept{Object}  & \concept{isReachable} & \concept{xsd:boolean}  \\ 
+		\concept{Agent} & \concept{reaches} &  \concept{Object} & via inference: \par \stmt{myself reaches *} $\Leftrightarrow$ \stmt{* isReachable true} \\ 
+		\concept{Agent} & \concept{cannotReach} & \concept{Object} & via inference: \par \stmt{myself cannotReach *} $\Leftrightarrow$ \stmt{* isReachable false}
 
 	\end{tabular}
-	\caption{List of facts describing action potentialities for an agent.}
+	\caption{List of statements describing action potentialities for an agent.}
 \end{table}
 
 
@@ -697,11 +669,11 @@ currently produced by the system.
 	\begin{tabular}{p{2cm}p{5cm}p{2cm}}
 		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
 		\hline
-		a agent \par (\concept{Agent})  & \textbf{has in left/right hand} \par (\concept{hasIn\{Left|Right\}Hand})  &  a GraspableObject \par (\concept{GraspableObject}) \\ 
-		a agent \par (\concept{Agent})  & \textbf{has posture} \par (\concept{hasPosture})  &  a posture \par (\concept{Posture})  \\
-		a agent \par (\concept{Agent})  & \textbf{currently 'bodily' does} \par (\concept{currentlyBodilyDoes})  &  an action \par (\concept{Action})
+		\concept{Agent} & \concept{hasIn\{Left|Right\}Hand}  &  \concept{GraspableObject} \\ 
+		\concept{Agent} & \concept{hasPosture}  &  \concept{Posture} \\
+		\concept{Agent} & \concept{currentlyBodilyDoes}  &  \concept{Action}
 	\end{tabular}
-	\caption{List of facts describing the state of an agent in general.}
+	\caption{List of statements describing the state of an agent in general.}
 \end{table}
 
 \begin{table}[h]
@@ -709,7 +681,7 @@ currently produced by the system.
 	\begin{tabular}{p{2cm}p{5cm}p{2cm}}
 		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
 		\hline
-		a agent \par (\concept{Agent})  & \textbf{currently performs} \par (\concept{currentlyPerforms})  &  a action \par (\concept{Action})
+		\concept{Agent} & \concept{currentlyPerforms})  &  a action \par (\concept{Action})
 	\end{tabular}
 	\caption{List of facts describing the current state of a robot.}
 \end{table}
