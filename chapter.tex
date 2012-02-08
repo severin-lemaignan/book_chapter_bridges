@@ -101,7 +101,7 @@ TDB.
 at the empty table. ``{\em Hey robot, put two glasses and this bottle on the
 tray!}''. ``{\em And bring that over there.}''. The robot wonders ``{\em The
 Martini or the Porto?}''. ``{\em Bring both!}'' answers Tom. The robot prepares
-the order and smoothly put down the tray on the table.}
+the order and smoothly bring the tray to the table.}
 
 \begin{figure}%[!ht] 
 	\centering
@@ -117,9 +117,9 @@ interaction (illustrated in Fig.~\ref{fig|vpt}) is a short-term target for the
 human-robot interaction community.
 
 This simple scenario belongs to the broad class of \emph{interactive
-manipulation problems}: several agents have a joint goal that requires some
+manipulation problems}: several agents have a (more or less implicit) joint goal that requires some
 sort of cooperation to be successfully achieved. These problems are often iterative
-(questions-answers, possibly bi-directional) and involve both dialogue and
+(step-by-step resolution, questions-answers,...) and involve both dialogue and
 manipulation.
 
 
@@ -165,7 +165,7 @@ We summarizes these challenges in four categories:
 
 	\item how to build an unambiguous representation of concepts (objects,
 	agents, actions...) underlying the interaction, and practical for
-	decision-making process,
+	decision-making processes,
 
 	\item how to establish the joint goal(s), how to build and maintain
 	iteratively shared (human-robot) plans, 
@@ -176,19 +176,19 @@ We summarizes these challenges in four categories:
 \end{enumerate}
 
 
-This chapter focuses on the point {\it 2)}: it presents techniques, developed
-and used on several real robots, for the creation of a set of environment
-models suitable for decision-making and control.
+This chapter focuses on the points {\it 1} and {\it 2}. It presents techniques,
+developed and used on several real robots, for the creation of a set of
+environment models suitable for grounded situation interpretation,
+decision-making and control.
 
-The other items are however equally important to achieve a rich and legible
-robot behaviour. Thus it seems important, before really focusing on the
-grounding issues, to briefly overview the global architecture of a robot able
-to interact with humans\fxwarning{Shall we stay very broad or focus on *our*
-implementation?}.
+The two other items are however equally important to achieve a rich and legible
+interaction. Thus we shall briefly overview the global architecture of a robot
+able to interact with humans\fxwarning{Shall we stay very broad or focus on
+*our* implementation?} before really focusing on the grounding issues.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Grounding Within a Larger Architecture}
+\subsection{An Architecture for Grounding}
  
 \begin{figure*}[thpb]
   \centering
@@ -197,7 +197,7 @@ implementation?}.
   \label{fig|archi}
 \end{figure*}
 
-The figure~\ref{fig|archi} gives an overview of the overall decisional layer of
+Figure~\ref{fig|archi} gives an overview of the overall decisional layer of
 our robots~\cite{Alami2011}. The sensorimotor layer (bottom) is abstracted in
 an intermediate 3D geometric model where geometric (and some temporal)
 reasoning take place~\cite{Sisbot2011}.
@@ -211,57 +211,59 @@ The controller can rely on two specialized planner: the geometric motion and
 manipulation planner~\cite{Sisbot2008, Mainprice2011, Pandey2010} and the
 symbolic task planner~\cite{Alili2008}.
 
-The dialogue processing module, as well as the symbolic task planner, use also
-the knowledge base to answer questions or initialize the planning domain.
+The dialogue processing module, as well as the symbolic task planner, also
+use the knowledge base to answer questions or initialize the planning domain.
 
-The robot controller decides upon a plan to execute, requires a plan from the
-task planner, affects the actions to the human and the robot, communicates the
-shared plan, and controls and monitors its execution. The operation continues
-until the goal is achieved, is declared unachievable or is abandoned by the
-human.
+During a typical interaction experiment, the robot controller decides upon a
+plan to execute, requires a plan from the task planner, affects the actions to
+the human and the robot, communicates the shared plan, and controls and
+monitors its execution. The operation continues until the goal is achieved, is
+declared unachievable or is abandoned by the human.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Notice on our main assumption %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsubsection*{On object identification and localization}
+
 This architecture makes one important assumption (hidden in the
 \emph{Sensorimotor layer} box in Figure~\ref{fig|archi}): world entities are
 assumed to be correctly \emph{perceived}, \emph{localized}, \emph{resolved} and
-\emph{uniquely identified}, in a \emph{repetable} way.
+\emph{uniquely identified} in a \emph{repetable} way.
 
-This means that we assume that all relevant entities (\ie the objects
-the robot has to interact with) can be actually perceived by the robot when
-they enter its field of view (we shall come back and precisely define the
-\emph{field of view} in the next section), that the entities' percepts enable a
-\emph{good enough} 6D localization of the entities, that these entities are
-properly resolved (\eg, two bottles next to each other are perceived as two
-different bottles), and finally that these entities are robustly identified:
-each time the exact same object is seen (possibly under a different angle), it
-is always labelled with the same, unique, identifier. This identifier by itself
-may be however completely random.
+This means that we assume all relevant entities (\ie the objects the robot has
+to interact with) to be actually perceived by the robot when they enter its
+field of view (we shall come back and precisely define the \emph{field of view}
+in the next section), that the entities' percepts enable a \emph{good enough}
+6D localization, that these entities are properly resolved (\eg, two bottles
+next to each other are perceived as two different bottles), and most
+importantly that these entities are robustly identified: each time the exact
+same object is seen (possibly under a different angle), it is always labelled
+with the same, unique, identifier (the identifier by itself may be completely
+random, and can be known at runtime only).
 
-Concretly this assumption typically translates into experiments by tagging each
-object with a barcode-like label (as seen in Fig.~\ref{fig|vpt}) that allows
-the robot to localize and identify a set of objects.
+Concretly this assumption typically translates during experiments by tagging
+each objects with a barcode-like label (some can be seen on Fig.~\ref{fig|vpt})
+that allows the robot to localize and identify these objects.
 
 Numerous works \fxfatal{Cite some of them} (some of them presented earlier in
-this book) focus on dealing with these resolusion and identification issues.
-We will not further discuss them.
+this book) focus on dealing with the resolution and identification issues.  We
+will not further discuss them here.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \subsection{Chapter overview}
 
-This chapter walks through the creation and use of a symbolic model of the
-environment and of the interacting agents, from a 3D geometric model build at
-runtime. As far as possible, we will try to present the exact list of symbolic
-facts computed by the system at runtime.
+This chapter walks through the on-line building and use of symbolic models of
+the environment and interacting agents. As far as possible, we will try to
+present the exact list of symbolic statements issued by the whole system at
+runtime.
 
-We start by introducing the general approach when applied to the symbolic model
-building of the environment. We shall introduce as well some \emph{search}
-policies and \emph{exploration} policies.
+We start by introducing the general approach applied to the symbolic model of
+the environment alone. We introduce as well \emph{search} and
+\emph{exploration} policies.
 
 The next section details how the robot create symbolic models that take into
 account agents. This section shows that introducing \emph{Perspective
@@ -270,8 +272,8 @@ Mind}~\cite{Scassellati2002}\fxwarning{Check this reference is relevant here}
 is mandatory to achieve effective human-robot interaction grounding. Techniques
 to efficiently compute perspective-aware models of the world are presented. 
 
-We also introduce in the section~\ref{grounding_agents} an analysis of the
-potential of actions (we call it the \emph{mightabilities}) of each agent.
+We also introduce a geometric approch for the analysis of the
+potential of actions (we call it the \emph{Mightabilities}) of each agent.
 
 Section~\ref{cognitivekernel} presents a centralized knowledge base that
 stores, reasons about, and asynchronously (event-driven) exposes the symbolic
@@ -279,16 +281,17 @@ facts to decision-making processes. We also discuss here the role of {\it a
 priori} knowledge (the so-called \emph{common-sense knowledge}).
 
 The following two sections~\ref{hatp} and~\ref{dialogs} present actual
-applications of these grounding mechanisms. First, we show how the robot may
+applications of this approach. First, we show how the robot may
 use the symbolic models for shared task planning: using each agent's model of
 the world, one stream of actions per agent is generated, with synchronization
 points between them. Then, we present how multi-modal (verbal and deitic)
 dialogue processing is made much easier by relying on consistent symbolic
-models, close enough from human natural language.
+models, using semantics close to human natural language.
 
-Note that bibliographical notes have been added at the end of each relevant section.
-We also present before the conclusion of the chapter several other global architectures
-dedicated to the grounding of human-robot interaction, along with some references regarding the specifics of the human-robot interactions themselves.
+Bibliographical notes have been added at the end of each relevant section.  We
+also present before the conclusion of the chapter other architectures dedicated
+to the grounding of human-robot interaction, along with some references
+regarding the specifics of the human-robot interactions.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -482,10 +485,10 @@ the corresponding actions \emph{pick} object and \emph{throw} object.
 
 \subsection{Related work}
 
-Spatial reasoning~\cite{OKeefe1999} has been used
+Spatial reasoning~\cite{O'Keefe1999} has been used
 for natural language processing for applications such as direction
-recognition ~\cite{Kollar10,Matuszek10} or language
-grounding~\cite{Tellex10}.~\cite{Skubic2004} presented a spatial
+recognition ~\cite{Kollar2010,Matuszek2010} or language
+grounding~\cite{Tellex2010}.~\cite{Skubic2004} presented a spatial
 reasoner integrated in a robot which computes symbolic positions of
 objects.
 
@@ -544,6 +547,7 @@ description of the relative positioning of objects in the environment (table
 	\caption{List of statements describing relative spatial relationships between objects and agents.}
 	\label{table|relative}
 \end{table}
+
 
 \subsection{Agent Capabilities}
 
@@ -644,6 +648,19 @@ during the agent capabilities analysis phase.
 	\label{facts|capabilites}
 \end{table}
 
+Table~\ref{facts|agentstate} lists the remaining symbolic facts that are produced and maintained by SPARK related to the general state of the agent.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{p{2cm}p{5cm}p{2cm}}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
+		\hline
+		\concept{Agent} & \concept{hasIn\{Left|Right\}Hand}  &  \concept{GraspableObject} \\ 
+		\concept{Agent} & \concept{hasPosture}  &  \concept{Posture} \\
+		\concept{Agent} & \concept{currentlyBodilyDoes}  &  \concept{Action}
+	\end{tabular}
+	\caption{List of statements describing the state of an agent in general. The \concept{currentlyBodilyDoes} predicate states the current action of the agent, be it intentional or not.}
+\end{table}
 
 
 \begin{table}[h]
@@ -664,27 +681,15 @@ during the agent capabilities analysis phase.
 \end{table}
 
 
-\begin{table}[h]
-	\centering
-	\begin{tabular}{p{2cm}p{5cm}p{2cm}}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
-		\hline
-		\concept{Agent} & \concept{hasIn\{Left|Right\}Hand}  &  \concept{GraspableObject} \\ 
-		\concept{Agent} & \concept{hasPosture}  &  \concept{Posture} \\
-		\concept{Agent} & \concept{currentlyBodilyDoes}  &  \concept{Action}
-	\end{tabular}
-	\caption{List of statements describing the state of an agent in general.}
-\end{table}
-
-\begin{table}[h]
-	\centering
-	\begin{tabular}{p{2cm}p{5cm}p{2cm}}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
-		\hline
-		\concept{Agent} & \concept{currentlyPerforms})  &  a action \par (\concept{Action})
-	\end{tabular}
-	\caption{List of facts describing the current state of a robot.}
-\end{table}
+% \begin{table}[h]
+% 	\centering
+% 	\begin{tabular}{p{2cm}p{5cm}p{2cm}}
+% 		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
+% 		\hline
+% 		\concept{Agent} & \concept{currentlyPerforms})  &  a action \par (\concept{Action})
+% 	\end{tabular}
+% 	\caption{List of facts describing the current state of a robot.}
+% \end{table}
 
 \subsection{Hypotheses on objects states and positions}
 
@@ -1877,11 +1882,11 @@ collaborative tasks have specific requirements compared to individual
 ones, \eg, since the robot and the person share a common goal, they
 have to agree on the manner to realize it, they must show their
 commitment to the goal during execution, etc. Several robotic systems
-have already been built based on these theories~\cite{Rich1997,Sidner2005,Tambe2005a,Breazeal2003} and they
+have already been built based on these theories~\cite{Rich1997,Sidner2005,Tambe1997,Breazeal2003} and they
 all have shown benefits of this approach. They have also shown how
 difficult it is to manage turn-taking between communication partners
 and to interleave task realization and communication in a generic
-way. Finally, today only few systems~\cite{Fong_2006,Breazeal2003,Sisbot2008} take humans into
+way. Finally, today only few systems~\cite{Fong2006,Breazeal2003,Sisbot2008} take humans into
 account at all levels.
 
 \fxwarning{If relevant, describe Breazeal approaches for grounding}
