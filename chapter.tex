@@ -1275,27 +1275,13 @@ instructions.
 
 Furthermore, this process takes full advantage of the embodied nature of the
 interaction: because deictic gestures and postures are also available in the
-symbolic knowledge base (as presented in section~\ref{spark-deitic}) and
-dynamically updated during the interactions, verbal dialogue processing turns
-into a truely multi-modal communication processing, leading to more robust
-interpretation.
-
-We present here the processing of three categories of sentences:
-\emph{statements}, \emph{desires} and \emph{questions} that can be answered
-from the declarative knowledge present in the robot knowledge base (a choice
-similar to the \emph{Behaviour Cycle} in the GLAIR
-architecture~\cite{Shapiro2009}). In our work, the grounding process of the
-human discourse consists in extracting either the \emph{informational} content
-of the sentence to produce statements or its \emph{intentional} content (\ie
-performative value) to collect orders and questions. We focus this application on the grounding (we call it
-\emph{resolution}) of concepts involved in the human discourse through the
-robot's own knowledge: refer to Kruijff et al.~\cite{Kruijff2010}
-for a broader survey of formal approaches to natural language processing in the
-robotics field.
+symbolic knowledge base and dynamically updated during the interactions, verbal
+dialogue processing turns into a truely multi-modal communication processing,
+leading to more robust interpretation.
 
 \begin{figure}[!t]
 \centering
-  \includegraphics[width=0.7\linewidth]{figs/dialog_module_simple.pdf}
+  \includegraphics[width=0.5\linewidth]{figs/dialog_module_simple.pdf}
   \caption{The {\sc Dialogs} module has three main steps: the parsing,
   the interpretation and the verbalization. The interpretation module is
   responsible for both the \emph{resolution} and the semantic content
@@ -1303,10 +1289,10 @@ robotics field.
   \label{fig|dialog}
 \end{figure}
 
-Our dialogue processing is done by a module called {\sc Dialogs} (Figure~\ref{fig|dialog}) that processes human
-input in natural language, grounds the concepts in the robot's knowledge and
-eventually translates the discourse in a set of queries or declarative OWL/RDF
-statements.  
+Dialogue processing is done in our architecture by a module called {\sc
+Dialogs}\cite{Lemaignan2011b} (fig.~\ref{fig|dialog}) that processes human input in natural
+language, grounds the concepts in the robot's knowledge and eventually
+translates the discourse in a set of queries or declarative OWL/RDF statements.  
 
 The user's input is first pre-processed. For instance, \emph{I'm} constructs are expanded
 into \emph{I am} and then parsed by a rule-based (\ie
@@ -1350,410 +1336,102 @@ disambiguated and grounded (noun phrase resolution), and {\it(iii)}
 verbal groups are resolved and their associated \emph{thematic roles} are
 retrieved (verb phrase resolution).
 
-\small
-\begin{pseudocode}[ruled]{Resolution}{sentence, currentSpeaker}
-\label{algo|Resolution}
-
-\mathcal{G} \GETS \CALL{ParseNominalGroups}{sentence} \\
-
-\FOREACH g \in \mathcal{G} \DO 
-\BEGIN
-   \mathcal{D} \GETS \CALL{GenerateDescription}{g} \STMTNUM{5.1em}{res.desc}\\
-   candidates \GETS \CALL{Ontology.Find}{\mathcal{D}} \STMTNUM{4em}{res.onto}\\
-   
-   \IF \left|{candidates}\right| = 0 \THEN
-    \BEGIN
-      \OUTPUT{\mbox{Couldn't resolve the group!}} \\
-      \EXIT \\
-    \END
-   \ELSEIF \left|{candidates}\right| = 1 \THEN
-      id \GETS candidates[0]\\
-
-   \ELSE
-      \BEGIN
-	\IF \CALL{Ontology.CheckEquivalent}{candidates} \THEN
-	  id \GETS candidates[0] \\
-	\ELSE
-	  id \GETS \CALL{Discrimination}{candidates} \STMTNUM{0em}{st.discrimination}\\
-      \END \\
-   \CALL{Replace}{g, id, sentence}
-\END
-\end{pseudocode}
-\normalsize
-
-As represented in Figure~\ref{fig|dialog}, interpretation tightly relies on the
+As represented in fig.~\ref{fig|dialog}, interpretation tightly relies on the
 communication with the knowledge base. All the concepts the robot manipulates
 are stored in the ontology server and retrieved through logical
 queries, except for the verbs that are currently stored in a dedicated library
 (the \emph{action library} in the diagram).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\section{Technical analysis}
-%\label{examples}
-
 In order to better understand the overall process of the {\sc Dialogs} module 
-and its relation with ORO, we next describe the different steps of the approach 
-based on three examples. In these examples we assume that some initial facts 
-are present in the knowledge base (section~\ref{modeling_real_world} discusses how 
-the initial knowledge can be acquired), both in the robot's own model and in the human's model.  Since the robot tries to ground a human utterance, all queries are sent to the human model in order to interpret it from the human perspective. 
+and its relation with ORO, we next describe one example: the grounding of the
+sentence ``\emph{Put that bottle on the tray}''. We assume that some initial
+facts are already present in the knowledge base (fig.~\ref{dialogs|ex1}), both in the
+robot's own model and in the human's model.  Since the robot tries to ground a
+human utterance, all queries are sent to the human model in order to interpret
+it from the human perspective. 
 
-\subsection{Informational Content Extraction}
-\label{informational_content_extraction}
-
-%\begin{figure}
-%    \centering
-%	\begin{tabular}{p{7cm}}
-%	\emph{Initial knowledge model of} \texttt{human\_01}\\
-%	\hline
-%    	\hspace{0.3cm}\stmt{banana\_01 type Banana} \\
-%    	\hspace{0.3cm}\stmt{banana\_01 hasColor yellow}\\
-%	
-%	\vspace{0.5em}
-%	\emph{Human input}\\
-%	\hline
-%	\hspace{0.3cm}``The yellow banana is big!'' \\
-%
-%	\vspace{0.5em}
-%	\emph{Generated partial statements}\\
-%	\hline
-%	\hspace{0.3cm}\stmt{?obj type Banana} \\
-%    	\hspace{0.3cm}\stmt{?obj hasColor yellow} \\
-%    	\hspace{0.7cm}$\Rightarrow$ \concept{?obj = banana\_01}\\
-%
-%	\vspace{0.5em}
-%	\emph{Newly created statements}\\
-%	\hline
-%	\hspace{0.3cm}\stmt{banana\_01 hasSize big} \\
-%	\end{tabular}
-%\caption{First example of natural language grounding: the nominal group ``the
-%yellow banana'' is matched with the individual \concept{banana\_01}.
-%``$\Rightarrow$'' represents the output of the ontology server.}
-%\label{dialog|ex1}
-%\end{figure}
-
-\begin{figure}
-    \centering
-%	\begin{tabular}{p{0.5\columnwidth} | p{0.5\columnwidth}}}
-	\begin{tabular}{l|l}
-	\emph{Initial knowledge} \texttt{human\_01} &
-	\emph{Human input}\\	
-	
-	\hline
-
-    	\stmt{banana\_01 type Banana} &
-	``The yellow banana is big!'' \\
-	
-    	\stmt{banana\_01 hasColor yellow} & \\
-	\vspace{0.5em}\\
-	\hline
-
-	\emph{Generated partial statements} &
-	\emph{Newly created statements}\\
-	\hline
-
-	\stmt{?obj type Banana} &
-	\hspace{0.2cm}\stmt{banana\_01 hasSize big} \\
-	
-    	\stmt{?obj hasColor yellow} & \\
-    	\hspace{0.2cm}$\Rightarrow$ \concept{?obj = banana\_01}\\
-
-	\hline
-	\end{tabular}
-\caption{First example: content extraction.
-``$\Rightarrow$'' represents the output of the ontology server.}
-\label{dialog|ex1}
+\begin{figure}[ht!]
+	  \centering
+      \subfigure[Initial knowledge in human model.]{%
+			\label{dialogs|ex1-a}
+		  
+			\begin{tabular}{p{4cm}}
+				\stmt{obj\_01 type Bottle} \par
+		    	\stmt{human\_01 sees obj\_01} \par
+		    	\stmt{human\_01 pointsAt obj\_01} \par
+		    	\stmt{obj\_02 type Bottle} \par
+		    	\stmt{obj\_03 type Tray}
+	       \end{tabular}
+	   }%
+       \subfigure[Human input.]{%
+			\label{dialogs|ex1-b}
+	   ``\emph{Put that bottle on the tray.}''	
+	   }\\%  ------- End of the first row ----------------------%
+       \subfigure[Queries.]{%
+			\label{dialogs|ex1-c}
+			\begin{tabular}{p{4cm}}
+				\stmt{?obj type Bottle, human\_01 focusesOn ?obj} \par 
+				\hspace{0.2cm}$\Rightarrow$ \concept{?obj = obj\_01} \par
+				\stmt{?obj type Tray} \par 
+				\hspace{0.2cm}$\Rightarrow$ \concept{?obj = obj\_03}
+	       \end{tabular}
+		}%
+	    \subfigure[Output.]{%
+			\label{dialogs|ex1-d}
+			\begin{tabular}{p{5cm}}
+			\stmt{human\_01 desires sit\_01} \par
+			\stmt{sit\_01 performedBy myself} \par
+	    	\stmt{sit\_01 actsOnObject obj\_01} \par
+			\stmt{sit\_01 receivedBy obj\_03}
+	       \end{tabular}
+	    }%
+	\caption{Processing the sentence ``\emph{Put that bottle on the tray}''. }
+	\label{dialogs|ex1}
 \end{figure}
 
-
-Figure~\ref{dialog|ex1} shows a first example of human discourse grounding and
-the extraction of informational content. We assume that the robot knowledge
-base only contains two initial statements in the human model. The user
-asserts a new one: ``The yellow banana is big!''. 
-We first want to match the nominal group \emph{The yellow banana} to an already
-known concept (algorithm~\ref{algo|Resolution}), and second to translate the property \emph{is big} into a predicate ({\tt hasSize}) to state its semantics. 
-
-To resolve the nominal group \emph{The yellow banana} a set of partial
-statements that describe the concept is generated based on the grammatical
-parsing of the sentence (algorithm~\ref{algo|Resolution}(\ref{res.desc})). The parsed tree of each nominal group is translated into statements based on a set of rules.
-In the example, a banana (\stmt{?obj type Banana})
-that is yellow (\stmt{?obj hasColor yellow})\footnote{Predicates like
-\concept{hasColor} or \concept{hasSize} that bind \concept{banana\_01} to
-adjectives are extracted from a predefined database of $[Predicate \rightarrow
-AdjectiveCategory]$, and falls back on the generic \concept{hasFeature}
-predicate if the adjective is not known.}.  Based on these partial statements a
-SPARQL query is sent to the ontology server to retrieve possible instances that match
-the description (algorithm~\ref{algo|Resolution}(\ref{res.onto})).
-
-In this first simple case, the concept \concept{banana\_01} is unambiguously
-matched (since there is only one possible banana) and returned. Finally, we can
-now add the new information provided by the human, \ie the new statement
-\stmt{banana\_01 hasSize big}, to the human model in the ontology server.
-
-% The translation of \emph{yellow} to \stmt{hasColor yellow} is not obvious: in
-% the general case, we associate a adjective to the noun it characterizes with
-% the \concept{hasFeature} predicate (for instance, \emph{The sight is beautiful}
-% would translate to \stmt{sight hasFeature beautiful}). But we can also manually
-% set the predicate associated to a category of adjectives: It is what has been
-% done for the main colours. Another example is the size: for known size
-% adjectives (big, small, etc.), the \concept{hasSize} predicate is being used.
-
-
-\subsection{Intentional Content Through Verb Resolution}
-The sentence in the first example is built with the state verb \emph{be} at
-indicative. Let us examine a different example with an action verb at
-imperative mode (an order): ``Give me the banana". The process is
-described in Figure~\ref{dialog|ex2}.
-
-%\begin{figure}
-%    \centering
-%	\begin{tabular}{p{7cm}}
-%	\emph{Initial knowledge model of} \texttt{human\_01}\\
-%	\hline
-%    	\hspace{0.3cm}\stmt{banana\_01 type Banana} \\
-%    	\hspace{0.3cm}\stmt{banana\_01 hasColor yellow}\\
-%	\end{tabular} \\
-%
-%	\vspace{0.5em}
-%
-%	\begin{tabular}{p{7cm}}
-%	\emph{Human input}\\
-%	\hline
-%    	\hspace{0.3cm}``Give me the banana.'' \\
-%	\end{tabular} \\
-%
-%	\vspace{0.5em}
-%
-%	\begin{tabular}{p{7cm}}
-%	\emph{Generated partial statements}\\
-%	\hline
-%    	\hspace{0.3cm}\stmt{?obj type Banana} \\
-%	\hspace{0.7cm}$\Rightarrow$ \concept{?obj = banana\_01}\\
-%
-%	\end{tabular} \\
-%
-%	\vspace{0.5em}
-%
-%	\begin{tabular}{p{7cm}}
-%	\emph{Newly created statements}\\
-%	\hline
-%    	\hspace{0.3cm}\stmt{human\_01 desires situation\_a3f74} \\
-%    	\hspace{0.3cm}\stmt{situation\_a3f74 type Give} \\
-%    	\hspace{0.3cm}\stmt{situation\_a3f74 performedBy myself} \\
-%    	\hspace{0.3cm}\stmt{situation\_a3f74 actsOnObject banana\_01} \\
-%    	\hspace{0.3cm}\stmt{situation\_a3f74 receivedBy human\_01} \\
-%	\end{tabular}
-%
-%\caption{Second example: processing an order.}
-%\label{dialog|ex2}
-%\end{figure}
-
-\begin{figure}
-    \centering
-	\begin{tabular}{l|l}
-	\emph{Initial knowledge} \texttt{human\_01} &
-	\emph{Human input}\\
-	
-	\hline
-	
-    	\stmt{banana\_01 type Banana} &
-	``Give me the banana.'' \\
-	
-    	\stmt{banana\_01 hasColor yellow} & \\
-	\vspace{0.5em}\\
-	\hline
-    	
-	\emph{Generated partial statements} &
-	\emph{Newly created statements}\\
-	\hline
-    	\stmt{?obj type Banana} & 
-	\stmt{human\_01 desires sit\_a3} \\
-	
-	\hspace{0.2cm}$\Rightarrow$ \concept{?obj = banana\_01}
-    	& \stmt{sit\_a3 performedBy myself} \\
-    	& \stmt{sit\_a3 actsOnObject banana\_01} \\
-    	& \stmt{sit\_a3 receivedBy human\_01} \\
-	\end{tabular}
-
-\caption{Second example: processing an order.}
-\label{dialog|ex2}
-\end{figure}
-
-
-\label{processing_of_actions}
 
 In order to capture the intentional content of a sentence (for example, an
 order) we need to retain the semantics of the verb and its complements.
-\emph{Thematic roles} allow for semantically linking a verb to its complements.  
-There is no general agreement amongst linguists on a comprehensive list of 
-thematic roles. The amount and the granularity of roles varies a lot in 
-the literature~\cite{Gutierrez2001}. We thus use a small set of them, which matches
-the relations the robot can actually achieve (we discuss
-possible extensions in the conclusion). For instance, in the second example,
-the verb \emph{give} has three thematic roles: \concept{performedBy},
+\emph{Thematic roles} allow for semantically linking a verb to its complements.
+The amount and the granularity of roles varies a lot in the
+literature~\cite{Gutierrez2001} and we store in a separate library only a small
+set of them, relevant for the planing and control tasks. In the example, the
+verb \emph{put} has three thematic roles: \concept{performedBy},
 \concept{actsOnObject} and \concept{receivedBy}.
 
-The list of actions the robot can plan for (currently \emph{take},
-\emph{place}, \emph{give}, \emph{show}, \emph{hide} and \emph{move}) along with
-possible synonyms (for example, \emph{to pick} is set as a synonym of \emph{to
-take}) and their associated thematic roles are stored in a predefined library
-of actions. For each action we identify and store: the role of the subject in
-the sentence (always \concept{performedBy}); the role of the direct object
-(for instance, \concept{actsOnObject}); and the role of each of the indirect
-objects with their optional prepositions (for instance,
-\concept{receivedBy})\footnote{Note that in example 2, ``give me the banana'',
-the pronoun ``me'' appears before ``banana'', while it is an indirect
-complement --- ``give it {\bf to me}''. The parser correctly handles these
-cases.}. Moreover, through the ontology we check that each holder of a
-role is semantically consistent. For instance, the action \emph{Give} must have a
-manipulable physical item (\concept{Artifact}) as direct object. Thus, if the
-concept the robot finds for the thematic role \concept{actsOnObject} cannot be
-inferred to be an artifact, the robot goes back to the human saying it does not
-understand.
+We also store which categories of concepts can endorse each roles. This allow to
+check the semantic consistency of the verbal group. For instance, the action
+\emph{Put} must have a manipulable physical item (\concept{Artifact}) as direct
+object. Thus, if the concept the robot finds for the thematic role
+\concept{actsOnObject} cannot be inferred to be an artifact, the robot goes
+back to the human saying it does not understand.
 
-This second example  also shows the pronoun reference resolution: ``me'' is
-replaced by the id of the current speaker, while ``you'' is replaced by
-\concept{myself} (\concept{myself} always represents the robot itself). When
-present, anaphoras (references to previous concepts like ``give me the banana, I
-like {\bf it}.'') are also resolved in the same step.
+Each noun is resolved by querying the knowledge base (fig.~\ref{dialogs|ex1-c})
+
+In this example, two bottles would match the query \stmt{?obj type Bottle},
+thus leading to an ambiguity. In the general case, we try to refine as much as
+possible the description of the noun using adjectives or relatives to avoid
+ambiguities. In this case, ``\emph{bottle}'' is qualified with ``\emph{that}'',
+which is interpreted by the module as an attentional focus: we ask the
+knowledge base to return objects that are bottles and currently a focus of the
+human (which is itself infered from the facts \stmt{human\_01 sees obj\_01,
+human\_01 pointsAt obj\_01}).
+
+If the concept can not be clarified (\ie, at least two instances remain after
+the resolution process), the robot goes back to the human, asking for more
+informations.
 
 Once the sentence is completely resolved and translated into a formal
-representation (a human desire in this example\footnote{Orders are here
-represented as human desires: the human desires a specific new situation.}), we
-store it in the ontology server. The robot's decisional/executive layers can
+representation (a human desire in this example, fig.~\ref{dialogs|ex1-d}), we
+store it in the knowledge base. The robot's decisional/executive layers can
 then decide whether to execute the order or not. 
-
-\subsection{Informational Content Extraction Requiring Clarification}
-\label{dialogs:disamb}
-\begin{figure}
-    \centering
-	\begin{tabular}{p{7cm}}
-	\emph{Initial knowledge model of} \texttt{human\_01}\\
-	\hline
-     	\hspace{0.3cm}\stmt{banana\_01 type Banana} \\
-     	\hspace{0.3cm}\stmt{banana\_01 hasColor yellow} \\
-     	\hspace{0.3cm}\stmt{banana\_02 type Banana} \\
-     	\hspace{0.3cm}\stmt{banana\_02 hasColor green} \\
-	\end{tabular} \\
-
-	\vspace{0.5em}
-
-	\begin{tabular}{p{7cm}}
-	\emph{Human input}\\
-	\hline
-     	\hspace{0.3cm}``The banana is good.'' \\
-	\end{tabular} \\
-
-	\vspace{0.5em}
-
-	\begin{tabular}{p{7cm}}
-	\emph{Generated partial statements}\\
-	\hline
-     	\hspace{0.3cm}\stmt{?obj type Banana} \\
-	\hspace{0.7cm} $\Rightarrow$ \concept{?obj = [banana\_01, banana\_02]}
-	\end{tabular} \\
-
-	\vspace{0.5em}
-
-	\begin{tabular}{p{7cm}}
-	\emph{Discrimination process}\\
-	\hline
-     	\hspace{0.3cm}\concept{discriminate([banana\_01, banana\_02])} \\
-	\hspace{0.7cm} $\Rightarrow$ \concept{?hasColor = [yellow, green]}
-	\end{tabular} \\
-
-	\vspace{0.5em}
-
-	\begin{tabular}{p{7cm}}
-	\emph{Robot output speech}\\
-	\hline
-     	\hspace{0.3cm}``The yellow one or the green one?'' \\
-	\end{tabular} \\
-
-	\vspace{0.5em}
-
-	\begin{tabular}{p{7cm}}
-	\emph{Human answer}\\
-	\hline
-     	\hspace{0.3cm}``The green one.'' \\
-	\end{tabular} \\
-    
-	\vspace{0.5em}
-
-	\begin{tabular}{p{7cm}}
-	\emph{Extended human input}\\
-	\hline
-     	\hspace{0.3cm}``The green banana is good.'' \\
-	\end{tabular} \\
-	
-	\vspace{0.5em}
-
-	\begin{tabular}{p{7cm}}
-	\emph{Generated partial statements}\\
-	\hline
-     	\hspace{0.3cm}\stmt{?obj type Banana} \\
-     	\hspace{0.3cm}\stmt{?obj hasColor green} \\
-	\hspace{0.7cm} $\Rightarrow$ \concept{?obj = [banana\_02]}
-	\end{tabular} \\
-    
-	\vspace{0.5em}
-	\begin{tabular}{p{7cm}}
-	\emph{Newly created statements}\\
-	\hline
-     	\hspace{0.3cm}\stmt{banana\_02 hasFeature good} \\
-	\end{tabular}
-
-\caption{Ambiguity resolution: in this example, ``banana'' can refer to the
-yellow banana (\concept{banana\_01}) or the green one (\concept{banana\_02}).
-Discrimination routines handle the disambiguation process.} \label{dialog|ex3}
-\end{figure}
-
-This last example (Figure~\ref{dialog|ex3}) shows the resolution of ambiguous
-concepts. In this case the user refers to ``the banana'' while two instances of 
-the \concept{Banana} class exist in the ontology. The robot needs to find out
-to which instance the user is actually referring to. To this end,
-disambiguation routines (algorithm~\ref{algo|Resolution}(\ref{st.discrimination}), see \cite{Ros2010b} for details of the routines)
-find differences between the instances (in the example, one banana is yellow
-while the other one is green) and build a sentence through the
-\emph{verbalization} module to ask the user a closed question that will
-help clarify the ambiguity: ``Is it yellow or green?'' The user's answer is
-parsed and merged with the previous sentence. The resulting, augmented,
-sentence (``The green banana is good") goes again through all the
-interpretation steps. This process is repeated until no ambiguities arise. 
-In the example, the \concept{banana\_02} is finally returned.
-
-%If no differences \fxfatal{should we say 'in the human model', even if 
-%getDiscriminantForAgent currently doesn't work?} can be found, an open question 
-%(``give me more information'') is send to the human.
-
-Several other strategies are used in parallel to disambiguate concepts without
-having to ask for more information to the human:
-
-\begin{itemize}
-	\item Which objects are currently visible to the human? If only one of
-	them, then it is probably the one the user is talking about. 
-	\item Did a previous interaction involved a specific object that would
-	still be the subject of the current sentence?
-	\item Is the user looking or pointing at a specific object?
-\end{itemize}
-
-%Two cases can alter the way the discrimination routines work:
-%\begin{enumerate}
-%    \item If a sentence starts with {\it Learn that...}, failures during 
-%    discrimination are interpreted as new concepts, and instead of marking the 
-%    nominal as not resolved, and new identifier is created and add to the knowledge base.
-%    \item For questions like {\it Which color is the bottle?}, the discrimination 
-%    algorithm can not use the feature {\it color} to identify to bottle. The 
-%    resolution algorithm pass this kind of constraints as a parameter of the 
-%    discrimination routines.
-%\end{enumerate}
-
  
-While no examples involving questions have been detailed, factual \emph{wh-}
+Not only statements and order but also factual \emph{wh-}
 questions and polar (\emph{yes/no}) questions can be processed in a similar way
 by \textsc{Dialogs}. For instance, a question like ``What is on the table?'' is
 grounded (to extract the relation \concept{isOn} and to find what \emph{table}
 refers to) and transformed into the following kind of query: \concept{find ?var
-[\stmt{?var isOn table1}]}.  Answers are converted back to a full sentence by
+[\stmt{?var isOn table\_01}]}.  Answers are converted back to a full sentence by
 the \emph{verbalization} module, and uttered to the human.
 
 \subsection{Related work}
@@ -1790,6 +1468,12 @@ both the reference resolution and reference description tasks, and rely on
 OWL-DL representation and SPARQL\footnote{{\em SPARQL Protocol and RDF Query
 Language}, \url{http://www.w3.org/TR/rdf-sparql-query/}} to extract
 \emph{topological contexts} from their knowledge base.
+
+Our choice to deal with three categories of sentences that can be answered
+from the declarative knowledge present in the robot knowledge base:
+\emph{statements}, \emph{desires} and \emph{questions} is similar to the \emph{Behaviour Cycle} in the GLAIR
+architecture~\cite{Shapiro2009}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
