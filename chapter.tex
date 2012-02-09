@@ -261,19 +261,19 @@ the environment and interacting agents. As far as possible, we will try to
 present the exact list of symbolic statements issued by the whole system at
 runtime.
 
-We start by introducing the general approach applied to the symbolic model of
-the environment alone. We introduce as well \emph{search} and
-\emph{exploration} policies.
+We start by introducing an approach to create symbolic models of the
+environment, seen by the robot or by the other interacting agents. To the end,
+we introduce \emph{Perspective Taking}~\cite{Flavell1992,Tversky1999} and some
+elements of \emph{Theory of Mind}~\cite{Scassellati2002}\fxwarning{Check this
+reference is relevant here} Techniques to efficiently compute perspective-aware
+models of the world are presented. 
 
-The next section details how the robot create symbolic models that take into
-account agents. This section shows that introducing \emph{Perspective
-Taking}~\cite{Flavell1992,Tversky1999} and some elements of \emph{Theory of
-Mind}~\cite{Scassellati2002}\fxwarning{Check this reference is relevant here}
-is mandatory to achieve effective human-robot interaction grounding. Techniques
-to efficiently compute perspective-aware models of the world are presented. 
+\emph{Search} and \emph{exploration} policies are also presented, along with
+symbolic ways to deal with under-defined locations.
 
-We also introduce a geometric approch for the analysis of the
-potential of actions (we call it the \emph{Mightabilities}) of each agent.
+The next section focuses on the modeling of agents and agents capabilities,
+including a geometric approch for the analysis of the potential of actions (we
+call it the \emph{Mightabilities}) of each agent.
 
 Section~\ref{cognitivekernel} presents a centralized knowledge base that
 stores, reasons about, and asynchronously (event-driven) exposes the symbolic
@@ -351,7 +351,7 @@ place.
 locations with respect to other objects in the environment, such as \emph{above,
 next to, in}, etc. In this work we compute three main relations based on the
 bounding box and center of mass of the objects 
-(Figure~\ref{fig::sprelations}\emph{c}): 
+(Figure~\ref{fig|sprelations}): 
 
 \begin{itemize}
 	\item \concept{isOn}: computes if an object $O_1$ is on another object $O_2$ by
@@ -374,7 +374,7 @@ bounding box and center of mass of the objects
 	\includegraphics[width=0.95\columnwidth]{figs/spatial_relation.pdf}
 	\caption{Spatial relations between two objects: (a) \concept{isOn} relation, 
 	(b) \concept{isIn} relation, and (c) \concept{isNextTo} relation.} 
-	\label{fig::sprelation} 
+	\label{fig|sprelations} 
 \end{figure}
 
 \end{itemize} 
@@ -383,22 +383,12 @@ bounding box and center of mass of the objects
 To ensure the different agent models are up-to-date, all these properties are
 always computed on-line, each time the current state of the world changes.
 
-SPARK can be compared to the \emph{Grounded Situation Model} (GSM) introduced
-by Mavridis and Roy~\cite{Mavridis2005} in the sense that they both provide an
-amodal physical representation of the world used as a mediator between the
-sensor space and symbolic models. They have however different features: while
-GSM enables representation of time and imaginary objects (whose existence is
-hinted by verbal assertions from a human, also called \emph{presupposition
-accomodation}), SPARK offers a richer 3D model that enables the computation of
-several spatial relationships between objects and an effective implementation
-of perspective taking capabilities.
-
 Table~\ref{facts|sprelations} lists all the symbolic relationships that are
 currently computed by the system.
 
 \begin{table}[h]
     \centering
-    \begin{tabular}{p{1.5cm}p{5cm}p{2cm}l}
+    \begin{tabular}{p{1.5cm}p{5cm}p{2cm}p{4cm}}
 	\rowcolor{white}
     \textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Notes} \\ 
     \hline
@@ -406,125 +396,34 @@ currently computed by the system.
 	 &  $\rightarrow$ \concept{isOn} $\equiv$ \concept{cyc:above\_Touching}  &  & \\ 
 	 &  $\rightarrow$ \concept{isIn}  &  & \\ 
 	 &  $\rightarrow$ \concept{isNextTo}  & &  \\ 
-	 \concept{Location}  & \concept{isAbove} $\equiv$ \concept{cyc:above-Generally}  &  \concept{Location}  &  inverse of \concept{isBelow} \\ 
+	 \concept{Location}  & \concept{isAbove} $\equiv$ \concept{cyc:above-Generally}  &  \concept{Location}  &  inverse of \concept{isBelow} \par \concept{isOn} $\Rightarrow$ \concept{isAbove}\\ 
 	 \concept{Location}  & \concept{isBelow}  & \concept{Location}  &  inverse of \concept{isAbove}
 	\end{tabular}
 
 	\caption{List of statements describing spatial relationships between
 	objects. ``$\rightarrow$'' indicates sub-properties. When existing, the
-	equivalent predicate in the {\sc OpenCyc} standard has been added.}
+	equivalent predicate in the {\sc OpenCyc} standard (prefix \concept{cyc:})
+	has been added.}
 
 \label{facts|sprelations}
 \end{table}
 
-Anonymous locations are represented by the mean of new randomly generated
-location IDs. 
-
-For instance, location of \concept{BottleA} has no name $\rightarrow$ \stmt{bottleA
-isAt loc12578}, with \concept{loc12578} a random ID. 
-
-If the position is actually completely unknown, \concept{loc12578} has no
-further informations attached to it (and can be omitted altogether). 
-
-If the position is known but has no name, it is possible to add details to the
-location. For instance: \stmt{loc12578 owl:differentFrom MyNiceTable}. 
-
-
-
-\subsubsection{Agent independent world dynamics}
-\begin{table}[h]
-   \centering
-   \begin{tabular}{p{5cm}p{5cm}l}
-	\rowcolor{white}
-
-	\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\ 
-	\hline
-	 \concept{SpatialThing}  & \concept{isMoving}  &  \concept{xsd:boolean}  
-	\end{tabular}
-   \caption{Description of agent independent world dynamics.}
-   \label{facts|dynamics}
-\end{table}
-
-
-\subsection{Exploration and search policies}
-
-The robot controller has access to the symbolic facts in ORO that are
-automatically updated whenever object and agent positions are changed.
-Robot controller can also access geometric perceived or inferred
-positions of objects and geometric positions and postures of the human
-that will be used to orient its cameras.  Building and updating the
-state of the world first relies on perceiving objects. Robot
-controller can use:
-
-\begin {itemize}
-\item Exploration policies: robot will exhaustively scan the table to
-  see all what can be seen.
-
-\item Search policies: robot will search an object until it is
-  detected if possible, scanning all the table and looking in human
-  hand.
-
-\end {itemize}
-
-Robot reasons on possible positions for non perceived
-objects. These hypotheses could be updated using new input from dialogue, human
-action and focus of attention. Currently, we manage at most one hypothesis per
-object. This hypothesis is produced by robot controller through an inference on
-robot or human action. In case of perception conflicts with low probability for
-the current hypothesis, robot controller will break this hypothesis and delete
-corresponding symbolic fact in the ontology.
-
-Robot must reacts to change in the world not linked to robot
-action to drive world update. Robot controller uses SPARK to monitor human hand
-motion and primitive action recognition for \emph{pick} and \emph{throw}. As
-mentioned above these primitive action recognition should be used with higher
-level information on goals, intentions and plans and some exploration to
-achieve complex human action and activity monitoring.  In the current
-implementation, these primitive actions are over-optimistically interpreted as
-the corresponding actions \emph{pick} object and \emph{throw} object.
-
-\subsection{Related work}
-
-Spatial reasoning~\cite{O'Keefe1999} has been used
-for natural language processing for applications such as direction
-recognition ~\cite{Kollar2010,Matuszek2010} or language
-grounding~\cite{Tellex2010}.~\cite{Skubic2004} presented a spatial
-reasoner integrated in a robot which computes symbolic positions of
-objects.
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Building a Model of Agents}
-\label{grounding_agents}
-
-Building a grounded symbolic model of the physical environment does not suffice
-in general to fully ground the human-robot interaction.
-
-We divide the process of building models for agents into two categories:
-operations related to the assessment of the current situation (for instance,
-\emph{What does the human do? What does he see?}), and operations related to
-the estimation of potential actions (for instance, \emph{Which regions could
-the human reach if I want to hand over an object?}). We call these
-potentialities of action \emph{Mightabilities}.
-
-In order to correctly interpret the other agents' messages, the robt must be
-able to build a model of the agents' state and capabilities and, for each
-agent, a model of the environment as perceived by this agent.
-
-To build such an agent-dependent model of the world, \emph{Perspective
-Taking}~\cite{Flavell1992,Tversky1999} is employed by the reasoner to provide
-the robot with the ability to put itself at the human's place (by moving a
-camera in the geometric model) and to reason about the world from different
-perspectives.
+SPARK also compute symbolic facts related to agent independent world dynamics.
+The predicate \concept{isMoving} states, for each tracked entity, whether it is
+currently moving or not.
 
 
 \subsection{Relative placements}
 
 While in previous section we listed several \emph{absolute} location predicate,
 many topological relations are directly dependent from the observation point.
+
+To build an agent-dependent model of the world, \emph{Perspective
+Taking}~\cite{Flavell1992,Tversky1999} is employed by the reasoner to provide
+the robot with the ability to put itself at the human's place (by moving a
+camera in the geometric model) and to reason about the world from different
+perspectives.
+
 
 Through perspective taking, SPARK computes for each agent a symbolic
 description of the relative positioning of objects in the environment (table
@@ -549,6 +448,108 @@ description of the relative positioning of objects in the environment (table
 \end{table}
 
 
+\subsection{Exploration policies}
+
+To effectively maintain the model of the world, the robot may adopt context-dependent strategies to observe its environment.
+
+We implement two categories of policies:
+
+\begin {itemize}
+\item Exploration policies: the robot exhaustively scans the surrounding environment to
+  see all what can be observed.
+
+\item Search policies: the robot looks for an specific object until it is
+  detected if possible, scanning surrounding furnitures and looking in human
+  hand.
+
+\end {itemize}
+
+The robot must also monitor events that are not directly linked to robot action
+to drive world update. The robot controller uses SPARK to monitor human hand
+motion and primitive action recognition (\cf section~\ref{sec|primitives}) to
+detect actions like \emph{pick} and \emph{throw}.  These trigger specific
+exploration behaviours.
+
+\subsection{Uncertain Locations and Management of Hypotheses on States and Positions}
+
+Unknown or under-defined locations are represented by the mean of randomly
+generated location IDs. For instance, if the location of \concept{BottleA} has
+no name, it can be stored as \stmt{bottleA isAt loc12578}, with
+\concept{loc12578} a random ID. 
+
+If the position is actually completely unknown, \concept{loc12578} has no
+further informations attached to it (and can be omitted altogether). On the
+contrary, if some is known about the location, it can be refined by qualifying
+the location, \eg \stmt{loc12578 isAbove MyNiceTable, loc12578
+owl:differentFrom MyNiceTable}. 
+
+
+It is sometimes difficult or even impossible to see and/or track an object in
+certain states. This happens, for instance, when the object has been put in a
+container, when it is in the robot gripper or in the human hand, and more
+generally in any state in which it is hidden by something else. Our robot has a
+model of the possible symbolic states for an object (whether the object is on a
+furniture, in an agent hand, in a container, etc.).  According to the robot
+perception of what has happened since the object was last seen, the robot tries
+to maintain a belief of the current possible symbolic states and their
+associated probabilities for this object. Such information can be used to
+update the beliefs using input from exploration, dialog, human visual focus,
+etc.
+
+SPARK currently provides a simple implementation of such a functionality. The
+only managed hypotheses are \emph{in container} and \emph{in agent hand}. We
+can have only one hypothesis at the same time. Hypothesis validity is checked
+geometrically in case of incoming perception values.
+
+
+
+The robot reasons on possible positions for non perceived objects. These
+hypotheses are refined using new input from dialogue, human action and focus of
+attention. Currently, we manage at most one hypothesis per object. This
+hypothesis is produced by robot controller through an inference on robot or
+human action. In case of perception conflicts with low probability for the
+current hypothesis, the robot controller will break this hypothesis and delete
+corresponding symbolic fact in the knowledge base.
+
+\subsection{Related work}
+
+Building and updating an intermediate 3D geometric model is common in robotic
+architecture. However, framework like SPARK, used as a hub for both sensor
+fusion and geometric reasoning, are less common.
+
+SPARK can be compared to the \emph{Grounded Situation Model} (GSM) introduced
+by Mavridis and Roy~\cite{Mavridis2005} in the sense that they both provide an
+amodal physical representation of the world used as a mediator between the
+sensor space and symbolic models. They have however different features: while
+GSM enables representation of time and imaginary objects (whose existence is
+hinted by verbal assertions from a human, also called \emph{presupposition
+accomodation}), SPARK offers a richer 3D model that enables the computation of
+several spatial relationships between objects and an effective implementation
+of perspective taking capabilities.
+
+On the other hand, applications of spatial reasoning~\cite{O'Keefe1999} are
+multiple. Ithas been used for instance for natural language processing for
+applications such as direction recognition ~\cite{Kollar2010,Matuszek2010} or
+language grounding~\cite{Tellex2010}.~\cite{Skubic2004} presented a spatial
+reasoner integrated in a robot which computes symbolic positions of objects.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Building a Model of Agents}
+\label{grounding_agents}
+
+Building a grounded symbolic model of the physical environment does not suffice
+in general to fully ground the human-robot interaction.
+
+We divide the process of building models for agents into two categories:
+operations related to the assessment of the current situation (for instance,
+\emph{What does the human do? What does he see?}), and operations related to
+the estimation of potential actions (for instance, \emph{Which regions could
+the human reach if I want to hand over an object?}). We call these
+potentialities of action \emph{Mightabilities}.
+
 \subsection{Agent Capabilities}
 
 There are a number of common properties for a robot and a human related to
@@ -556,9 +557,7 @@ their capabilities in a given situation: they can both reach, grasp, look at,
 point at, etc. In our context, we group robots and humans into a single category.
 Thus, we define agents as entities that can act in the environment and
 manipulate it. In this work we focus on the following capabilities from each
-agent's perspective\footnote{Note that each of the capabilities described are
-computed from each agent point of view, and therefore, also stored in different
-models in ORO for further use at the decisional level.}:
+agent's perspective:
 
 \begin{itemize}
 
@@ -583,10 +582,8 @@ this example only the grey box satisfies the \concept{looksAt} relation.
 \item \emph{Points At}: verifies whether an object is pointed at by an agent.
 This relation is particularly useful during interaction when one of the agents
 is referring to an object saying ``this" or ``that" while pointing at it.
-Section~\ref{disamb-gestures} describes in more detail the combination of both
-sources of information (verbal and non-verbal).
  
-If a big object occludes a smaller one, and an agent is pointing at them, the
+If a larger object occludes a smaller one while an agent is pointing at them, the
 outcome of the evaluation will result only in one relation, \ie \stmt{agent\_01
 pointsAt object\_01} since the small one is not visible to the agent.  On the
 contrary, if the small object is in front of the big one, then both objects
@@ -628,8 +625,8 @@ method~\cite{Nakamura90,Baerlocher04} to find a collision free posture for the
 agent where its end-effector is at the center of the object within a given
 tolerance.
 
-Table~\ref{facts|capabilites} summarizes the predicates produced by SPARK
-during the agent capabilities analysis phase.
+Tables~\ref{facts|capabilites} and~\ref{facts|reachabilities} summarize the
+predicates produced by SPARK during the agent capabilities analysis phase.
 
 \begin{table}[h]
 	\centering
@@ -648,21 +645,6 @@ during the agent capabilities analysis phase.
 	\label{facts|capabilites}
 \end{table}
 
-Table~\ref{facts|agentstate} lists the remaining symbolic facts that are produced and maintained by SPARK related to the general state of the agent.
-
-\begin{table}[h]
-	\centering
-	\begin{tabular}{p{2cm}p{5cm}p{2cm}}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
-		\hline
-		\concept{Agent} & \concept{hasIn\{Left|Right\}Hand}  &  \concept{GraspableObject} \\ 
-		\concept{Agent} & \concept{hasPosture}  &  \concept{Posture} \\
-		\concept{Agent} & \concept{currentlyBodilyDoes}  &  \concept{Action}
-	\end{tabular}
-	\caption{List of statements describing the state of an agent in general. The \concept{currentlyBodilyDoes} predicate states the current action of the agent, be it intentional or not.}
-\end{table}
-
-
 \begin{table}[h]
 	\centering
 		\begin{tabular}{p{2cm}p{4.5cm}p{2cm}p{3.5cm}}
@@ -678,6 +660,22 @@ Table~\ref{facts|agentstate} lists the remaining symbolic facts that are produce
 
 	\end{tabular}
 	\caption{List of statements describing action potentialities for an agent.}
+	\label{facts|reachabilities}
+\end{table}
+
+
+Table~\ref{facts|agentstate} lists the remaining symbolic facts that are produced and maintained by SPARK related to the general state of the agent.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{p{2cm}p{5cm}p{2cm}}
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
+		\hline
+		\concept{Agent} & \concept{hasIn\{Left|Right\}Hand}  &  \concept{GraspableObject} \\ 
+		\concept{Agent} & \concept{hasPosture}  &  \concept{Posture} \\
+		\concept{Agent} & \concept{currentlyBodilyDoes}  &  \concept{Action}
+	\end{tabular}
+	\caption{List of statements describing the state of an agent in general. The \concept{currentlyBodilyDoes} predicate states the current action of the agent, be it intentional or not.}
 \end{table}
 
 
@@ -691,27 +689,8 @@ Table~\ref{facts|agentstate} lists the remaining symbolic facts that are produce
 % 	\caption{List of facts describing the current state of a robot.}
 % \end{table}
 
-\subsection{Hypotheses on objects states and positions}
-
-It is sometimes difficult or even impossible to see and/or track an object in
-certain states. This happens, for instance, when the object has been put in a
-container, when it is in the robot gripper or in the human hand, and more
-generally in any state in which it is hidden by something else. Our robot has a
-model of the possible symbolic states for an object (whether the object is on a
-furniture, in an agent hand, in a container, etc.).  According to the robot
-perception of what has happened since the object was last seen, the robot tries
-to maintain a belief of the current possible symbolic states and their
-associated probabilities for this object. Such information can be used to
-update the beliefs using input from exploration, dialog, human visual focus,
-etc.
-
-SPARK currently provides a simple implementation of such a functionality. The
-only managed hypotheses are \emph{in container} and \emph{in agent hand}. We
-can have only one hypothesis at the same time. Hypothesis validity is checked
-geometrically in case of incoming perception values.
-
-
 \subsection{Primitive action recognition}
+\label{sec|primitives}
 
 Monitoring human activity is crucial to maintain a coherent state of the world.
 Full human action and activity monitoring is a difficult task that requires
@@ -1194,7 +1173,7 @@ interacting with humans.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{First Application: Goal and Plan Management}
-\label{hatp}
+\label{sec|hatp}
 
 \fxfatal[author=Severin]{Reformulate this section to put emphasis on 'How we
 use the whole architecture to make symbolic planning grounded into the real
