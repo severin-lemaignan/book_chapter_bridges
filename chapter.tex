@@ -358,7 +358,7 @@ place.
 locations with respect to other objects in the environment, such as \emph{above,
 next to, in}, etc. In this work we compute three main relations based on the
 bounding box and center of mass of the objects 
-(Figure~\ref{fig|sprelations}): 
+(fig.~\ref{fig|sprelations}): 
 
 \begin{itemize}
 	\item \concept{isOn}: computes if an object $O_1$ is on another object $O_2$ by
@@ -613,11 +613,9 @@ the teddy bear is reachable for it, while the bottle is not.
 	\begin{center}
 	\subfigure[]{
 		\includegraphics[width=0.4\linewidth]{figs/looks.jpg} 
-		\label{(a)}
 	}
 	\subfigure[]{
 		\includegraphics[width=0.35\linewidth]{figs/reach.jpg}
-		\label{(b)}
 	} 
 	\caption{(a) Field of view (FOV) and the field of attention (FOA) of the human. (b) Different reaching postures for the human.}
 	\label{fig::sparkRepresentations}
@@ -654,16 +652,12 @@ predicates produced by SPARK during the agent capabilities analysis phase.
 
 \begin{table}[h]
 	\centering
-		\begin{tabular}{p{2cm}p{4.5cm}p{2cm}p{3.5cm}}
+		\begin{tabular}{p{2cm}p{4.5cm}p{2cm}}
 		\rowcolor{white}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Notes} \\
+		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
 		\hline
-		\concept{SpatialThing}  & \concept{isVisibleByMovingHead}  &  \concept{xsd:boolean}  \\ 
-		\concept{Agent} & \concept{seesWithHeadMovement} &  \concept{Object} & via inference: \par \stmt{myself seesWithHeadMovement *} $\Leftrightarrow$ \stmt{* isVisibleByMovingHead true} \\
-		\concept{Agent} & \concept{cannotSeeWithHeadMovement} & \concept{Object} &  via inference: \par \stmt{myself cannotSeeWithHeadMovement *} $\Leftrightarrow$ \stmt{* isVisibleByMovingHead false} \\ 
-		\concept{Object}  & \concept{isReachable} & \concept{xsd:boolean}  \\ 
-		\concept{Agent} & \concept{reaches} &  \concept{Object} & via inference: \par \stmt{myself reaches *} $\Leftrightarrow$ \stmt{* isReachable true} \\ 
-		\concept{Agent} & \concept{cannotReach} & \concept{Object} & via inference: \par \stmt{myself cannotReach *} $\Leftrightarrow$ \stmt{* isReachable false}
+		\concept{Agent} & \concept{seesWithHeadMovement} &  \concept{SpatialThing} \\
+		\concept{Agent} & \concept{reaches} &  \concept{Object} \\ 
 
 	\end{tabular}
 	\caption{List of statements describing action potentialities for an agent.}
@@ -1143,7 +1137,7 @@ physical world.'}
 
 The Goal and Plan Management activity involves the human-aware
 symbolic task planner component and the dedicated robot controller
-activity (Figure~\ref{architecture_fg}).
+activity (fig.~\ref{architecture_fg}).
 
 \subsection{Symbolic Task Planning}
 
@@ -1212,7 +1206,7 @@ preferences. The social rules we have defined so far deal with:
 \end{figure}
 
 Figure~\ref{plan_hatp2} illustrates an alternative plan to the previous 
-one (Figure~\ref{plan_hatp1}) if the wasted time social rule is used.
+one (fig.~\ref{plan_hatp1}) if the wasted time social rule is used.
 The obtained shared plan is the best plan according to a global evaluation of
 these multiple criteria.
 
