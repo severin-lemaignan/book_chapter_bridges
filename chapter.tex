@@ -297,7 +297,7 @@ regarding the specifics of the human-robot interactions.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Building a Symbolic Model of the Environment}
+\section{Building an Agent-Aware Symbolic Model of the Environment}
 \label{sec:situ}
 
 Anchoring perceptions in a symbolic model requires perception abilities
@@ -323,7 +323,14 @@ environment with respect to relations between objects, robots and humans.
 
 \end{figure}
 
-\subsection{Locations}
+Figure~\ref{fig|spark} shows a screenshot of the SPARK environment side-by-side
+with the real environment: as mentioned in the introduction, obecjts are
+identified and localized through their 2D tags. The human pose is tracked with
+a Microsoft Kinect device (assisted by motion capture to accurately track the
+head motion, which is required to compute what the human is looking at).
+
+
+\subsection{Symbolic locations}
 
 One way of referring to object's positions is based on human's symbolic 
 descriptors, instead of using their precise position. In fact, in many cases, 
@@ -714,17 +721,26 @@ and its motion near objects or above containers.
 
 \subsection{Mightabilities: pro-active analysis of potentialities}
 
-\fxfatal{Write an introduction that glues this section with the previous ones}
+Until now, we have presented techniques to assess, from different perspectives,
+the \emph{current} state of the world.
+
+Making effective decisions also requires the ability to assess possible \emph{future}
+actions, both for the robot (by the mean of geometric and/or symbolic planning --
+we present in section~\ref{sec|hatp} an example of a symbolic task planner), but
+also for the human.
+
+This section explains how potential manipulation actions can be computed for
+the human and represented as so-called \emph{Mightability Maps}.
 
 In human movement and behavioral psychology literatures, different types of
 reach actions of the human have been identified and analyzed,
-\cite{Gardner2001, Choi2004}.  Figure~\ref{fig|reaches_taxonomy} shows taxonomy
-of such reaches involving simple arm-shoulder extension (arm-and-shoulder
-reach), leaning forward (arm-and-torso reach) and standing reach.
+\cite{Gardner2001, Choi2004}.  Figure~\ref{fig|reaches_taxonomy} shows a taxonomy
+of such reaches involving simple arm-shoulder extension (\emph{arm-and-shoulder}
+reach), leaning forward (\emph{arm-and-torso} reach) and \emph{standing} reach.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.5\textwidth]{./figs/reach_postures.pdf} \\
+  \includegraphics[width=0.7\textwidth]{./figs/reach_postures.pdf} \\
   \caption {Taxonomy of reach actions:(a) arm-shoulder reach, (b) arm-torso 
   reach, (c) standing reach.}
   \label{fig|reaches_taxonomy}
