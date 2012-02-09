@@ -747,20 +747,21 @@ reach), leaning forward (\emph{arm-and-torso} reach) and \emph{standing} reach.
 \end{figure}
 
 Taking inspiration from such studies, we have presented the concept of
-\emph{Mightability}, which stands for ``Might be Able to...'', as a framework for
-\emph{multi-state visuo-spatial} perspective taking. The idea is to analyze the
-various abilities of an agent such as ability to see or ability to reach, not
-only from the current state of the agent, but also from a set of states, which
-the agent might achieve from his current state. For this the robot applies\fxwarning{Sentence unclear}, $A_v$,
-an ordered list of virtual actions, to make the agent to virtually reach a state
-and then estimates the abilities $A_b \in \{See, Reach, Grasp\}$, by respecting the
-environmental and postural constraints of the agent. Currently,
+\emph{Mightability}, which stands for ``Might be Able to...'', as a framework
+for \emph{multi-state visuo-spatial} perspective taking. The idea is to analyze
+the various abilities of an agent such as ability to see or ability to
+reach, not only from the current state of the agent, but also from a set of
+states, which the agent might achieve from his current state. For this the
+robot applies a list $A_v$, of virtual actions to estimate the abilities
+$A_b \in \{See, Reach, Grasp\}$ from the resulting virtual pose, also
+considering the environmental and postural constraints of the agent.
+Currently,
 
 \[ 
 A_v \subseteq \{A_v^{head}, A_v^{arm}, A_v^{torso}, A_v^{posture}, A_v^{displace}\}
 \]
 
-where
+with
 
 \begin{align*}
 A_v^{head} & \subseteq \{PanHead, TiltHead\} \\
@@ -771,7 +772,7 @@ A_v^{displace} & \subseteq \{MoveTo\} \\
 \end{align*}
 
 When such mightability analyses are performed at the levels of cells of the
-discretized 3D workspace, we term it as \emph{Mightability Maps} (MM) and when done
+discretized 3D workspace, we term them as \emph{Mightability Maps} (MM) and when done
 for the object in the space we call it \emph{Object Oriented Mightabilities} (OOM).
 
 The robot performs mightability analyses by taking into account collision
@@ -833,13 +834,11 @@ reachability, the robot further distinguishes among reachable by left hand,
 reachable by right hand and reachable by both hands of an agent in a particular
 state.  
 
-Mightability analysis could be performed and updated online; hence facilitate
-its use for various planning and decision making components as explained below.
-Mightability Map based finding candidate places for basic HRI
-tasks\fxwarning{Sentence not clear}: As the robot is able to perform such
-analysis for all the agents in the environment, it can use the MM to find the
-candidate places to perform a set of basic HRI tasks: give, make accessible,
-show, hide an object, etc. 
+Mightability analysis can be performed and updated online, making possible to
+use it during the planning and decision making steps: as the robot is able to
+perform such analysis for all the agents in the environment, it can use the MM
+to find the candidate places to perform a set of basic HRI tasks: give, make
+accessible, show, hide an object, etc. 
 
 \begin{figure}
   \centering
@@ -857,10 +856,10 @@ space, (i) the feasible solution of highest weight.}
 \end{figure}
 
 
-As shown in Figure~\ref{fig|mightabilities-framework}, for
-finding a feasible solution of a task, robot reasons on various MM of
-the involved agents and performs relevant set operations depending upon
-the task.  
+Figure~\ref{fig|mightabilities-framework} shows how a feasible solution for a
+task can be found: the robot reasons on various MM of the involved agents and
+selects the best solution by performing successive set operations depending on
+the task.
 
 \begin{figure}[ht!]
    \begin{center}
@@ -884,63 +883,30 @@ the task.
 
    \caption{
 	Steps for finding weighted candidate search space for the task of robot
-	giving an object to the human.}
+	giving an object to the human. {\it(a)} \emph{sees} and \emph{reach} map
+	for the robot, {\it(b)} \emph{sees} and \emph{reach} map for the human,
+	{\it(c)} zone visible and accessible for both agents, {\it(d)} weighted
+	candidate points}
 		
    \label{fig|mightabilities-steps}
 \end{figure}
 
-
-
-Figure~\ref{fig|mightabilities-steps} shows the main steps of finding the
-candidate search space for the task of giving an object to the human by the
-robot. From the initial set of all the MM for the robot and for the human, the
+Figure~\ref{fig|mightabilities-steps} illustrates the process for a \emph{give}
+task. From the initial set of all the MM for the robot and for the human, the
 planner extracts the relevant MM based on the task and the desired efforts of
 the agents.
 
 In this example, the maximum desired effort for the human is to lean forward.
-As the task requires a hand-over operation so the relevant MM obtained in step
-(c) corresponds to the reach and visibility of both the agents, as shown in
-figures~\ref{fig|mightabilities-steps}(a) and (b) for the robot and for the
-human respectively.
-
-Then the planner performs the set operations in step (d) to obtain the raw
-candidate points in step (e). For the example task, the set operation is
-finding the intersection of reachable and visible places by both the agents.
-Figure~\ref{fig|mightabilities-steps}(c) shows the resultant candidate points
-obtained in step (e), which in fact is commonly reachable and visible by both
-the agents. 
+As the task requires a hand-over operation, we compute positions visible and
+reachable by both agents (fig.~\ref{fig|mightabilities-steps}{\it(c)}) from
+each agent's respective maps (figs.~\ref{fig|mightabilities-steps}{\it(a)} and
+{\it(b)}).
 
 Further based on various criteria such as comfort, preferences, etc. weights
-are assigned to the raw candidate points in step (f) to obtain weighted
-candidate points in step (g). Figure~\ref{fig|mightabilities-steps}(d) shows
-the weighted candidate points, red cells are least preferable and green are
-more preferable, so highest weight. At this step it is interesting to note that
-the search space has been significantly reduced as compared to entire
-workspace.  
-
-In step (h) each candidate cell is iteratively tested for feasibility in the
-order of highest to lowest weight until a solution is found. For finding a
-feasible solution, various task-dependent constraints are introduced. Such
-tests would have been very expensive if done for entire workspace.  In our
-current implementation the first highest weighted candidate cell which
-satisfies all the feasibility tests is accepted as the feasible solution of
-highest weight, as shown in step (i). 
-
-%Figure~\ref{fig|pr2-giving} show PR2 robot performing the task of giving an
-%object to the human by finding the feasible solution through the presented
-%framework. 
-%
-%
-%\begin{figure}
-%  \centering
-%  \includegraphics[width=0.8\textwidth]{./figs/mightabilities/5.png}
-%  \caption { 
-%PR2 giving an object to the human at a feasible place, which is easily visible
-%and reachable by the human from his current position.
-%}
-%  \label{fig|pr2-giving}
-%\end{figure}
-%
+are assigned to the raw candidate points
+(fig.~\ref{fig|mightabilities-steps}{\it(d)}), and the resulting candidates are
+finally tested (\ie, the motion planner is called) to check if the robot can
+actually reach the position.
 
 \subsection{Related work}
 
