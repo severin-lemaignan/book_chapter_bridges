@@ -730,7 +730,7 @@ we present in section~\ref{sec|hatp} an example of a symbolic task planner), but
 also for the human.
 
 This section explains how potential manipulation actions can be computed for
-the human and represented as so-called \emph{Mightability Maps}.
+the human and represented as so-called \emph{Mightability Maps}~\cite{Pandey2010}.
 
 In human movement and behavioral psychology literatures, different types of
 reach actions of the human have been identified and analyzed,
@@ -788,35 +788,19 @@ the agent with the environment is detected.
 \begin{figure}[ht!]
    \begin{center}
 %
-       \subfigure[]{%
-           \label{a}
+       \subfigure[Initial model.]{%
            \includegraphics[width=0.5\textwidth]{./figs/mightabilities/2a.jpg}
        }%
-       \subfigure[]{%
-          \label{b}
-          \includegraphics[width=0.5\textwidth]{./figs/mightabilities/2b.jpg}
-       }\\ %  ------- End of the first row ----------------------%
-       \subfigure[]{%
-           \label{c}
-           \includegraphics[width=0.5\textwidth]{./figs/mightabilities/2c.jpg}
-       }%
-       \subfigure[]{%
-          \label{d}
+       \subfigure[Mightability Map for the \emph{see} ability. In dark blue, the current field of view, in light green the potential field of view if the human turns his head.]{%
           \includegraphics[width=0.5\textwidth]{./figs/mightabilities/2d.jpg}
-       }\\
-       \subfigure[]{%
-          \label{e}
+       }\\%
+       \subfigure[The \emph{reach} ability. In light green, accessible zones if the human leans forward.]{%
           \includegraphics[width=0.5\textwidth]{./figs/mightabilities/2e.jpg}
-       }   
+       }%  
 	\end{center}
 
    \caption{%
-		(a) 3D representation of the current world state. Mightability Maps for
-		human (b) to see and (c) to reach the places in 3D from his current
-		position and configuration. Because of robot's capability to perform
-		multi-state perspective taking, the robot is able to estimates that if
-		human will turn his head around, he can see more places (d) and if he
-		will lean forward he can reach more places (e).
+	   Examples of Mightability Maps for the \emph{see} and \emph{reach} abilities.
    }
 		
    \label{fig|mightabilities}
@@ -864,19 +848,15 @@ the task.
 \begin{figure}[ht!]
    \begin{center}
        \subfigure[]{%
-           \label{a}
            \includegraphics[width=0.5\textwidth]{./figs/mightabilities/4a.jpg}
        }%
        \subfigure[]{%
-          \label{b}
           \includegraphics[width=0.5\textwidth]{./figs/mightabilities/4b.jpg}
        }\\ %  ------- End of the first row ----------------------%
        \subfigure[]{%
-           \label{c}
            \includegraphics[width=0.5\textwidth]{./figs/mightabilities/4c.jpg}
        }%
        \subfigure[]{%
-          \label{d}
           \includegraphics[width=0.5\textwidth]{./figs/mightabilities/4d.jpg}
        }
 	\end{center}
