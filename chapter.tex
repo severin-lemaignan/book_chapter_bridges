@@ -1125,19 +1125,22 @@ interacting with humans.
 \section{First Application: Goal and Plan Management}
 \label{sec|hatp}
 
-\fxfatal[author=Severin]{Reformulate this section to put emphasis on 'How we
-use the whole architecture to make symbolic planning grounded into the real
-physical world.'}
+Complex human robot interaction may necessitate a strong reasoning about
+the environment and the capabilities of involved agents: How can they
+achieve a specific goal? What are the required actions to achieve this
+goal? Which actions can be performed by each agent? etc.
 
-The Goal and Plan Management activity involves the human-aware
-symbolic task planner component and the dedicated robot controller
-activity (fig.~\ref{architecture_fg}).
+In the previous sections, we have seen how symbolic knowledge is produced
+and stored from the real physical world. In this section, we present one
+possible way to use these symbolic models of the environment and
+interacting agents to produce a plan of actions for a complex
+goal.
 
 \subsection{Symbolic Task Planning}
 
 In order to devise how a given goal can be accomplished, the robot has
 to elaborate a plan,~\textit{i.e.} a set of actions to be achieved by
-the robot and its human partners.  This is the role of a HATP
+the robot and its human partners.  This is the role of HATP
 \cite{Alili2008} (for Human Aware Task Planner).  HATP is based on a
 Hierarchical Task Network (HTN) refinement which performs an iterative
 task decomposition into sub-tasks until reaching atomic
