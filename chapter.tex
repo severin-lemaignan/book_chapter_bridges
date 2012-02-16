@@ -502,16 +502,6 @@ only managed hypotheses are \emph{in container} and \emph{in agent hand}. We
 can have only one hypothesis at the same time. Hypothesis validity is checked
 geometrically in case of incoming perception values.
 
-
-
-The robot reasons on possible positions for non perceived objects. These
-hypotheses are refined using new input from dialogue, human action and focus of
-attention. Currently, we manage at most one hypothesis per object. This
-hypothesis is produced by robot controller through an inference on robot or
-human action. In case of perception conflicts with low probability for the
-current hypothesis, the robot controller will break this hypothesis and delete
-corresponding symbolic fact in the knowledge base.
-
 \subsection{Related work}
 
 Building and updating an intermediate 3D geometric model is common in robotic
