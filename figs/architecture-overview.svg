@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="architecture-overview.pdf"
+   sodipodi:docname="architecture-overview.svg"
    inkscape:export-filename="/home/mwarnier/Documents/Publications/mat_publications/icra2012/figs/supervisor-architecture-new.png"
    inkscape:export-xdpi="300"
    inkscape:export-ydpi="300">
@@ -1504,11 +1504,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="351.59611"
-     inkscape:cy="142.75404"
+     inkscape:zoom="0.7"
+     inkscape:cx="439.73198"
+     inkscape:cy="286.19407"
      inkscape:document-units="px"
-     inkscape:current-layer="g9904"
+     inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1280"
      inkscape:window-height="997"
@@ -1527,7 +1527,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2400,18 +2400,18 @@
       <text
          xml:space="preserve"
          style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-         x="306.43552"
+         x="314.43356"
          y="623.31171"
          id="text8111"
          inkscape:export-filename="/home/mwarnier/Documents/Publications/mat_publications/icra2012/figs/supervisor-architecture-new.png"
          inkscape:export-xdpi="300"
          inkscape:export-ydpi="300"
-         transform="scale(1.0002497,0.99975038)"><tspan
+         transform="scale(1.0002497,0.99975037)"><tspan
            style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
            sodipodi:role="line"
-           x="306.43552"
+           x="314.43356"
            y="623.31171"
-           id="tspan8115">Robot Controller</tspan></text>
+           id="tspan8115">Execution Controller</tspan></text>
       <g
          inkscape:export-ydpi="150"
          inkscape:export-xdpi="150"
@@ -2657,20 +2657,25 @@
        inkscape:export-xdpi="300"
        inkscape:export-filename="/home/mwarnier/Documents/Publications/mat_publications/icra2012/figs/supervisor-architecture-new.png"
        id="text9868"
-       y="792.03455"
-       x="36.328297"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       y="756.16522"
+       x="101.12331"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
        xml:space="preserve"><tspan
-         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;text-anchor:end;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
          id="tspan9874"
-         y="792.03455"
-         x="36.328297"
+         y="756.16522"
+         x="101.12331"
          sodipodi:role="line">world model</tspan><tspan
-         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-         y="804.53455"
-         x="36.328297"
+         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;text-anchor:end;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+         y="768.66522"
+         x="101.12331"
          sodipodi:role="line"
-         id="tspan4722">and agents beliefs</tspan></text>
+         id="tspan4722">and agents</tspan><tspan
+         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;text-anchor:end;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+         y="781.16522"
+         x="101.12331"
+         sodipodi:role="line"
+         id="tspan3465">beliefs</tspan></text>
     <g
        transform="matrix(-0.70060255,0.17550802,-0.17558535,-0.70029401,494.24374,885.52976)"
        id="g9876"
@@ -3201,5 +3206,46 @@
          style="font-size:13.84828472px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;stroke:#000000;stroke-width:3.46207118;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
          inkscape:transform-center-y="0.01114576" />
     </g>
+    <text
+       transform="scale(1.0002497,0.99975037)"
+       inkscape:export-ydpi="300"
+       inkscape:export-xdpi="300"
+       inkscape:export-filename="/home/mwarnier/Documents/Publications/mat_publications/icra2012/figs/supervisor-architecture-new.png"
+       id="text3452"
+       y="746.45758"
+       x="297.44928"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       xml:space="preserve"><tspan
+         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+         id="tspan3458"
+         y="746.45758"
+         x="297.44928"
+         sodipodi:role="line">Events</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 378.39286,121.43231 0,21.25"
+       id="path3463"
+       inkscape:connector-curvature="0"
+       transform="translate(-42.884827,611.0029)" />
+    <text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="114.3343"
+       y="805.10602"
+       id="text3467"
+       inkscape:export-filename="/home/mwarnier/Documents/Publications/mat_publications/icra2012/figs/supervisor-architecture-new.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"
+       transform="scale(1.0002497,0.99975037)"><tspan
+         id="tspan3473"
+         sodipodi:role="line"
+         x="114.3343"
+         y="805.10602"
+         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;text-anchor:end;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">natural language</tspan><tspan
+         sodipodi:role="line"
+         x="114.3343"
+         y="817.60602"
+         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;text-anchor:end;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+         id="tspan3480">grounding</tspan></text>
   </g>
 </svg>

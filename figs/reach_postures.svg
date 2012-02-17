@@ -51,7 +51,7 @@
      inkscape:cx="232.07242"
      inkscape:cy="73.524462"
      inkscape:document-units="px"
-     inkscape:current-layer="g33034"
+     inkscape:current-layer="g7633"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -973,17 +973,17 @@
          id="text7879"
          y="655.15051"
          x="-137.85741"
-         style="font-size:58.72206879px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller;-inkscape-font-specification:Aller"
+         style="font-size:39.1480469px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller;-inkscape-font-specification:Aller"
          xml:space="preserve"
          transform="matrix(0.99955696,0.03401212,-0.03278199,0.99932775,0,0)"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans;font-size:39.1480469px"
            y="655.15051"
            x="-137.85741"
            id="tspan7881"
            sodipodi:role="line">(a)</tspan></text>
       <text
          xml:space="preserve"
-         style="font-size:58.72206879px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller;-inkscape-font-specification:Aller"
+         style="font-size:39.1480469px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller;-inkscape-font-specification:Aller"
          x="244.01035"
          y="655.1792"
          id="text7883"
@@ -993,18 +993,18 @@
            id="tspan7885"
            x="244.01035"
            y="655.1792"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">(b)</tspan></text>
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans;font-size:39.1480469px">(b)</tspan></text>
       <text
          sodipodi:linespacing="125%"
          id="text7887"
          y="655.15051"
-         x="642.73004"
-         style="font-size:58.72206879px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller;-inkscape-font-specification:Aller"
+         x="662.30402"
+         style="font-size:39.1480484px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Aller;-inkscape-font-specification:Aller"
          xml:space="preserve"
          transform="matrix(0.99955696,0.03401212,-0.03278199,0.99932775,0,0)"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+           style="font-size:39.1480484px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
            y="655.15051"
-           x="642.73004"
+           x="662.30402"
            id="tspan7889"
            sodipodi:role="line">(c)</tspan></text>
     </g>

@@ -76,13 +76,10 @@ Julien Guitton
 }
 
 \maketitle
-\clearpage
-
-\setcounter{minitocdepth}{2}
-\dominitoc
-
-
-\clearpage
+%\clearpage
+%\setcounter{minitocdepth}{2}
+%\dominitoc
+%\clearpage
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -93,22 +90,24 @@ Julien Guitton
 
 {\em Aperitif time. Sitting down in his comfortable armchair, Tom gives a look
 at the empty table. ``{\em Hey robot, put two glasses and this bottle on the
-tray!}''. ``{\em And bring that over there.}''. The robot wonders ``{\em The
+tray!}''. ``{\em And bring that over there.}''. The robot asks ``{\em The
 Martini or the Porto?}''. ``{\em Bring both!}'' answers Tom. The robot prepares
 the order and smoothly bring the tray to the table.}
 
 \begin{figure}%[!ht] 
 	\centering
 	\includegraphics[width=0.8\linewidth]{figs/aperitif_time.jpg} 
-	\caption{Interacting with the robot in an everyday situation: the human 
-	asks for help in vague terms, the robot takes into account the human's 
-	spatial perspective to refine its understanding of the question.} 
+
+	\caption{Interacting with the robot in an everyday situation: the human
+	asks for help in vague terms, the robot takes into account the human's {\it
+	a priori} knowledge and spatial perspective to refine its understanding of
+	the question.} 
+
 	\label{fig|vpt} 
 \end{figure}
 
 While the dream of the robot-servant could be questioned, this kind of natural
-interaction (illustrated in Fig.~\ref{fig|vpt}) is a short-term target for the
-human-robot interaction community.
+interaction is a short-term target for the human-robot interaction community.
 
 This simple scenario belongs to the broad class of \emph{interactive
 manipulation problems}: several agents agree a (more or less implicit) joint
@@ -128,37 +127,29 @@ problems involve both dialogue and manipulation and are often iterative
 
 Figure~\ref{fig|hri-dec} illustrates some of the aspects of the interaction.
 From the robot perspective, several cognitive skills are involved: dialogue
-processing through different modalities, verbal and deictic (what does the
-human say? what attitude -- glances, postures, gestures... -- does he
-express?), acquisition and maintainance of one or several models of the
-environment, not only from the robot point of view, but also from the other
-agents' points of view, anticipation (what are the intentions of the human? Can
-I predict and anticipate his actions?), planning and control (how would I
-proceed further towards the goal?), monitoring of the other agents' activities
-and the overall progress of the task (do we have an effective cooperation?)
-
-We can look back to our initial ``\emph{Aperitif Time}'' scenario and analyse
-it along these lines.
+processing through verbal and deictic modalities (what does the human say? what
+attitude -- glances, postures, gestures... -- does he express?), acquisition
+and maintainance of one or several models of the environment, not only from the
+robot point of view, but also from the other agents' points of view,
+anticipation (what are the intentions of the human? Can I predict and
+anticipate his/her actions?), planning and control (how would I proceed further
+towards the goal?), monitoring of the other agents' activities (do we have an
+effective cooperation?) and the overall progress of the task. 
 
 What are the prerequisites for such a sentence --``Robot, put two glasses and
 this bottle on the tray''-- to be understood by the robot, correctly
 interpreted in the spatial context of the interaction, and eventually
-transformed into a set of actions?
-
-
-\fxfatal{TO FILL}
-...
-
-We summarize these challenges in four categories:
+transformed into a set of actions? We summarize these challenges in four
+categories:
 
 \begin{enumerate}
 
-	\item how to build and maintain a consistent model of the current
+	\item how to build and maintain a consistent geometric model of the current
 	situation, acquired through perception or deduction from previous
 	perceptions,
 
-	\item how to build an unambiguous representation of concepts (objects,
-	agents, actions...) underlying the interaction, and practical for
+	\item how to build an unambiguous symbolic representation of concepts
+	(objects, agents, actions...) underlying the interaction, and practical for
 	decision-making processes,
 
 	\item how to establish the joint goal(s), how to build and maintain
@@ -175,10 +166,9 @@ developed and used on several real robots, for the creation of a set of
 environment models suitable for grounded situation interpretation,
 decision-making and control.
 
-The two other items are however equally important to achieve a rich and legible
-interaction. Thus we shall briefly overview the global architecture of a robot
-able to cooperate with humans\fxwarning{Shall we stay very broad or focus on
-*our* implementation?} before really focusing on the grounding issues.
+The two other items are however important to actually perform the interaction.
+Thus we briefly overview a global architecture of a robot able to cooperate
+with humans before really focusing on the grounding issues.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -187,19 +177,19 @@ able to cooperate with humans\fxwarning{Shall we stay very broad or focus on
 \begin{figure*}[thpb]
   \centering
   \includegraphics[width=1.0\textwidth]{./figs/architecture-overview.pdf} \\
-  \caption {Architecture of the robot control system}
+  \caption {Software architecture for a service robot interacting with humans.}
   \label{fig|archi}
 \end{figure*}
 
-Figure~\ref{fig|archi} gives an overview of the overall decisional layer of
-our robots~\cite{Alami2011}. The sensorimotor layer (bottom) is abstracted in
-an intermediate 3D geometric model where geometric (and some temporal)
+Figure~\ref{fig|archi} presents the decisional layer of a service robot as
+developed at LAAS~\cite{Alami2011}. The sensorimotor layer (bottom) is
+abstracted in an intermediate 3D model where geometric (and some temporal)
 reasoning take place~\cite{Sisbot2011}.
 
 The outcome of the geometric analysis, as well as the result of the dialogue
 processing module~\cite{Lemaignan2011b}, are stored in a central knowledge
 base~\cite{Lemaignan2010}. The symbolic knowledge base triggers events that are
-captured by the top-level robot controller.
+captured by the top-level execution controller.
 
 The controller can rely on two specialized planners: the geometric motion and
 manipulation planner~\cite{Sisbot2008, Mainprice2011, Pandey2010} and the
@@ -208,7 +198,7 @@ symbolic task planner~\cite{Alili2008}.
 The dialogue processing module, as well as the symbolic task planner, also
 use the knowledge base to answer questions or initialize the planning domain.
 
-During a typical interaction experiment, the robot controller decides upon a
+During a typical interaction experiment, the execution controller decides upon a
 plan to execute, requires a plan from the task planner, allocates the actions to
 the human and the robot, communicates the shared plan, and controls and
 monitors its execution. The operation continues until the goal is achieved, is
@@ -228,18 +218,17 @@ assumed to be correctly \emph{perceived}, \emph{localized}, \emph{resolved} and
 
 This means that we assume all relevant entities (\ie the objects the robot has
 to interact with) to be actually perceived by the robot when they enter its
-field of view (we shall come back and precisely define the \emph{field of view}
-in the next section), that the entities' percepts enable a \emph{good enough}
-6D localization, that these entities are properly resolved (\eg, two bottles
-next to each other are perceived as two different bottles), and most
-importantly that these entities are robustly identified: each time the exact
-same object is seen (possibly under a different angle), it is always labelled
-with the same, unique, identifier (the identifier by itself may be completely
-random, and can be known at runtime only).
+field of view, that the perception enables a \emph{good enough} 6D
+localization, that the objects are properly resolved (\eg, two bottles next to
+each other are perceived as two different bottles), and most importantly, that
+the objects are robustly identified: each time the exact same object is seen
+(possibly under a different angle), it is always labelled with the same,
+unique, identifier (the identifier by itself may be completely random, and can
+be known at runtime only).
 
-Concretly this assumption typically translates during experiments by tagging
-each objects with a barcode-like label (some can be seen on Fig.~\ref{fig|vpt})
-that allows the robot to localize and identify these objects.
+Typically this assumption translates during experiments by tagging each objects
+with a barcode-like label (some of them can be seen on Fig.~\ref{fig|vpt}) that
+allows the robot to localize and identify these objects.
 
 Numerous work \fxfatal{Cite some of them} (some of them presented earlier in
 this book) focus on dealing with resolution and identification issues.  We
@@ -250,37 +239,37 @@ will not further discuss them here.
 
 \subsection{Chapter overview}
 
-This chapter walks through the on-line building and use of symbolic models of
-the environment and interacting agents. As far as possible, we will try to
-present the exact list of symbolic statements issued by the whole system at
-runtime.
+This chapter walks through the on-line building and use of geometric and
+symbolic models of the environment and interacting agents. As far as possible,
+we will try to present the exact list of symbolic statements issued by the
+whole system at runtime.
 
-We start by introducing an approach to create symbolic models of the
-environment, seen by the robot or by the other interacting agents. To the end,
-we introduce \emph{Perspective Taking}~\cite{Flavell1992,Tversky1999} and some
-elements of \emph{Theory of Mind}~\cite{Scassellati2002}\fxwarning{Check this
-reference is relevant here} Techniques to efficiently compute perspective-aware
-models of the world are presented. 
+We first introduce the approach with the modelling of the environment, as seen
+by the robot or by other interacting agents. To this end, we introduce
+\emph{Perspective Taking}~\cite{Flavell1992,Tversky1999} and some elements of
+\emph{Theory of Mind}~\cite{Scassellati2002}\fxwarning{Check this reference is
+relevant here} techniques to efficiently compute perspective-aware models of
+the world. 
 
 \emph{Search} and \emph{exploration} policies are also presented, along with
-symbolic ways to deal with under-defined locations.
+symbolic ways to deal with ill-defined locations.
 
 The next section focuses on the modeling of agents and agents capabilities,
-including a geometric approch for the analysis of the potential of actions (we
-call it the \emph{Mightabilities}) of each agent.
+including a geometric approach for the analysis of the potential of actions (we
+call them \emph{mightabilities}) of each agent.
 
-Section~\ref{cognitivekernel} presents a centralized knowledge base that
+Section~\ref{cognitivekernel} presents the centralized knowledge base that
 stores, reasons about, and asynchronously (event-driven) exposes the symbolic
-facts to decision-making processes. We also discuss here the role of {\it a
-priori} knowledge (the so-called \emph{common-sense knowledge}).
+facts to the decision-making components. We also discuss here the role of {\it
+a priori} knowledge (also called \emph{common-sense} knowledge).
 
-The following two sections~\ref{hatp} and~\ref{dialogs} present actual
-applications of this approach. First, we show how the robot may
-use the symbolic models for shared task planning: using each agent's model of
-the world, one stream of actions per agent is generated, with synchronization
-points between them. Then, we present how multi-modal (verbal and deitic)
-dialogue processing is made much easier by relying on consistent symbolic
-models, using semantics close to human natural language.
+The following two sections~\ref{sec|hatp} and~\ref{dialogs} present actual
+applications of this approach. First, we show how the robot may use the
+symbolic models for shared task planning: each agent's model of the world is
+used to produce one stream of actions per agent, with synchronization points
+between them. Then, we present how multi-modal (verbal and deictic) dialogue
+processing is made easier by relying on physically grounded and consistent
+symbolic models, using semantics close to human natural language.
 
 Bibliographical notes have been added at the end of each relevant section.  We
 also present before the conclusion of the chapter other architectures dedicated
@@ -294,9 +283,9 @@ regarding the specifics of the human-robot interactions.
 \section{Building an Agent-Aware Symbolic Model of the Environment}
 \label{sec:situ}
 
-Anchoring perceptions in a symbolic model requires perception abilities
-and their symbolic interpretation. In this section we present
-SPARK (\emph{SPAtial Reasoning \& Knowledge}~\cite{Sisbot2011}), a situation assessment reasoner
+Anchoring perceptions in a symbolic model requires perception abilities and
+their symbolic interpretation. In this section we present SPARK (\emph{SPAtial
+Reasoning \& Knowledge}~\cite{Sisbot2011}), a situation assessment reasoner
 that generates relevant symbolic information from the geometry of the
 environment with respect to relations between objects, robots and humans.
 
@@ -312,47 +301,37 @@ environment with respect to relations between objects, robots and humans.
 %
    \end{center}
 
-   \caption{The robot represents at runtime its environment in a 3D model resulting of the sensors' inputs fusion.}%
+   \caption{The robot represents at runtime its environment in a 3D model
+   resulting of the sensors' inputs fusion (Kinect, motion capture, 2D barcodes
+   tracking).}
+
    \label{fig|spark}
 
 \end{figure}
 
 Figure~\ref{fig|spark} shows a screenshot of the SPARK environment side-by-side
-with the real environment: as mentioned in the introduction, obecjts are
-identified and localized through their 2D tags. The human pose is tracked with
+with the real environment: as mentioned in the introduction, objects are
+identified and localized through 2D barcodes. The human pose is tracked with
 a Microsoft Kinect device (assisted by motion capture to accurately track the
 head motion, which is required to compute what the human is looking at).
 
+This geometric model is continuously updated at runtime by the robot.
 
 \subsection{Symbolic locations}
 
-One way of referring to object's positions is based on human's symbolic 
-descriptors, instead of using their precise position. In fact, in many cases, 
-this information is the most precise information available since humans do not 
-store the numeric coordinates of objects. These type of descriptors have been 
-studied in the context of language grounding 
-(\cite{O'Keefe1999,Matuszek2010,Regier2001,Kelleher2009,Blisard2005}). In this 
-work we focus on the following relations which are computed with respect to the 
-position of the agents and the objects:
+Human commonly refer to the positions of objects with symbolic descriptors
+(like \emph{on}, \emph{next to}...) instead of precise, numeric position. These
+type of descriptors have been studied in the context of language grounding
+(\cite{O'Keefe1999,Matuszek2010,Regier2001,Kelleher2006,Blisard2005}). In this
+work we focus agent-independent symbolic locations and agent-dependent,
+relative locations.
 
-\begin{itemize} 
+\subsubsection{Agent-independent locations}
 
-\item \emph{Location according to an agent}: The predicate
-\concept{isLocatedAt} represents spatial locations between agents and objects.
-For example we say ``it is on my right, on your left, ...'' We compute these
-spatial locations by dividing the space around the referent (an agent) into $n$
-regions based on arbitrary angle values relative to the referent orientation.
-For example, for $n = 4$ we would have the space divided into \emph{front,
-left, right} and \emph{back}. Additionally, two proximity values, \emph{near}
-and \emph{far}, may also be considered. The number of regions and proximity
-values can be chosen depending on the context where the interaction takes
-place.
-
-\item \emph{Location according to an object}: We can also refer to object
-locations with respect to other objects in the environment, such as \emph{above,
-next to, in}, etc. In this work we compute three main relations based on the
-bounding box and center of mass of the objects 
-(fig.~\ref{fig|sprelations}): 
+We can refer to object locations with respect to other objects in the
+environment, such as \emph{above, next to, in}, etc. In this work we compute
+three main relations based on the bounding box and center of mass of the
+objects (fig.~\ref{fig|sprelations}): 
 
 \begin{itemize}
 	\item \concept{isOn}: computes if an object $O_1$ is on another object $O_2$ by
@@ -379,7 +358,6 @@ bounding box and center of mass of the objects
 \end{figure}
 
 \end{itemize} 
-\end{itemize}
 
 To ensure the different agent models are up-to-date, all these properties are
 always computed on-line, each time the current state of the world changes.
@@ -414,10 +392,21 @@ The predicate \concept{isMoving} states, for each tracked entity, whether it is
 currently moving or not.
 
 
-\subsection{Relative placements}
+\subsubsection{Agent-dependent placements}
 
 While in previous section we listed several \emph{absolute} location predicate,
 many topological relations are directly dependent from the observation point.
+
+The predicate \concept{hasRelativePosition} represents spatial locations
+between agents and objects that are agent dependent.  For example we say ``it
+is on my right, on your left, ...'' We compute these spatial locations by
+dividing the space around the referent (an agent) into $n$ regions based on
+arbitrary angle values relative to the referent orientation.  For example, for
+$n = 4$ we would have the space divided into \emph{front, left, right} and
+\emph{back}. Additionally, two proximity values, \emph{near} and \emph{far},
+may also be considered. The number of regions and proximity values can be
+chosen depending on the context where the interaction takes place.
+
 
 To build an agent-dependent model of the world, \emph{Perspective
 Taking}~\cite{Flavell1992,Tversky1999} is employed by the reasoner to provide
@@ -445,62 +434,64 @@ description of the relative positioning of objects in the environment (table
 	 \concept{Object}  & \concept{cyc:near}  &  \concept{Agent} & 
 	\end{tabular}
 	\caption{List of statements describing relative spatial relationships between objects and agents.}
-	\label{table|relative}
+	\label{facts|relative}
 \end{table}
 
 
-\subsection{Exploration policies}
+\subsection{Exploration and search policies}
 
-To effectively maintain the model of the world, the robot may adopt context-dependent strategies to observe its environment.
+To effectively maintain the model of the world, the robot may adopt
+context-dependent strategies to observe its environment.
 
-We implement two categories of policies:
+Two main categories of policies are implemented on our robots:
 
 \begin {itemize}
-\item Exploration policies: the robot exhaustively scans the surrounding environment to
-  see all what can be observed.
 
-\item Search policies: the robot looks for an specific object until it is
-  detected if possible, scanning surrounding furnitures and looking in human
-  hand.
+	\item \emph{Exploration} policies: the robot exhaustively scans the
+	surrounding environment to see all what can be observed.
+
+	\item \emph{Search} policies: the robot looks for an specific object until
+	it is detected if possible, scanning surrounding furnitures and looking in
+	human hand.
 
 \end {itemize}
 
-The robot must also monitor events that are not directly linked to robot action
-to drive world update. The robot controller uses SPARK to monitor human hand
+World updates are also driven by events that are not directly linked to the
+robot actions. The execution controller relies on SPARK to monitor human hand
 motion and primitive action recognition (\cf section~\ref{sec|primitives}) to
-detect actions like \emph{pick} and \emph{throw}.  These trigger specific
+detect actions like \emph{pick} and \emph{throw}.  These trigger also specific
 exploration behaviours.
 
 \subsection{Uncertain Locations and Management of Hypotheses on States and Positions}
 
 Unknown or under-defined locations are represented by the mean of randomly
 generated location IDs. For instance, if the location of \concept{BottleA} has
-no name, it can be stored as \stmt{bottleA isAt loc12578}, with
+no name (for instance, the human is holding it above the table), it can be stored as \stmt{bottleA isAt loc12578}, with
 \concept{loc12578} a random ID. 
 
 If the position is actually completely unknown, \concept{loc12578} has no
-further informations attached to it (and can be omitted altogether). On the
-contrary, if some is known about the location, it can be refined by qualifying
-the location, \eg \stmt{loc12578 isAbove MyNiceTable, loc12578
-owl:differentFrom MyNiceTable}. 
+further informations attached to it (and can be omitted altogether). When more
+is known about the location, it can be step-by-step refined by qualifying the
+location, \eg \stmt{loc12578 isAbove MyNiceTable, loc12578 owl:differentFrom
+MyNiceTable}. 
 
 
 It is sometimes difficult or even impossible to see and/or track an object in
-certain states. This happens, for instance, when the object has been put in a
-container, when it is in the robot gripper or in the human hand, and more
-generally in any state in which it is hidden by something else. Our robot has a
-model of the possible symbolic states for an object (whether the object is on a
-furniture, in an agent hand, in a container, etc.).  According to the robot
-perception of what has happened since the object was last seen, the robot tries
-to maintain a belief of the current possible symbolic states and their
-associated probabilities for this object. Such information can be used to
-update the beliefs using input from exploration, dialog, human visual focus,
-etc.
+certain states (for instance when the object has been dropped into an opaque
+container, or when it is partially masked in the robot gripper or in the human
+hand). Our robot has a model of the possible symbolic states for an object
+(whether the object is on a furniture, in an agent hand, in a container, etc.):
+according to the robot perception of what has happened since the object was
+last seen, the robot tries to maintain a belief of the current possible
+symbolic states and their associated probabilities for this object. Such
+information can be used to update the beliefs using input from exploration,
+dialogue, human visual focus, etc.
 
 SPARK currently provides a simple implementation of such a functionality. The
-only managed hypotheses are \emph{in container} and \emph{in agent hand}. We
-can have only one hypothesis at the same time. Hypothesis validity is checked
-geometrically in case of incoming perception values.
+only hypotheses that the robot can consider, are \emph{in container} and
+\emph{in agent hand}. We can have only one hypothesis at the same time.
+Hypothesis validity is checked geometrically in case of incoming perception
+values.
 
 \subsection{Related work}
 
@@ -524,6 +515,15 @@ applications such as direction recognition ~\cite{Kollar2010,Matuszek2010} or
 language grounding~\cite{Tellex2010}.~\cite{Skubic2004} presented a spatial
 reasoner integrated in a robot which computes symbolic positions of objects.
 
+Perspective Taking is a human ability which allows one to put him/herself in
+another person's point of view. Studied in psychology
+literature~\cite{Flavell1992,Tversky1999}, this ability is crucial when
+interacting with people by allowing one to reason on others' understanding of
+the world in terms of visual perception, spatial descriptions, affordances and
+beliefs, etc.  Therefore, in the last years these notions have been gradually
+employed in human-robot interaction.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -545,15 +545,16 @@ potentialities of action \emph{Mightabilities}.
 
 There are a number of common properties for a robot and a human related to
 their capabilities in a given situation: they can both reach, grasp, look at,
-point at, etc. In our context, we group robots and humans into a single category.
-Thus, we define agents as entities that can act in the environment and
-manipulate it. In this work we focus on the following capabilities from each
-agent's perspective:
+point at, etc.: we group them in the \emph{Agent} category, defined as entities
+that can act in the environment and manipulate it.
+
+In this work we focus on the following capabilities from each agent's
+perspective:
 
 \begin{itemize}
 
 \item \emph{Sees}: An important ability to know about an agent is to predict
-``what it can see'', \ie what is within its field of view (FOV). A robot being
+\emph{What can it see?}, \ie what is within its field of view (FOV). A robot being
 able to compute this information can then act accordingly. An example would be
 a clarification scenario where the human is searching for an object and the
 robot is able to infer that he/she is looking for the one that is not visible
@@ -589,7 +590,7 @@ point where the user is able to get the object afterward.
 Figure~\ref{fig::sparkRepresentations}\emph{b} shows different reachability postures for each object
 on the table. In the example, the bottle and the box are both reachable for the
 human, but the teddy bear is too far. Instead, from the robot's perspective,
-the teddy bear is reachable for it, while the bottle is not.
+the teddy bear is reachable, while the bottle is not.
 
 \end{itemize}
 
@@ -614,8 +615,8 @@ method~\cite{Nakamura90,Baerlocher04} to find a collision free posture for the
 agent where its end-effector is at the center of the object within a given
 tolerance.
 
-Tables~\ref{facts|capabilites} and~\ref{facts|reachabilities} summarize the
-predicates produced by SPARK during the agent capabilities analysis phase.
+Tables~\ref{facts|capabilites} summarizes the predicates produced by SPARK
+during the agent capabilities analysis phase.
 
 \begin{table}[h]
 	\centering
@@ -627,29 +628,23 @@ predicates produced by SPARK during the agent capabilities analysis phase.
 		 \concept{Agent}  & \concept{sees}  &  \concept{SpatialThing}  &    \\ 
 		 \concept{SpatialThing}  & \concept{isInFieldOfView}  &  \concept{xsd:boolean}  & via inference: \par \stmt{myself sees *} $\Leftrightarrow$ \stmt{* isInFieldOfView true} \\ 
 		 \concept{Agent}  & \concept{pointsAt} $\equiv$ \concept{cyc:pointingToward}  & \concept{SpatialThing} \\ 
-		 \concept{Agent}  & \concept{focusesOn}  &  \concept{SpatialThing}  &  via inference: \par \concept{looksAt} $\wedge$ \concept{pointsAt} $\Rightarrow$ \concept{focusesOn}
-
-	\end{tabular}
-	\caption{List of facts describing the attentional state of an agent. \concept{looksAt} is interpreted as an object \emph{being in the field of attention} of an agent. An object is \concept{see}n if it is visible for the agent without moving the head (ie, in \emph{field of view}).}
-	\label{facts|capabilites}
-\end{table}
-
-\begin{table}[h]
-	\centering
-		\begin{tabular}{p{2cm}p{4.5cm}p{2cm}}
-		\rowcolor{white}
-		\textbf{Subject} & \textbf{Predicate} & \textbf{Object} \\
-		\hline
+		 \concept{Agent}  & \concept{focusesOn}  &  \concept{SpatialThing}  &  via inference: \par \concept{looksAt} $\wedge$ \concept{pointsAt} $\Rightarrow$ \concept{focusesOn} \\
 		\concept{Agent} & \concept{seesWithHeadMovement} &  \concept{SpatialThing} \\
 		\concept{Agent} & \concept{reaches} &  \concept{Object} \\ 
 
 	\end{tabular}
-	\caption{List of statements describing action potentialities for an agent.}
-	\label{facts|reachabilities}
+
+	\caption{List of facts describing the attentional state and the abilities
+	of an agent. \concept{looksAt} is interpreted as an object \emph{being in
+	the field of attention} of an agent. An object is \concept{see}n if it is
+	visible for the agent without moving the head (\ie, in \emph{field of
+	view}).}
+
+	\label{facts|capabilites}
 \end{table}
 
-
-Table~\ref{facts|agentstate} lists the remaining symbolic facts that are produced and maintained by SPARK related to the general state of the agent.
+Table~\ref{facts|agentstate} lists the other symbolic facts that are
+produced and maintained by SPARK related to the general state of the agent.
 
 \begin{table}[h]
 	\centering
@@ -660,7 +655,13 @@ Table~\ref{facts|agentstate} lists the remaining symbolic facts that are produce
 		\concept{Agent} & \concept{hasPosture}  &  \concept{Posture} \\
 		\concept{Agent} & \concept{currentlyBodilyDoes}  &  \concept{Action}
 	\end{tabular}
-	\caption{List of statements describing the state of an agent in general. The \concept{currentlyBodilyDoes} predicate states the current action of the agent, be it intentional or not.}
+
+	\caption{List of statements describing the state of an agent in general.
+	\concept{Posture} can be either \concept{standing} or \concept{sitting}.
+	The \concept{currentlyBodilyDoes} predicate states the current action of
+	the agent, be it intentional or not.}
+
+	\label{facts|agentstate}
 \end{table}
 
 
@@ -680,11 +681,11 @@ Table~\ref{facts|agentstate} lists the remaining symbolic facts that are produce
 Monitoring human activity is crucial to maintain a coherent state of the world.
 Full human action and activity monitoring is a difficult task that requires
 knowledge and reasoning both on high level facts like goals, intentions and
-plans, as well as bottom-up data from agent and object motions. Simple temporal
-and geometric reasoning on human hand trajectories and potential objects
-placements can provide some useful clues for high level human monitoring
-processes. We call this temporal and geometric reasoning \emph{primitive action
-recognition}.
+plans, as well as bottom-up data from agent and object motions. However, simple
+temporal and geometric reasoning on human hand trajectories and potential
+objects placements can provide some useful clues for high level human
+monitoring processes. We call this temporal and geometric reasoning
+\emph{primitive action recognition}.
 
 For example, a \emph{pick} or a \emph{throw} action can be
 recognized by observing that an object on table and an empty human hand are
@@ -711,10 +712,8 @@ This section explains how potential manipulation actions can be computed for
 the human and represented as so-called \emph{Mightability Maps}~\cite{Pandey2010}.
 
 In human movement and behavioral psychology literatures, different types of
-reach actions of the human have been identified and analyzed,
-\cite{Gardner2001, Choi2004}.  Figure~\ref{fig|reaches_taxonomy} shows a taxonomy
-of such reaches involving simple arm-shoulder extension (\emph{arm-and-shoulder}
-reach), leaning forward (\emph{arm-and-torso} reach) and \emph{standing} reach.
+reach actions (fig.~\ref{fig|reaches_taxonomy}) of the human have been
+identified and analyzed, \cite{Gardner2001, Choi2004}.
 
 \begin{figure}
   \centering
@@ -724,15 +723,16 @@ reach), leaning forward (\emph{arm-and-torso} reach) and \emph{standing} reach.
   \label{fig|reaches_taxonomy}
 \end{figure}
 
-Taking inspiration from such studies, we have presented the concept of
-\emph{Mightability}, which stands for ``Might be Able to...'', as a framework
+Taking inspiration from such studies, we introduce the concept of
+\emph{mightability}, which stands for ``Might be Able to...'', as a framework
 for \emph{multi-state visuo-spatial} perspective taking. The idea is to analyze
 the various abilities of an agent such as ability to see or ability to
 reach, not only from the current state of the agent, but also from a set of
-states, which the agent might achieve from his current state. For this the
-robot applies a list $A_v$, of virtual actions to estimate the abilities
+states, which the agent might achieve from his current state. To this end,
+the robot applies a list $A_v$ of virtual actions to estimate the abilities
 $A_b \in \{See, Reach, Grasp\}$ from the resulting virtual pose, also
 considering the environmental and postural constraints of the agent.
+
 Currently,
 
 \[ 
@@ -745,23 +745,23 @@ with
 A_v^{head} & \subseteq \{PanHead, TiltHead\} \\
 A_v^{arm} & \subseteq \{StretchOutArm\} \\
 A_v^{torso} & \subseteq \{TurnTorso, LeanTorso\} \\
-A_v^{posture} & \subseteq \{MakeStanding, MakeSitting\} \\
+A_v^{posture} & \subseteq \{Stand, Sit\} \\
 A_v^{displace} & \subseteq \{MoveTo\} \\
 \end{align*}
 
 When such mightability analyses are performed at the levels of cells of the
-discretized 3D workspace, we term them as \emph{Mightability Maps} (MM) and when done
-for the object in the space we call it \emph{Object Oriented Mightabilities} (OOM).
+discretized 3D workspace, we term them as \emph{Mightability Maps} and when done
+for the object in the space we call it \emph{Object Oriented Mightabilities}.
 
-The robot performs mightability analyses by taking into account collision
-as well as the joint limits. The information about the robot and human
-positions, orientations and the 3D state of the environment is continuously
-updated in our 3D representation and planning platform, Move3D \cite{Simeon2001}, which
-also facilitates our robots to check intra-body and inter-body collisions
-for itself and for the human model. The robot uses kinematic structures of
-the agents and performs various virtual actions until the joint limits
-of the neck and/or torso are reached or the collision of the torso of
-the agent with the environment is detected.
+The robot performs mightability analyses by taking into account collision as
+well as the joint limits. The information about the robot and human positions,
+orientations and the 3D state of the environment is continuously updated in the
+3D representation and planning platform, Move3D \cite{Simeon2001}, which also
+provides intra-body and inter-body collisions checking for the robot and for
+the human models. The robot uses the kinematic structures of the agents and
+performs various virtual actions until the joint limits of the neck and/or
+torso are reached or the collision of the torso of the agent with the
+environment is detected (fig.~\ref{fig|mightabilities}).
 
 \begin{figure}[ht!]
    \begin{center}
@@ -769,10 +769,14 @@ the agent with the environment is detected.
        \subfigure[Initial model.]{%
            \includegraphics[width=0.5\textwidth]{./figs/mightabilities/2a.jpg}
        }%
-       \subfigure[Mightability Map for the \emph{see} ability. In dark blue, the current field of view, in light green the potential field of view if the human turns his head.]{%
+	   \subfigure[Mightability Map for the \emph{see} ability. In dark blue,
+	   the current field of view, in light green the potential field of view if
+	   the human turns his head.]{%
           \includegraphics[width=0.5\textwidth]{./figs/mightabilities/2d.jpg}
        }\\%
-       \subfigure[The \emph{reach} ability. In light green, accessible zones if the human leans forward.]{%
+
+	   \subfigure[The \emph{reach} ability. In light green, accessible zones if
+	   the human leans forward.]{%
           \includegraphics[width=0.5\textwidth]{./figs/mightabilities/2e.jpg}
        }%  
 	\end{center}
@@ -784,42 +788,38 @@ the agent with the environment is detected.
    \label{fig|mightabilities}
 \end{figure}
 
-Figure~\ref{fig|mightabilities}(a) shows the current scenario.
-Figures~\ref{fig|mightabilities}(b) and (c) show the MM for the places visible
-and reachable by the human from his current position and configuration.
-
 Thanks to multi-state perspective taking, the robot is also able to estimate
 that if the human will just turn his head around, he will be able to see more
-places (figure~\ref{fig|mightabilities}(d)) and if the human will lean forward,
-he will be able to reach more space (figure~\ref{fig|mightabilities}(e)). For
-reachability, the robot further distinguishes among reachable by left hand,
+places and if the human will lean forward, he will be able to reach more space.
+For reachability, the robot further distinguishes among reachable by left hand,
 reachable by right hand and reachable by both hands of an agent in a particular
 state.  
 
 Mightability analysis can be performed and updated online, making possible to
 use it during the planning and decision making steps: as the robot is able to
-perform such analysis for all the agents in the environment, it can use the MM
-to find the candidate places to perform a set of basic HRI tasks: give, make
-accessible, show, hide an object, etc. 
+perform such analysis for all the agents in the environment, it can use the
+mightability maps to find the candidate places to perform a set of basic
+human-robot interaction tasks: give, make accessible, show, hide an object,
+etc. 
 
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{./figs/mightab-steps.pdf}
 
-\caption { Mightability Analysis-based framework for finding a solution: (a)
-Initial Mightability Maps, (b) Decision making on relevant Mightability Maps
-depending on task and required comfort level of agents, (c) relevant
-Mightability Maps, (d) task specific set operations, (e) raw candidate solution
-set, (f) weight assignment based on spatial preferences, (g) set of weighted
-candidate points, (h) applying rigorous and expensive tests on reduced search
-space, (i) the feasible solution of highest weight.}
+\caption {(a) Initial mightability maps, for every agent and evey ability, (b)
+Decision making on relevant mightability maps depending on task and required
+comfort level of agents, (c) relevant mightability maps, (d) task specific set
+operations, (e) raw candidate solution set, (f) weight assignment based on
+spatial preferences, (g) set of weighted candidate points, (h) applying
+rigorous and expensive tests on reduced search space, (i) the feasible solution
+of highest weight.}
 
   \label{fig|mightabilities-framework}
 \end{figure}
 
 
 Figure~\ref{fig|mightabilities-framework} shows how a feasible solution for a
-task can be found: the robot reasons on various MM of the involved agents and
+task can be found: the robot reasons on various mightability maps of the involved agents and
 selects the best solution by performing successive set operations depending on
 the task.
 
@@ -850,38 +850,29 @@ the task.
 \end{figure}
 
 Figure~\ref{fig|mightabilities-steps} illustrates the process for a \emph{give}
-task. From the initial set of all the MM for the robot and for the human, the
-planner extracts the relevant MM based on the task and the desired efforts of
-the agents.
+task. From the initial set of all the mightability maps for the robot and for
+the human, the planner extracts the relevant mightability maps based on the
+task and the desired efforts of the agents.
 
 In this example, the maximum desired effort for the human is to lean forward.
 As the task requires a hand-over operation, we compute positions visible and
-reachable by both agents (fig.~\ref{fig|mightabilities-steps}{\it(c)}) from
-each agent's respective maps (figs.~\ref{fig|mightabilities-steps}{\it(a)} and
-{\it(b)}).
+reachable by both agents (fig.~\ref{fig|mightabilities-steps}{\it c}) from
+each agent's respective maps (figs.~\ref{fig|mightabilities-steps}{\it a} and
+{\it b}).
 
 Further based on various criteria such as comfort, preferences, etc. weights
 are assigned to the raw candidate points
-(fig.~\ref{fig|mightabilities-steps}{\it(d)}), and the resulting candidates are
+(fig.~\ref{fig|mightabilities-steps}{\it d}), and the resulting candidates are
 finally tested (\ie, the motion planner is called) to check if the robot can
 actually reach the position.
 
 \subsection{Related work}
 
-Perspective Taking is a human ability which allows one to put
-him/herself in another person's point of view. Studied in
-psychology literature~\cite{Flavell1992,Tversky1999}, this ability is
-crucial when interacting with people by allowing one to reason on
-others' understanding of the world in terms of visual perception, spatial
-descriptions, affordances and beliefs, etc.
-Therefore, in the last years these notions have been gradually
-employed in Human-Robot Interaction.~\cite{breazeal2006} presents a
-learning algorithm that takes into account information about a
-teacher's visual perspective in order to learn a
-task. ~\cite{Johnson2005} apply visual perspective taking for action
-recognition between two robots.~\cite{Trafton2005} use both visual and
-spatial perspective taking for finding out the referent indicated by a
-human partner.
+Breazeal et al.~\cite{breazeal2006} present a learning algorithm that takes
+into account information about a teacher's visual perspective in order to learn
+a task.  ~\cite{Johnson2005} apply visual perspective taking for action
+recognition between two robots.~\cite{Trafton2005} use both visual and spatial
+perspective taking for finding out the referent indicated by a human partner.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -889,26 +880,20 @@ human partner.
 \section{Explicit Knowledge Management}
 \label{cognitivekernel}
 
-\subsection{ORO: The OpenRobots Ontology server}
+The previous sections have presented how symbolic facts, grounded in the
+current physical situation, were generated by the robot. This section now
+presents how we store and reason about these symbolic statements.
 
-A key element of this cognitive architecture is how knowledge is explicitely
+\subsection{Ontology-based Knowledge Management}
+
+A key element of this cognitive architecture is how knowledge is explicitly
 exposed, stored and handled between component.
 
-We have adopted a centralized approach for knowledge management (while this is
-the most commonly found approach in the litterature, other, more distributed
-approaches exist, like \cite{Jacobsson2008}). Our knowledge base is called
-ORO~\cite{Lemaignan2010}.
-
-The ORO platform is primarily designed as a central
+We have adopted a centralized approach for knowledge management called
+ORO~\cite{Lemaignan2010}. The platform is designed as a central
 knowledge storage service implemented as a server where the robot
 components can add or query statements at run-time. Figure~\ref{fig|oro-overview}
-illustrates the overall architecture. The \emph{front-end} accepts and manages
-connections from client components. The clients' requests are processed by a
-set of internal modules: basic operations on statements, but also higher
-cognitive and human-robot interaction related functionalities are available
-(detailed thereafter). External plugins can also be easily added. The modules
-rely on several parallel ontology \emph{back-ends} where the knowledge is
-actually stored.
+illustrates the main functional components of ORO.
 
 \begin{figure}[!t]
 \centering
@@ -917,47 +902,39 @@ actually stored.
   \label{fig|oro-overview}
 \end{figure}
 
+At the core, ORO is build around the OpenJena ontology management library,
+connected to the Pellet reasoner.
+
+A front-end accepts and manages connections to clients. The clients' requests
+are processed by a set of internal modules: basic operations on statements, but
+also higher cognitive and human-robot interaction related functionalities are
+available. External plugins can also be easily added.
+
 Besides acting as a facts database, the ORO platform exposes several functions:
 operations on knowledge statements relying on inference (through a continuous
 first-order logic classification process), management of \emph{per-agent}
 symbolic models, and also higher cognitive and human-robot interaction related
-functionalities like categorization of sets of concepts, profiles of memory
-(that enable the robot to ``forget'' about some facts), natural language
-grounding~\cite{Lemaignan2011}\ldots.
-
-ORO stores independent knowledge models (in our implementation, as
-\emph{ontologies}) for each agent (the robot and the humans it
-interacts with). The robot architecture components (like the executive
-layer or the situation assessment component) can then store the
-agents' beliefs in specific models.  Each of these models is
-independent and logically consistent, enabling reasoning on different
-perspectives of the world that would otherwise be considered as
-globally inconsistent (for instance, an object can be visible for the
-robot but not for the human. This object can have at the same time the
-property \concept{isVisible \textbf{true}} and \concept{isVisible
-  \textbf{false}} in two different models). This feature actually
-allows us to consider the robot to be endowed with a simple
-\emph{theory of mind}~\cite{Scassellati2002}: it can explicitly
-model the belief state of its interactors.
+functionalities like categorization of sets of concepts or profiles of memory
+(that enable the robot to ``forget'' about some facts).
 
 ORO also provides an event mechanism that allows components to be
 triggered when specific events occur. A component can
 for instance subscribe to events of kind \setstmt{?agent isVisible
   true, ?agent type Human}. As soon as the perception layer detects a
 human in the robot's field of view and accordingly updates the
-knowledge base, the executive layer would be triggered back. The
+knowledge base, the executive layer is triggered. The
 event framework also takes advantage of the inference capabilities of
 ORO. Thus an event can be indirectly triggered if its triggering
 conditions can be inferred to be true.
 
-\subsection{The OpenRobots Common-Sense Ontology}
+\subsection{Common-Sense Knowledge}
 \label{ontology}
 
 For the robot to interpret and come up with new inferences based on the facts
 coming from the perceptual layers, it need a \emph{cultural background}, a
 common-sense knowledge assumed to be shared by all agents. The ORO server is
 loaded at startup with an initial set of statements which we call the
-\emph{OpenRobots Common Sense Ontology}. It defines a small set of concepts
+\emph{OpenRobots Common Sense Ontology}. It defines concepts
 (and implicitly, a vocabulary) that can be used by all the modules of the robot
 to unambiguously add or query facts. Moreover, the same ontology declares rules
 and logical properties that are later on used for inference.
@@ -971,31 +948,22 @@ Available predicates allow us to describe the state of the agents and the world
 with relations like \concept{isOn}, \concept{sees},
 \concept{currentlyPerforms}, etc.
 
-Several significant projects are trying to provide such a machine-processable
-repository of common sense facts produced by humans (the \textsc{OpenMind}
-project\footnote{\url{http://www.openmind.org/}}, for instance). These
-knowledge bases are valuable but remain difficult to use in a pervasive way
-because of both their incompleteness and the lack of good connections with
-underlying, unambiguous concepts.
-%\cite{Singh2002}
-
 Our common sense ontology is closely aligned with the open-source
-OpenCyc\footnote{\url{http://www.opencyc.org}} upper ontology.
-OpenCyc defines a large taxonomy of concepts and semantic
-relationships between concepts that are used in several other projects
-(\textsc{WordNet, DBpedia}). This potentially eases the exchange and addition
-of knowledge from these other sources. Moreover, it also enables knowledge
-exchange with other robots (for instance, the works previously mentioned by
-Daoutis and Tenorth rely on the same Cyc concepts).
+OpenCyc\footnote{\url{http://www.opencyc.org}} upper ontology.  OpenCyc defines
+a large taxonomy of concepts and semantic relationships between concepts that
+are used in several other projects (\textsc{WordNet, DBpedia}). This
+potentially eases the exchange and addition of knowledge from these other
+sources. It also enables knowledge exchange with other robots (for instance,
+the work by Daoutis~\cite{Daoutis2009} or Tenorth~\cite{Tenorth2009a} are also 
+aligned on Cyc concepts).
 
 \subsection{Reasoning and Dynamic Knowledge Structuring}
 
-As previously mentioned, ontologies in ORO are written in OWL. The
-Pellet reasoner supports most of the OWL constructs and allows several types of
-reasoning:
+Knowledge is stored as OWL/RDF ontologies in ORO. We use the Pellet reasoner to
+classify them. This enables several type of reasoning:
 
 \begin{itemize}
-	\item inheritance
+	\item reasoning on inheritance relations (\eg \emph{all bottles are containers}),
 	\item property axioms
 		\begin{itemize}
 		\item entailments based on predicates' domain and range,
@@ -1016,10 +984,12 @@ reasoning:
 	\end{itemize}
 
 We provide in ORO accessors to query, add or remove all these properties and
-restrictions (except the SWRL rules) at run-time. This allows
-knowledge introspection and enables the robot to alter its own knowledge
-structures (the so-called \emph{T-Box} model) during its life-time by adding
-new constraints and properties to classes and predicates.
+restrictions (except the SWRL rules) at run-time. This allows knowledge
+introspection and enables the robot to alter its own knowledge structures (the
+so-called \emph{T-Box} model) during its life-time by adding new constraints
+and properties to classes and predicates (we can for instance teach the robot
+\emph{at runtime} that cats are animals, \ie \stmt{Cat rdfs:subClassOf
+Animal}).
 
 \subsection{Representation of Alternative Cognitive Models}
 \label{alterite}
@@ -1028,11 +998,9 @@ As pictured in Figure~\ref{fig|oro-overview}, ORO stores independent cognitive
 models for each agent it interacts with. When ORO actually identifies a new
 agent (or infers that some instance is an agent), it automatically creates a
 new, separate, in-memory OWL model for that agent. Thus, different robot
-components, like supervision or situation assessment, may then store the
+components, like supervision or situation assessment, can access the
 agents' beliefs in separate models. All knowledge processing functions in the
-robot's primary model are equally available in every agent's model, which
-allows us to store and reason on different (and possibly globally inconsistent)
-models of the world.
+robot's primary model are equally available in every agent's model.
 
 Each of these models is independent and logically consistent,
 enabling reasoning on different perspectives of the world that would otherwise
@@ -1044,10 +1012,8 @@ two different models).
 This feature actually allows us to consider the robot to be endowed with a
 \emph{theory of mind}~\cite{Scassellati2002}: the robot can explicitly model
 the belief state of its interactors, opening new possibilities for the control
-architecture. In section~\ref{exp:disambVPT} we present an example of how we use this feature to
-make sense of user sentences from his/her point of view. Moreover,
-these multiple models can be viewed as different interpretive scopes,
-allowing the robot to interpret the same reality from different points of view.
+architecture. In section~\ref{dialogs} we present an example of how we use this feature to
+make sense of user sentences from his/her point of view.
 
 % \subsection{Categorization}
 % \label{categorization}
@@ -1068,29 +1034,20 @@ allowing the robot to interpret the same reality from different points of view.
 
 \subsection{Related work}
 
+Knowledge representation systems are always present in some form in robotic
+architecture that claim to be somehow \emph{cognitive}. While centralized
+knowledge base are the most common approach in the litterature, other, more
+pervasive, approaches exist, like \cite{Jacobsson2008}.
+
+We mention only two of them here. Other system, that are part of larger
+architecture for grounding of human-robot interaction, are presented in
+section~\ref{sec|literature}.
+
 In the field of symbolic knowledge processing for robots, Gunderson and
 Gunderson~\cite{Gunderson2008} introduce the concept of \emph{reification}
 (based on both recognition and pre-afference) as an intermediate step between
 pattern recognition and symbol grounding. Their underlying storage of knowledge
-relies on ontologies and bio-inspired memory models. While sharing similar
-foundations to our work, their proposal is based on fairly simple perceptual
-modalities and does not develop complex symbolic models that could enable
-human-robot interaction.
-
-Suh et al.~\cite{Suh2007} develop {\sc OMRKF}, an ontology-based reasoning
-framework for robotics. They tackle the grounding problem by storing low-level
-facts (like SIFT visual features) in a layered symbolic architecture that works
-well in simple sensori-motor spaces. However this approach raises concerns
-regarding scalability and management of more complex entities or interactions.
-
-Daoutis et al.~\cite{Daoutis2009} introduce one of the first complete
-architectures for grounded human-robot interaction. They successfully bind
-low-level percepts (including view-point independent SIFT based object
-recognition) to a high-level knowledge representation and reasoning system.
-They base their knowledge model directly on the \textit{ResearchCyc} ontology
-(including the \textit{MicroTheories} concept), used in combination with the
-{\sc CycL} language. This enables second-order logic modeling and access to a
-large common-sense knowledge base.
+relies on ontologies and bio-inspired memory models.
 
 Beetz et al.~\cite{Beetz2010} proposes a cognitive architecture called
 \textsc{CRAM} (Cognitive Robot Abstract Machine) that integrates
@@ -1108,6 +1065,15 @@ in real world scenarios. A probabilistic extension of \textsc{KnowRob}, called
 \textsc{ProbCog}~\cite{Jain2009} is also available. While in principle
 possible, currently the CRAM architecture does not provide explicit support for
 interacting with humans.
+
+On the topic \emph{common-sense knowledge}, several significant projects are
+trying to provide a machine-processable repository of common sense facts
+produced by humans (the \textsc{OpenMind} project~\cite{Singh2002} or
+RoboEarth~\cite{Waibel2011} are --very different-- examples). These knowledge
+bases are valuable but remain sometimes difficult to use in a pervasive way
+because of both their incompleteness and the lack of good connections with
+underlying, unambiguous concepts.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1135,7 +1101,7 @@ the robot and its human partners.  This is the role of HATP
 Hierarchical Task Network (HTN) refinement which performs an iterative
 task decomposition into sub-tasks until reaching atomic
 actions~\cite{Nau2003}.  The planning domain defines a set of methods
-describing how to decompose a task and can be seen as the Howto
+describing how to decompose a task and can be seen as the {\it how-to}
 knowledge of the robot.  HATP is able to produce plans for the robot's
 actions as well as for the other participants (humans or robots). It
 can be tuned by setting up different costs depending on the actions to
@@ -1143,10 +1109,8 @@ apply and by taking into account a set of constraints called social
 rules. This tuning aims at adapting the robot's behavior according to
 the desired level of cooperation of the robot.
 
-%\subsubsection*{Agents and action streams:}
-\vspace{0.3cm}
-\noindent
-\textbf{Agents and action streams:}
+\subsubsection{Agents and action streams}
+
 The robot plans not only for itself but also for the other agents. The
 resulting plan, called ``shared plan'' is a set of actions that form
 a stream for each agent involved in the goal achievement. Depending on
@@ -1163,14 +1127,14 @@ agents. Figure~\ref{plan_hatp1} illustrates a plan with two streams.
   \label{plan_hatp1}
 \end{figure}
 
-\subsubsection{Action costs and social rules:}
-A cost and a duration function is associated to each action.
-The duration function provides a duration interval for the action
-achievement and is used, in one hand, to schedule the different
-streams and, in the other hand, as an additional cost function.
-In addition to these costs, HATP also takes into account a set of social
-rules.  Social rules are constraints aiming at leading the plan
-construction towards the best plan according to some human
+\subsubsection{Action costs and social rules}
+
+A cost and a duration function is associated to each action.  The duration
+function provides a duration interval for the action achievement and is used,
+in one hand, to schedule the different streams and, in the other hand, as an
+additional cost function.  In addition to these costs, HATP also takes into
+account a set of social rules.  Social rules are constraints aiming at leading
+the plan construction towards the best plan according to some human
 preferences. The social rules we have defined so far deal with:
 
 \begin{itemize}
@@ -1197,11 +1161,10 @@ one (fig.~\ref{plan_hatp1}) if the wasted time social rule is used.
 The obtained shared plan is the best plan according to a global evaluation of
 these multiple criteria.
 
-\subsubsection{Several levels of cooperation:} 
+\subsubsection{Several levels of cooperation} 
 
-By tuning its costs
-and adapting its social rules, HATP can be used to compute various
-alternative plans. These plans can be categorized into several levels
+By tuning its costs and adapting its social rules, HATP can be used to compute
+various alternative plans. These plans can be categorized into several levels
 of cooperation
 
 \begin{itemize}
@@ -1210,7 +1173,6 @@ of cooperation
 \item collaboration of the robot and the human by coordinating their
   actions towards a human-robot joint goal.
 \end{itemize}
-
 
 
 
@@ -1230,23 +1192,23 @@ What is referred by ``\textit{Robot}''? What is ``\textit{put}''? What are
 ``\textit{the}''? And ``\textit{two}''? etc.
 
 Working in a situated context, we need to \emph{resolve} these semantics atoms,
-\ie group them and then, ground them in the sensory-motor space of the robot. For instance,
+\ie group them and ground them in the sensory-motor space of the robot. For instance,
 ``\textit{this bottle}'' is a demonstrative group that refers in this context to the
 bottle the human is focusing on.
 
 The next step is to extract and understand the \emph{intended meaning} of the
-utterance as thought by the agent. In our example, Tom obviously wants an
-action to be performed by the robot. The action parametrization is conveyed by
-the semantics attached to the words and the grammatical structure of the
-sentence. In our example, the type of action is given by the verb
-``\textit{put}''. Assuming the robot has some procedural knowledge attached to
-this symbol, the action type can be considered as grounded for the robot. We
-can as well understand that the recipient of the action is the human, the
-performer is the robot itself, and the objects acted upon are two glasses and a bottle. The
+utterance as thought by the agent. In our example, the human obviously wants an
+action to be performed by the robot. In our example, the type of action is
+given by the verb ``\textit{put}''. Assuming the robot has some procedural
+knowledge attached to this symbol, the action type can be considered as
+grounded for the robot. The action parametrization is conveyed by the semantics
+attached to the words and the grammatical structure of the sentence: we
+understand that the recipient of the action is the human, the performer is the
+robot itself, and the objects acted upon are two glasses and a bottle. The
 recipient, performer and object are three of the \emph{thematic
-roles}~\cite{Gruber1965} that qualify the \emph{put} action. They are
-necessary to fully ground the sentence\footnote{This analysis has been inspired
-on the work of Austin et al.~\cite{Austin1962}, where this type of sentences
+roles}~\cite{Gruber1965} that qualify the \emph{put} action. They are necessary
+to fully ground the sentence\footnote{This analysis has been inspired on the
+work of Austin et al.~\cite{Austin1962}, where this type of sentences
 correspond to \emph{speech acts}, comprising of \emph{locutionary act} (the
 meaning), \emph{illocutionary} (the intent) and possibly \emph{perlocutionary
 acts} (implicit speaker's expectation).}.
@@ -1257,13 +1219,13 @@ structure of human utterances, \ie natural language sentences, and then make
 sense of them. 
 
 In this second application of our cognitive architecture, we show how we
-harness the symbolic knowledge base to ground, interpret and act on verbal
-instructions.
+harness the symbolic knowledge base to tackle the semantic challenge: how
+ground and interpret the meaning of verbal instructions.
 
-Furthermore, this process takes full advantage of the embodied nature of the
+Note that this process also takes full advantage of the embodied nature of the
 interaction: because deictic gestures and postures are also available in the
 symbolic knowledge base and dynamically updated during the interactions, verbal
-dialogue processing turns into a truely multi-modal communication processing,
+dialogue processing turns into a truly multi-modal communication processing,
 leading to more robust interpretation.
 
 \begin{figure}[!t]
@@ -1277,14 +1239,16 @@ leading to more robust interpretation.
 \end{figure}
 
 Dialogue processing is done in our architecture by a module called {\sc
-Dialogs}\cite{Lemaignan2011b} (fig.~\ref{fig|dialog}) that processes human input in natural
-language, grounds the concepts in the robot's knowledge and eventually
-translates the discourse in a set of queries or declarative OWL/RDF statements.  
+Dialogs}\cite{Lemaignan2011b} (fig.~\ref{fig|dialog}) that processes human
+input in natural language, grounds the concepts in the robot's knowledge and
+eventually translates the discourse in a set of queries or declarative OWL/RDF
+statements.  
 
-The user's input is first pre-processed. For instance, \emph{I'm} constructs are expanded
-into \emph{I am} and then parsed by a rule-based (\ie
+The user's input is first pre-processed (for instance, \emph{I'm} constructs
+are expanded into \emph{I am}) and then parsed by a rule-based (\ie
 grammar-free) tool that extracts the grammatical structure from the user's
-sentence. Figure~\ref{dialog|parser_output} shows an example of the raw output of the parser for a moderately complex sentence.
+sentence. Figure~\ref{dialog|parser_output} shows an example of the raw output
+of the parser for a moderately complex sentence.
 
 \begin{figure}%[!ht]
 \begin{center}
@@ -1306,7 +1270,7 @@ VP: \textbf{remember} (present simple)
 \end{center}
 \caption{Raw output of the {\sc Dialogs} parser after processing the
 sentence: ``remember that I want you to give me my nice blue bottle.'' 
-Nominal groups are not grounded yet.} 
+Grounding has yet to take place.} 
 \label{dialog|parser_output}
 \end{figure}
 
@@ -1314,7 +1278,7 @@ The output of the parser is then sent to the \emph{interpretation} module, the
 core of the component.  Interpretation consists in three distinct operations:
 the sentence \emph{resolution} (concepts grounding), the \emph{content
 analysis} (what is the intent of the utterance: information, question or
-desire) and the \emph{statement building} (translation into RDF statements).
+desire) and the \emph{statement building} (translation into OWL statements).
 
 The sentence resolution has three steps: {\it(i)} pronouns and anaphora are
 replaced by the correct speaker ID and the ID of the last object referred to
@@ -1329,13 +1293,12 @@ are stored in the ontology server and retrieved through logical
 queries, except for the verbs that are currently stored in a dedicated library
 (the \emph{action library} in the diagram).
 
-In order to better understand the overall process of the {\sc Dialogs} module 
-and its relation with ORO, we next describe one example: the grounding of the
-sentence ``\emph{Put that bottle on the tray}''. We assume that some initial
-facts are already present in the knowledge base (fig.~\ref{dialogs|ex1}), both in the
-robot's own model and in the human's model.  Since the robot tries to ground a
-human utterance, all queries are sent to the human model in order to interpret
-it from the human perspective. 
+We next describe the grounding of ``Put that bottle on the tray'' as a simple
+illustrative case. To simplify, we assume that some initial facts are already
+present in the knowledge base (fig.~\ref{dialogs|ex1}), both in the robot's own
+model and in the human's model.  Since the robot tries to ground a human
+utterance, all queries are sent to the human model in order to interpret it
+from the human perspective. 
 
 \begin{figure}[ht!]
 	  \centering
@@ -1376,14 +1339,30 @@ it from the human perspective.
 	\label{dialogs|ex1}
 \end{figure}
 
+Nouns are first resolved by generating requests to the knowledge base, using
+the original nouns as the concept class (fig.~\ref{dialogs|ex1-c}) and eventual
+pronouns and adjectives as supplementary qualifiers.
 
-In order to capture the intentional content of a sentence (for example, an
-order) we need to retain the semantics of the verb and its complements.
-\emph{Thematic roles} allow for semantically linking a verb to its complements.
-The amount and the granularity of roles varies a lot in the
-literature~\cite{Gutierrez2001} and we store in a separate library only a small
-set of them, relevant for the planing and control tasks. In the example, the
-verb \emph{put} has three thematic roles: \concept{performedBy},
+In this example, two instances of the concept \concept{Bottle} would match the
+simple query \stmt{?obj type Bottle}, thus leading to an ambiguity. In the
+general case, we try to refine as much as possible the description of the noun
+using adjectives or relatives to avoid ambiguities. In this case,
+``\emph{bottle}'' is qualified with ``\emph{that}'', which is interpreted by
+the module as an attentional focus: we ask the knowledge base to return objects
+that are bottles and currently a focus of the human (which is itself infered
+from the facts \stmt{human\_01 sees obj\_01, human\_01 pointsAt obj\_01}).
+
+If the concept can not be clarified (\ie, at least two instances remain after
+the resolution process), the robot goes back to the human, asking for more
+informations.
+
+We next analyse the verb. In order to capture the intentional content of a
+sentence (for example, an order) we need to retain the semantics of the verb
+and its complements.  \emph{Thematic roles} allow for semantically linking a
+verb to its complements.  The amount and the granularity of roles varies a lot
+in the literature~\cite{Gutierrez2001} and we store in a separate library only
+a small set of them, relevant for the planing and control tasks. In the
+example, the verb \emph{put} has three thematic roles: \concept{performedBy},
 \concept{actsOnObject} and \concept{receivedBy}.
 
 We also store which categories of concepts can endorse each roles. This allow to
@@ -1393,27 +1372,12 @@ object. Thus, if the concept the robot finds for the thematic role
 \concept{actsOnObject} cannot be inferred to be an artifact, the robot goes
 back to the human saying it does not understand.
 
-Each noun is resolved by querying the knowledge base (fig.~\ref{dialogs|ex1-c})
-
-In this example, two bottles would match the query \stmt{?obj type Bottle},
-thus leading to an ambiguity. In the general case, we try to refine as much as
-possible the description of the noun using adjectives or relatives to avoid
-ambiguities. In this case, ``\emph{bottle}'' is qualified with ``\emph{that}'',
-which is interpreted by the module as an attentional focus: we ask the
-knowledge base to return objects that are bottles and currently a focus of the
-human (which is itself infered from the facts \stmt{human\_01 sees obj\_01,
-human\_01 pointsAt obj\_01}).
-
-If the concept can not be clarified (\ie, at least two instances remain after
-the resolution process), the robot goes back to the human, asking for more
-informations.
-
 Once the sentence is completely resolved and translated into a formal
 representation (a human desire in this example, fig.~\ref{dialogs|ex1-d}), we
 store it in the knowledge base. The robot's decisional/executive layers can
 then decide whether to execute the order or not. 
  
-Not only statements and order but also factual \emph{wh-}
+Not only statements and orders but also factual \emph{wh-}
 questions and polar (\emph{yes/no}) questions can be processed in a similar way
 by \textsc{Dialogs}. For instance, a question like ``What is on the table?'' is
 grounded (to extract the relation \concept{isOn} and to find what \emph{table}
@@ -1423,14 +1387,13 @@ the \emph{verbalization} module, and uttered to the human.
 
 \subsection{Related work}
 
-Processing natural language in situated contexts is already an established
+Processing natural language in situated contexts is an established
 research field. In~\cite{Roy2005}, Roy and Reiter summarize what they see as
 the main challenges to be tackled: cross-modal representation systems,
 association of words with perceptual and action categories, modeling of
 context, figuring out the right granularity of models, integrating temporal
 modeling and planning, ability to match past (learned) experiences with the
 current interaction and ability to take into account the human perspective.
-This list offers an interesting entry point to evaluate our contribution.
 
 Kruijff et al. provides in~\cite{Kruijff2010} an up-to-date survey of
 literature on situated human-robot dialogue, focusing on formal representation
@@ -1456,10 +1419,10 @@ OWL-DL representation and SPARQL\footnote{{\em SPARQL Protocol and RDF Query
 Language}, \url{http://www.w3.org/TR/rdf-sparql-query/}} to extract
 \emph{topological contexts} from their knowledge base.
 
-Our choice to deal with three categories of sentences that can be answered
-from the declarative knowledge present in the robot knowledge base:
-\emph{statements}, \emph{desires} and \emph{questions} is similar to the \emph{Behaviour Cycle} in the GLAIR
-architecture~\cite{Shapiro2009}.
+Our choice to deal with three categories of sentences that can be answered from
+the declarative knowledge present in the robot knowledge base:
+\emph{statements}, \emph{desires} and \emph{questions} is similar to the
+\emph{Behaviour Cycle} in the GLAIR architecture~\cite{Shapiro2009}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -1469,33 +1432,37 @@ architecture~\cite{Shapiro2009}.
 \label{conclusion}
 
 \subsection{Grounding the Human Interaction: Specifics and Alternative Approaches}
+\label{sec|literature}
 
 Before concluding the chapter, this section gives some pointers to the specifics of the human-robot interaction context, 
 and to other contributions implementing alternative grounding strategies in such a context.
 
+\subsubsection{Dealing with humans}
 
-The human presence brings specific requirements for robot's abilities both
-at the functional and at the deliberative levels~\cite{Klein2004}. This touches several domains:
- motion~\cite{Kulic2007,Berg2004,Madhav2006},
-navigation~\cite{Althaus2004,Sisbot2007}, manipulation~\cite{Kemp2007}
-in presence of humans as well as perception of human
+The human presence brings specific requirements for robot's abilities both at
+the functional and at the deliberative levels~\cite{Klein2004}. This touches
+several domains: motion~\cite{Kulic2007,Berg2004},
+navigation~\cite{Althaus2004,Sisbot2007}, manipulation~\cite{Kemp2007} in
+presence of humans as well as perception of human
 activities~\cite{Breazeal2001,Burger2008}.
 
-Also, when interacting with humans, robots need to incorporate communication and
-collaboration abilities. Several theories dealing with
-collaboration~\cite{Cohen1991,Grosz1996,Clark1996} emphasize that
-collaborative tasks have specific requirements compared to individual
-ones, \eg, since the robot and the person share a common goal, they
-have to agree on the manner to realize it, they must show their
-commitment to the goal during execution, etc. Several robotic systems
-have already been built based on these theories~\cite{Rich1997,Sidner2005,Tambe1997,Breazeal2003} and they
-all have shown benefits of this approach. They have also shown how
-difficult it is to manage turn-taking between communication partners
-and to interleave task realization and communication in a generic
-way. Finally, today only few systems~\cite{Fong2006,Breazeal2003,Sisbot2008} take humans into
-account at all levels.
+Also, when interacting with humans, robots need to incorporate communication
+and collaboration abilities. Several theories dealing with
+collaboration~\cite{Cohen1991,Grosz1996,Clark1996} emphasize that collaborative
+tasks have specific requirements compared to individual ones, \eg, since the
+robot and the person share a common goal, they have to agree on the manner to
+realize it, they must show their commitment to the goal during execution, etc.
+Several robotic systems have already been built based on these
+theories~\cite{Rich1997,Sidner2005,Tambe1997,Breazeal2003} and they all have
+shown benefits of this approach. They have also shown how difficult it is to
+manage turn-taking between communication partners and to interleave task
+realization and communication in a generic way. Finally, today only few
+systems~\cite{Fong2006,Breazeal2003,Sisbot2008} take humans into account at all
+levels.
 
 \fxwarning{If relevant, describe Breazeal approaches for grounding}
+
+\subsubsection{Architectures for grounding human-robot interaction}
 
 While mostly implemented on virtual agents, the GLAIR cognitive architecture by
 Shapiro and Bona~\cite{Shapiro2009} is an architecture explicitly built to
@@ -1509,14 +1476,20 @@ project has been only demonstrated in a limited set of environments, but
 exhibits interesting features such as explicit management of contexts of facts
 and memory models (long term/short term, episodic/semantic).
 
-Also worth mentioning, Mavridis and Roy~\cite{Mavridis2005} propose the idea of
-a \emph{grounded situation model} which is an amodal model of the world where
-different sensing modalities, including verbal ones (the robot is able to
-\emph{imagine} objects), are merged. Their framework also allows the management of
-the interaction history (the human can ask for a past event). They propose an
-implementation in an environment built on simple entities (a manipulator arm
-and colored balls).
+Suh et al.~\cite{Suh2007} develop {\sc OMRKF}, an ontology-based reasoning
+framework for robotics. They tackle the grounding problem by storing low-level
+facts (like SIFT visual features) in a layered symbolic architecture that works
+well in simple sensori-motor spaces. However this approach raises concerns
+regarding scalability and management of more complex entities or interactions.
 
+Daoutis et al.~\cite{Daoutis2009} introduce one of the first complete
+architectures for grounded human-robot interaction. They successfully bind
+low-level percepts (including view-point independent SIFT based object
+recognition) to a high-level knowledge representation and reasoning system.
+They base their knowledge model directly on the \textit{ResearchCyc} ontology
+(including the \textit{MicroTheories} concept), used in combination with the
+{\sc CycL} language. This enables second-order logic modeling and access to a
+large common-sense knowledge base.
 
 
 \subsection{Towards an Event-Driven, Knowledge-Oriented Architecture for Personal Robotics}
