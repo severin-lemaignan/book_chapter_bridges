@@ -91,7 +91,7 @@ Julien Guitton
 
 \subsection{Grounding the Human Interaction: the Challenges}
 
-{\em Aperitif time. Sitting down in its comfortable armchair, Tom gives a look
+{\em Aperitif time. Sitting down in his comfortable armchair, Tom gives a look
 at the empty table. ``{\em Hey robot, put two glasses and this bottle on the
 tray!}''. ``{\em And bring that over there.}''. The robot wonders ``{\em The
 Martini or the Porto?}''. ``{\em Bring both!}'' answers Tom. The robot prepares
@@ -111,10 +111,10 @@ interaction (illustrated in Fig.~\ref{fig|vpt}) is a short-term target for the
 human-robot interaction community.
 
 This simple scenario belongs to the broad class of \emph{interactive
-manipulation problems}: several agents have a (more or less implicit) joint goal that requires some
-sort of cooperation to be successfully achieved. These problems are often iterative
-(step-by-step resolution, questions-answers,...) and involve both dialogue and
-manipulation.
+manipulation problems}: several agents agree a (more or less implicit) joint
+goal that requires some sort of cooperation to be successfully achieved. These
+problems involve both dialogue and manipulation and are often iterative
+(step-by-step resolution, questions-answers,...).
 
 
 \begin{figure}[htb]
@@ -149,7 +149,7 @@ transformed into a set of actions?
 \fxfatal{TO FILL}
 ...
 
-We summarizes these challenges in four categories:
+We summarize these challenges in four categories:
 
 \begin{enumerate}
 
@@ -170,19 +170,19 @@ We summarizes these challenges in four categories:
 \end{enumerate}
 
 
-This chapter focuses on the points {\it 1} and {\it 2}. It presents techniques,
+This chapter focuses on points {\it 1} and {\it 2}. It presents techniques,
 developed and used on several real robots, for the creation of a set of
 environment models suitable for grounded situation interpretation,
 decision-making and control.
 
 The two other items are however equally important to achieve a rich and legible
 interaction. Thus we shall briefly overview the global architecture of a robot
-able to interact with humans\fxwarning{Shall we stay very broad or focus on
+able to cooperate with humans\fxwarning{Shall we stay very broad or focus on
 *our* implementation?} before really focusing on the grounding issues.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{An Architecture for Grounding}
+\subsection{An Architecture for Interactive Robotics}
  
 \begin{figure*}[thpb]
   \centering
@@ -196,12 +196,12 @@ our robots~\cite{Alami2011}. The sensorimotor layer (bottom) is abstracted in
 an intermediate 3D geometric model where geometric (and some temporal)
 reasoning take place~\cite{Sisbot2011}.
 
-The outcomes of the geometric analysis, as well as the result of the dialogue
+The outcome of the geometric analysis, as well as the result of the dialogue
 processing module~\cite{Lemaignan2011b}, are stored in a central knowledge
 base~\cite{Lemaignan2010}. The symbolic knowledge base triggers events that are
 captured by the top-level robot controller.
 
-The controller can rely on two specialized planner: the geometric motion and
+The controller can rely on two specialized planners: the geometric motion and
 manipulation planner~\cite{Sisbot2008, Mainprice2011, Pandey2010} and the
 symbolic task planner~\cite{Alili2008}.
 
@@ -209,7 +209,7 @@ The dialogue processing module, as well as the symbolic task planner, also
 use the knowledge base to answer questions or initialize the planning domain.
 
 During a typical interaction experiment, the robot controller decides upon a
-plan to execute, requires a plan from the task planner, affects the actions to
+plan to execute, requires a plan from the task planner, allocates the actions to
 the human and the robot, communicates the shared plan, and controls and
 monitors its execution. The operation continues until the goal is achieved, is
 declared unachievable or is abandoned by the human.
@@ -241,8 +241,8 @@ Concretly this assumption typically translates during experiments by tagging
 each objects with a barcode-like label (some can be seen on Fig.~\ref{fig|vpt})
 that allows the robot to localize and identify these objects.
 
-Numerous works \fxfatal{Cite some of them} (some of them presented earlier in
-this book) focus on dealing with the resolution and identification issues.  We
+Numerous work \fxfatal{Cite some of them} (some of them presented earlier in
+this book) focus on dealing with resolution and identification issues.  We
 will not further discuss them here.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
