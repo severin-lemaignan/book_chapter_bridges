@@ -72,7 +72,7 @@ Julien Guitton
 	\at
 	CNRS - LAAS, 7 avenue du Colonel Roche, F-31077 Toulouse, France\\
 	Université de Toulouse, UPS, INSA, INP, ISAE, LAAS, F-31077 Toulouse, France\\
-	\email{surname.name@laas.fr}
+	\email{slemaign, ralami, akpandey, mwarnier, jguitton@laas.fr}
 }
 
 \maketitle
@@ -505,9 +505,10 @@ amodal physical representation of the world used as a mediator between the
 sensor space and symbolic models. They have however different features: while
 GSM enables representation of time and imaginary objects (whose existence is
 hinted by verbal assertions from a human, also called \emph{presupposition
-accomodation}), SPARK offers a richer 3D model that enables the computation of
-several spatial relationships between objects and an effective implementation
-of perspective taking capabilities.
+accomodation}), SPARK uses a richer 3D model extracted from the
+Move3D~\cite{Simeon2001} environment, that enables the computation of several
+spatial relationships between objects and an effective implementation of
+perspective taking capabilities.
 
 On the other hand, applications of spatial reasoning~\cite{O'Keefe1999} are
 multiple. It has been used for instance for natural language processing for
@@ -519,9 +520,9 @@ Perspective Taking is a human ability which allows one to put him/herself in
 another person's point of view. Studied in psychology
 literature~\cite{Flavell1992,Tversky1999}, this ability is crucial when
 interacting with people by allowing one to reason on others' understanding of
-the world in terms of visual perception, spatial descriptions, affordances and
-beliefs, etc.  Therefore, in the last years these notions have been gradually
-employed in human-robot interaction.
+the world in terms of visual perception, spatial descriptions, abilities,
+affordances and beliefs, etc.  Therefore, in the last years these notions have
+been gradually employed in human-robot interaction.
 
 
 
@@ -611,7 +612,7 @@ the teddy bear is reachable, while the bottle is not.
 While the first three relations (\concept{sees}, \concept{looksAt} and
 \concept{pointsAt}) are computed through a model based approach, the latter one
 is based on the Generalized Inverse Kinematics with pseudo inverse
-method~\cite{Nakamura90,Baerlocher04} to find a collision free posture for the
+method~\cite{Nakamura90,Baerlocher04} to find a posture for the
 agent where its end-effector is at the center of the object within a given
 tolerance.
 
@@ -704,7 +705,7 @@ Until now, we have presented techniques to assess, from different perspectives,
 the \emph{current} state of the world.
 
 Making effective decisions also requires the ability to assess possible \emph{future}
-actions, both for the robot (by the mean of geometric and/or symbolic planning --
+actions, not only for the robot (by the mean of geometric and/or symbolic planning --
 we present in section~\ref{sec|hatp} an example of a symbolic task planner), but
 also for the human.
 
@@ -756,7 +757,7 @@ for the object in the space we call it \emph{Object Oriented Mightabilities}.
 The robot performs mightability analyses by taking into account collision as
 well as the joint limits. The information about the robot and human positions,
 orientations and the 3D state of the environment is continuously updated in the
-3D representation and planning platform, Move3D \cite{Simeon2001}, which also
+3D representation and planning platform, Move3D, which also
 provides intra-body and inter-body collisions checking for the robot and for
 the human models. The robot uses the kinematic structures of the agents and
 performs various virtual actions until the joint limits of the neck and/or
@@ -782,8 +783,9 @@ environment is detected (fig.~\ref{fig|mightabilities}).
 	\end{center}
 
    \caption{%
-	   Examples of Mightability Maps for the \emph{see} and \emph{reach} abilities.
-   }
+	   Examples of a subset of Mightability Maps for the \emph{see} and
+	   \emph{reach} abilities.  
+	}
 		
    \label{fig|mightabilities}
 \end{figure}
@@ -863,8 +865,8 @@ each agent's respective maps (figs.~\ref{fig|mightabilities-steps}{\it a} and
 Further based on various criteria such as comfort, preferences, etc. weights
 are assigned to the raw candidate points
 (fig.~\ref{fig|mightabilities-steps}{\it d}), and the resulting candidates are
-finally tested (\ie, the motion planner is called) to check if the robot can
-actually reach the position.
+iteratively tested for feasibility by introducing computationally-expensive
+constraints such as existence of a collision-free trajectory.
 
 \subsection{Related work}
 
@@ -902,7 +904,8 @@ illustrates the main functional components of ORO.
   \label{fig|oro-overview}
 \end{figure}
 
-At the core, ORO is build around the OpenJena ontology management library,
+At the core, ORO is build around the
+OpenJena\footnote{\url{http://www.openjena.org}} ontology management library,
 connected to the Pellet reasoner.
 
 A front-end accepts and manages connections to clients. The clients' requests
@@ -931,7 +934,7 @@ conditions can be inferred to be true.
 \label{ontology}
 
 For the robot to interpret and come up with new inferences based on the facts
-coming from the perceptual layers, it need a \emph{cultural background}, a
+coming from the perceptual layers, it needs a \emph{cultural background}, a
 common-sense knowledge assumed to be shared by all agents. The ORO server is
 loaded at startup with an initial set of statements which we call the
 \emph{OpenRobots Common Sense Ontology}. It defines concepts
@@ -1011,7 +1014,7 @@ two different models).
 
 This feature actually allows us to consider the robot to be endowed with a
 \emph{theory of mind}~\cite{Scassellati2002}: the robot can explicitly model
-the belief state of its interactors, opening new possibilities for the control
+the belief states of its interactors, opening new possibilities for the control
 architecture. In section~\ref{dialogs} we present an example of how we use this feature to
 make sense of user sentences from his/her point of view.
 
@@ -1036,7 +1039,7 @@ make sense of user sentences from his/her point of view.
 
 Knowledge representation systems are always present in some form in robotic
 architecture that claim to be somehow \emph{cognitive}. While centralized
-knowledge base are the most common approach in the litterature, other, more
+knowledge bases are the most common approach in the litterature, other, more
 pervasive, approaches exist, like \cite{Jacobsson2008}.
 
 We mention only two of them here. Other system, that are part of larger
@@ -1098,7 +1101,7 @@ In order to devise how a given goal can be accomplished, the robot has
 to elaborate a plan,~\textit{i.e.} a set of actions to be achieved by
 the robot and its human partners.  This is the role of HATP
 \cite{Alili2008} (for Human Aware Task Planner).  HATP is based on a
-Hierarchical Task Network (HTN) refinement which performs an iterative
+Hierarchical Task Network (HTN) refinement, which performs an iterative
 task decomposition into sub-tasks until reaching atomic
 actions~\cite{Nau2003}.  The planning domain defines a set of methods
 describing how to decompose a task and can be seen as the {\it how-to}
@@ -1114,7 +1117,7 @@ the desired level of cooperation of the robot.
 The robot plans not only for itself but also for the other agents. The
 resulting plan, called ``shared plan'' is a set of actions that form
 a stream for each agent involved in the goal achievement. Depending on
-the context, some ``shared plans'' contain causal relations between
+the context, some ``shared plans'' contain causal relations between the
 agents. For example, the second agent needs to wait for the success of
 the first agent's action to be able to start its own action. When the
 plan is performed, causal links induce synchronization between
@@ -1205,7 +1208,7 @@ grounded for the robot. The action parametrization is conveyed by the semantics
 attached to the words and the grammatical structure of the sentence: we
 understand that the recipient of the action is the human, the performer is the
 robot itself, and the objects acted upon are two glasses and a bottle. The
-recipient, performer and object are three of the \emph{thematic
+recipient, the performer and the object are three of the \emph{thematic
 roles}~\cite{Gruber1965} that qualify the \emph{put} action. They are necessary
 to fully ground the sentence\footnote{This analysis has been inspired on the
 work of Austin et al.~\cite{Austin1962}, where this type of sentences
@@ -1368,7 +1371,7 @@ example, the verb \emph{put} has three thematic roles: \concept{performedBy},
 We also store which categories of concepts can endorse each roles. This allow to
 check the semantic consistency of the verbal group. For instance, the action
 \emph{Put} must have a manipulable physical item (\concept{Artifact}) as direct
-object. Thus, if the concept the robot finds for the thematic role
+object. Thus, if the concept that the robot finds for the thematic role
 \concept{actsOnObject} cannot be inferred to be an artifact, the robot goes
 back to the human saying it does not understand.
 
@@ -1449,7 +1452,7 @@ activities~\cite{Breazeal2001,Burger2008}.
 Also, when interacting with humans, robots need to incorporate communication
 and collaboration abilities. Several theories dealing with
 collaboration~\cite{Cohen1991,Grosz1996,Clark1996} emphasize that collaborative
-tasks have specific requirements compared to individual ones, \eg, since the
+tasks have specific requirements compared to individual ones, {\it e.g.}, since the
 robot and the person share a common goal, they have to agree on the manner to
 realize it, they must show their commitment to the goal during execution, etc.
 Several robotic systems have already been built based on these
@@ -1457,8 +1460,8 @@ theories~\cite{Rich1997,Sidner2005,Tambe1997,Breazeal2003} and they all have
 shown benefits of this approach. They have also shown how difficult it is to
 manage turn-taking between communication partners and to interleave task
 realization and communication in a generic way. Finally, today only few
-systems~\cite{Fong2006,Breazeal2003,Sisbot2008} take humans into account at all
-levels.
+systems~\cite{Fong2006,Breazeal2003,Sisbot2008, Pandey2011} take humans into
+account at more than one levels.
 
 \fxwarning{If relevant, describe Breazeal approaches for grounding}
 
@@ -1552,7 +1555,7 @@ way to produce new facts that may trigger in return physical behaviours.
 
 \subsubsection{Knowledge and Embodiment}
 
-The three experiments that were presented in the paper all illustrate how the
+The examples that were presented in the paper illustrate how the
 robot makes use of its embodied nature to establish a meaningful communication
 with a human. Mainly, because the robot and the human share the same physical
 environment and they perceive each other, we are able to create a mutual
