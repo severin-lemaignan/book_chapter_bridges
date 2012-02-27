@@ -367,7 +367,7 @@ currently computed by the system.
 
 \begin{table}[h]
     \centering
-    \begin{tabular}{p{1.5cm}p{5cm}p{2cm}p{4cm}}
+    \begin{tabular}{p{1.5cm}p{5cm}p{2cm}p{2.7cm}}
 	\rowcolor{white}
     \textbf{Subject} & \textbf{Predicate} & \textbf{Object} & \emph{Notes} \\ 
     \hline
@@ -897,7 +897,7 @@ knowledge storage service implemented as a server where the robot
 components can add or query statements at run-time. Figure~\ref{fig|oro-overview}
 illustrates the main functional components of ORO.
 
-\begin{figure}[!t]
+\begin{figure}
 \centering
   \includegraphics[width=0.8\linewidth]{figs/oro_architecture_functional.pdf}
   \caption{Overview of the ORO architecture.}
@@ -906,7 +906,7 @@ illustrates the main functional components of ORO.
 
 At the core, ORO is build around the
 OpenJena\footnote{\url{http://www.openjena.org}} ontology management library,
-connected to the Pellet reasoner.
+connected to the Pellet\footnote{\url{http://clarkparsia.com/pellet}} reasoner.
 
 A front-end accepts and manages connections to clients. The clients' requests
 are processed by a set of internal modules: basic operations on statements, but
@@ -1095,8 +1095,6 @@ possible way to use these symbolic models of the environment and
 interacting agents to produce a plan of actions for a complex
 goal.
 
-\subsection{Symbolic Task Planning}
-
 In order to devise how a given goal can be accomplished, the robot has
 to elaborate a plan,~\textit{i.e.} a set of actions to be achieved by
 the robot and its human partners.  This is the role of HATP
@@ -1112,7 +1110,7 @@ apply and by taking into account a set of constraints called social
 rules. This tuning aims at adapting the robot's behavior according to
 the desired level of cooperation of the robot.
 
-\subsubsection{Agents and action streams}
+\subsection*{Agents and action streams}
 
 The robot plans not only for itself but also for the other agents. The
 resulting plan, called ``shared plan'' is a set of actions that form
@@ -1130,7 +1128,7 @@ agents. Figure~\ref{plan_hatp1} illustrates a plan with two streams.
   \label{plan_hatp1}
 \end{figure}
 
-\subsubsection{Action costs and social rules}
+\subsection*{Action costs and social rules}
 
 A cost and a duration function is associated to each action.  The duration
 function provides a duration interval for the action achievement and is used,
@@ -1164,7 +1162,7 @@ one (fig.~\ref{plan_hatp1}) if the wasted time social rule is used.
 The obtained shared plan is the best plan according to a global evaluation of
 these multiple criteria.
 
-\subsubsection{Several levels of cooperation} 
+\subsection*{Several levels of cooperation} 
 
 By tuning its costs and adapting its social rules, HATP can be used to compute
 various alternative plans. These plans can be categorized into several levels
@@ -1388,7 +1386,7 @@ refers to) and transformed into the following kind of query: \concept{find ?var
 [\stmt{?var isOn table\_01}]}.  Answers are converted back to a full sentence by
 the \emph{verbalization} module, and uttered to the human.
 
-\subsection{Related work}
+\subsection*{Related work}
 
 Processing natural language in situated contexts is an established
 research field. In~\cite{Roy2005}, Roy and Reiter summarize what they see as
