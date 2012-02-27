@@ -1493,24 +1493,25 @@ They base their knowledge model directly on the \textit{ResearchCyc} ontology
 large common-sense knowledge base.
 
 
-\subsection{Towards an Event-Driven, Knowledge-Oriented Architecture for Personal Robotics}
+\subsection{Building upon a Knowledge-Oriented Architecture}
 
-In this paper, we have studied knowledge streams between three components: {\it(1)}
-{\sc ORO}, an ontology-based knowledge server that stores and maintains
-classified RDF statements produced by other modules in agent-specific
+This paper has presented how several modules exchange streams of knowledge:
+{\sc SPARK}, the grounded, human-aware, 3D model of the environment that
+performs all the spatial reasoning within our architecture, including reasoning
+involving motion planing (to compute reachability of objects) and perspective
+taking, {\sc ORO}, an ontology-based knowledge server that stores and maintains
+classified OWL/RDF statements produced by other modules in agent-specific
 models and allows information to be easily retrieved, either through queries or
-via an event system; {\it(2)} {\sc SPARK}, the grounded, human-aware 3D model
-of the environment that performs all the spatial reasoning within our
-architecture, including reasoning involving motion planing (to compute
-reachability of objects) and perspective taking, and {\it(3)} {\sc Dialogs}, a
+via an event system, {\sc HATP}, an symbolic task planner that plans for both
+the robots and the humans, allowing monitoring and prediction of human actions,
+also taking into account social rules to share the tasks, and  {\sc Dialogs}, a
 natural language processor that performs simple grammatical parsing of English
 language, grounds the semantic content of the utterance (if necessary, also
-interacts with the user to disambiguate), and eventually generates a RDF
+interacts with the user to disambiguate), and eventually generates a OWL/RDF
 representation of the sentence.
 
-These components, combined with modules dedicated to symbolic supervision and
-task planning (these modules are outside of the scope of this article), compose
-an architecture that we call \emph{knowledge-oriented}:
+These components, combined together by the execution controller, compose
+an architecture that we consider \emph{knowledge-oriented}:
 
 \begin{itemize}
 \item{Knowledge is explicitly stored in one central and consistent repository
@@ -1518,7 +1519,7 @@ of facts, accessible by all modules.}
 \item{Knowledge is represented in a strict formalism (OWL statements) and
 with a clearly defined vocabulary (stated in the {\tt commonsense.oro.owl}
 ontology).}
-\item{The first two points enable both a loosely-coupled
+\item{These first two items enable both a loosely-coupled
 architecture where modules can very easily be removed or replaced by other ones
 as long as they share the same semantics (modules are defined by the knowledge
 they produce),}
@@ -1534,88 +1535,25 @@ transparently benefit from it when available (since richer symbolic
 descriptions of objects are then available).}
 \end{itemize}
 
-This architecture moves away from standard layered approaches. Interactions
-between components are mostly bidirectional and we do not have a concept of
-layers of abstraction (we do, however, have access to the lower level modules
-of the robot to execute actions, but all cognition-related modules reside at the
-same level). This is especially visible for the dialogue input processing. This
-component does not simply act as an alternative perceptual input to the
-symbolic database, but also actively queries previously acquired knowledge to
-disambiguate and validate the newly created symbolic knowledge.
-
-
-Regarding the anchoring question, this architecture is
+From an anchoring point of view, this architecture is also
 bidirectional. The components we described provide a \textit{bottom-up}
 grounding process: SPARK and \textsc{Dialogs} constantly build and push new
 symbolic contents about the world to ORO where it becomes accessible to
 decisional layers. In parallel, ORO relies on reasoning in a \textit{top-down}
 way to produce new facts that may trigger in return physical behaviours. 
 
-\subsubsection{Knowledge and Embodiment}
+\subsubsection*{Knowledge and Embodiment}
 
-The examples that were presented in the paper illustrate how the
-robot makes use of its embodied nature to establish a meaningful communication
-with a human. Mainly, because the robot and the human share the same physical
-environment and they perceive each other, we are able to create a mutual
-context.
-
-Sloman, in~\cite{Sloman2009}, argues however that the strong focus on
-embodiment in the robotics community has hindered progress towards natural
-human-robot interaction. Our approach has hopefully made clear that, similar to
-Beetz et al.~\cite{Beetz2010}, we do not consider embodiment \emph{per se} outside of
-a broader symbolic system, \ie our architecture is not bound to the morphology or
-the low-level sensori-motor capabilities of a specific agent. 
-
-However, we can build a model of the ``human point of view'' because the robot
-perceives the human, and is able to estimate, at least partially, what the
-human perceives or not. We infer that a human focuses on some object because
-he/she points at it, looks at it, and besides, the object is visible to him.
-This relies on the embodied nature of the interaction. In turn, this allows us
-to understand the meaning of sentences like ``Give me that''.
-
-We hope that this contribution shows that considering embodiment as the most
-challenging and fruitful characteristic of robotics in regards to the whole AI
-community does not contradict with a formal, highly symbolic approach of the
-representation and decision problems that arise in robotics. 
-
-Let us conclude this article briefly reviewing and linking Roy's list of challenges
-for human-robot dialogue with our current approach: 
-\begin{itemize}
-
-	\item While more modalities (especially, deictic gestures and social gazes)
-	can be added, we have actually proposed a \emph{cross-modal
-	representation system}.
-
-	\item One of the main feature of the \textsc{Dialogs} module is its ability
-	to interactively ground concepts through disambiguation, bringing the
-	ability for the robot to \emph{associate words with perceptual and action
-	categories}.
-
-	\item The ORO knowledge base offers some support for the \emph{modeling of
-	context}, but a lot remains to be done in this respect.
-
-	\item \emph{Figuring out the right granularity of models} is partially
-	solved by supporting both a geometric reasoning level and a purely symbolic
-	level. Generally speaking, it appears that complex robotic systems need
-	to operate with a dynamic granularity, depending on the task to achieve.
-
-	\item \emph{Temporal modeling} is currently missing in our architecture,
-	and symbolic and geometric \emph{planning} is accomplished outside of the
-	knowledge representation loop we presented here. We see planning as an
-	essential tool to build predictive knowledge, and we are looking into this
-	direction.
-
-	\item Since we provide no time management, our system is currently not able
-	to \emph{match past (learned) experiences with the current interaction}.
-	This ability is obviously a key step for general action recognition, and
-	seems of particular importance for the robot to assess the state of the
-	interaction with the human.
-
-	\item Finally, Roy mentions \emph{the ability to take into account the
-	human perspective}: this is probably our main contribution which we are now
-	trying to develop even further towards psychology-inspired experiments.
-
-\end{itemize}
+The examples that were presented in the paper illustrate how the robot makes
+use of its embodied nature to establish a meaningful communication with a
+human. Because the robot and the human share the same physical environment and
+they perceive each other, we are able to create a mutual context: we can build
+a model from the ``human point of view'' because the robot perceives the human,
+and is able to estimate, at least partially, what the human perceives or not.
+We infer that a human focuses on some object because he/she points at it, looks
+at it, and besides, the object is visible to him.  In turn, this allows us to
+understand the meaning of sentences like ``Give me that''. This approach is
+tightly bound to the embodied nature of the interaction.
 
 
 
