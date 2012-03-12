@@ -1001,7 +1001,7 @@ As pictured in Figure~\ref{fig|oro-overview}, ORO stores independent cognitive
 models for each agent it interacts with. When ORO actually identifies a new
 agent (or infers that some instance is an agent), it automatically creates a
 new, separate, in-memory OWL model for that agent. Thus, different robot
-components, like supervision or situation assessment, can access the
+components, like execution control or situation assessment, can access the
 agents' beliefs in separate models. All knowledge processing functions in the
 robot's primary model are equally available in every agent's model.
 
@@ -1012,8 +1012,8 @@ robot but not for the human. This object can have at the same time the property
 \concept{isVisible \textbf{true}} and \concept{isVisible \textbf{false}} in
 two different models). 
 
-This feature actually allows us to consider the robot to be endowed with a
-\emph{theory of mind}~\cite{Scassellati2002}: the robot can explicitly model
+This feature actually allows us to consider the robot to be endowed with a partial
+\emph{theory of mind}~\cite{Leslie2000}: the robot can explicitly model
 the belief states of its interactors, opening new possibilities for the control
 architecture. In section~\ref{dialogs} we present an example of how we use this feature to
 make sense of user sentences from his/her point of view.
