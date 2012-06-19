@@ -28,7 +28,7 @@
 
 \usepackage{lscape}
 
-\usepackage[draft]{fixme}
+\usepackage{fixme}
 \fxusetheme{color}
 
 %%%%%%%%%%%% Custom macros %%%%%%%%%%%%%
@@ -187,7 +187,7 @@ abstracted in an intermediate 3D model where geometric (and some temporal)
 reasoning take place~\cite{Sisbot2011}.
 
 The outcome of the geometric analysis, as well as the result of the dialogue
-processing module~\cite{Lemaignan2011b}, are stored in a central knowledge
+processing module~\cite{Lemaignan2011a}, are stored in a central knowledge
 base~\cite{Lemaignan2010}. The symbolic knowledge base triggers events that are
 captured by the top-level execution controller.
 
@@ -212,7 +212,7 @@ declared unachievable or is abandoned by the human.
 \subsubsection*{On object identification and localization}
 
 This architecture makes one important assumption (hidden in the
-\emph{Sensorimotor layer} box in Figure~\ref{fig|archi}): world entities are
+\emph{Sensorimotor layer} box in figure~\ref{fig|archi}): world entities are
 assumed to be correctly \emph{perceived}, \emph{localized}, \emph{resolved} and
 \emph{uniquely identified} in a \emph{repeatable} way.
 
@@ -227,12 +227,12 @@ unique, identifier (the identifier by itself may be completely random, and can
 be known at runtime only).
 
 Typically this assumption translates during experiments by tagging each objects
-with a barcode-like label (some of them can be seen on Fig.~\ref{fig|vpt}) that
+with a barcode-like label (some of them can be seen on figure~\ref{fig|vpt}) that
 allows the robot to localize and identify these objects.
 
-Numerous work \fxfatal{Cite some of them} (some of them presented earlier in
-this book) focus on dealing with resolution and identification issues.  We
-will not further discuss them here.
+Numerous work, some of them presented earlier in this book, focus on dealing
+with resolution and identification issues.  We will not further discuss them
+here.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -331,7 +331,7 @@ relative locations.
 We can refer to object locations with respect to other objects in the
 environment, such as \emph{above, next to, in}, etc. In this work we compute
 three main relations based on the bounding box and center of mass of the
-objects (fig.~\ref{fig|sprelations}): 
+objects (figure~\ref{fig|sprelations}): 
 
 \begin{itemize}
 	\item \concept{isOn}: computes if an object $O_1$ is on another object $O_2$ by
@@ -562,7 +562,7 @@ able to compute this information can then act accordingly. An example would be
 a clarification scenario where the human is searching for an object and the
 robot is able to infer that he/she is looking for the one that is not visible
 (otherwise the user would not be searching for it).  In
-Figure~\ref{fig::sparkRepresentations}\emph{a} the field of view of a person is
+figure~\ref{fig::sparkRepresentations}\emph{a} the field of view of a person is
 illustrated with a grey cone (broader one). While he is able to see the two
 small boxes on the table in front of him, the big box on his right is out of
 his FOV, and therefore, he is not able to see it. 
@@ -715,7 +715,7 @@ This section explains how potential manipulation actions can be computed for
 the human and represented as so-called \emph{Mightability Maps}~\cite{Pandey2010}.
 
 In human movement and behavioral psychology literatures, different types of
-reach actions (fig.~\ref{fig|reaches_taxonomy}) of the human have been
+reach actions (figure~\ref{fig|reaches_taxonomy}) of the human have been
 identified and analyzed, \cite{Gardner2001, Choi2004}.
 
 \begin{figure}
@@ -764,7 +764,7 @@ provides intra-body and inter-body collisions checking for the robot and for
 the human models. The robot uses the kinematic structures of the agents and
 performs various virtual actions until the joint limits of the neck and/or
 torso are reached or the collision of the torso of the agent with the
-environment is detected (fig.~\ref{fig|mightabilities}).
+environment is detected (figure~\ref{fig|mightabilities}).
 
 \begin{figure}[ht!]
    \begin{center}
@@ -823,9 +823,9 @@ of highest weight.}
 
 
 Figure~\ref{fig|mightabilities-framework} shows how a feasible solution for a
-task can be found: the robot reasons on various mightability maps of the involved agents and
-selects the best solution by performing successive set operations depending on
-the task.
+task can be found: the robot reasons on various mightability maps of the
+involved agents and selects the best solution by performing successive set
+operations depending on the task.
 
 \begin{figure}[ht!]
    \begin{center}
@@ -860,13 +860,13 @@ task and the desired efforts of the agents.
 
 In this example, the maximum desired effort for the human is to lean forward.
 As the task requires a hand-over operation, we compute positions visible and
-reachable by both agents (fig.~\ref{fig|mightabilities-steps}{\it c}) from
-each agent's respective maps (figs.~\ref{fig|mightabilities-steps}{\it a} and
+reachable by both agents (figure~\ref{fig|mightabilities-steps}{\it c}) from
+each agent's respective maps (figures~\ref{fig|mightabilities-steps}{\it a} and
 {\it b}).
 
 Further based on various criteria such as comfort, preferences, etc. weights
 are assigned to the raw candidate points
-(fig.~\ref{fig|mightabilities-steps}{\it d}), and the resulting candidates are
+(figure~\ref{fig|mightabilities-steps}{\it d}), and the resulting candidates are
 iteratively tested for feasibility by introducing computationally-expensive
 constraints such as existence of a collision-free trajectory.
 
@@ -894,10 +894,10 @@ A key element of this cognitive architecture is how knowledge is explicitly
 exposed, stored and handled between component.
 
 We have adopted a centralized approach for knowledge management called
-ORO~\cite{Lemaignan2010}. The platform is designed as a central
-knowledge storage service implemented as a server where the robot
-components can add or query statements at run-time. Figure~\ref{fig|oro-overview}
-illustrates the main functional components of ORO.
+ORO~\cite{Lemaignan2010}. The platform is designed as a central knowledge
+storage service implemented as a server where the robot components can add or
+query statements at run-time. Figure~\ref{fig|oro-overview} illustrates the
+main functional components of ORO.
 
 \begin{figure}
 \centering
@@ -999,7 +999,7 @@ Animal}).
 \subsection{Representation of Alternative Cognitive Models}
 \label{alterite}
 
-As pictured in Figure~\ref{fig|oro-overview}, ORO stores independent cognitive
+As pictured in figure~\ref{fig|oro-overview}, ORO stores independent cognitive
 models for each agent it interacts with. When ORO actually identifies a new
 agent (or infers that some instance is an agent), it automatically creates a
 new, separate, in-memory OWL model for that agent. Thus, different robot
@@ -1098,7 +1098,7 @@ interacting agents to produce a plan of actions for a complex
 goal.
 
 In order to devise how a given goal can be accomplished, the robot has
-to elaborate a plan,~\textit{i.e.} a set of actions to be achieved by
+to elaborate a plan,\ie a set of actions to be achieved by
 the robot and its human partners.  This is the role of HATP
 \cite{Alili2008} (for Human Aware Task Planner).  HATP is based on a
 Hierarchical Task Network (HTN) refinement, which performs an iterative
@@ -1160,7 +1160,7 @@ preferences. The social rules we have defined so far deal with:
 \end{figure}
 
 Figure~\ref{plan_hatp2} illustrates an alternative plan to the previous 
-one (fig.~\ref{plan_hatp1}) if the wasted time social rule is used.
+one (figure~\ref{plan_hatp1}) if the wasted time social rule is used.
 The obtained shared plan is the best plan according to a global evaluation of
 these multiple criteria.
 
@@ -1242,7 +1242,7 @@ leading to more robust interpretation.
 \end{figure}
 
 Dialogue processing is done in our architecture by a module called {\sc
-Dialogs}\cite{Lemaignan2011b} (fig.~\ref{fig|dialog}) that processes human
+Dialogs}\cite{Lemaignan2011a} (figure~\ref{fig|dialog}) that processes human
 input in natural language, grounds the concepts in the robot's knowledge and
 eventually translates the discourse in a set of queries or declarative OWL/RDF
 statements.  
@@ -1290,7 +1290,7 @@ disambiguated and grounded (noun phrase resolution), and {\it(iii)}
 verbal groups are resolved and their associated \emph{thematic roles} are
 retrieved (verb phrase resolution).
 
-As represented in fig.~\ref{fig|dialog}, interpretation tightly relies on the
+As represented in figure~\ref{fig|dialog}, interpretation tightly relies on the
 communication with the knowledge base. All the concepts the robot manipulates
 are stored in the ontology server and retrieved through logical
 queries, except for the verbs that are currently stored in a dedicated library
@@ -1298,7 +1298,7 @@ queries, except for the verbs that are currently stored in a dedicated library
 
 We next describe the grounding of ``Put that bottle on the tray'' as a simple
 illustrative case. To simplify, we assume that some initial facts are already
-present in the knowledge base (fig.~\ref{dialogs|ex1}), both in the robot's own
+present in the knowledge base (figure~\ref{dialogs|ex1}), both in the robot's own
 model and in the human's model.  Since the robot tries to ground a human
 utterance, all queries are sent to the human model in order to interpret it
 from the human perspective. 
@@ -1343,7 +1343,7 @@ from the human perspective.
 \end{figure}
 
 Nouns are first resolved by generating requests to the knowledge base, using
-the original nouns as the concept class (fig.~\ref{dialogs|ex1-c}) and eventual
+the original nouns as the concept class (figure~\ref{dialogs|ex1-c}) and eventual
 pronouns and adjectives as supplementary qualifiers.
 
 In this example, two instances of the concept \concept{Bottle} would match the
@@ -1376,7 +1376,7 @@ object. Thus, if the concept that the robot finds for the thematic role
 back to the human saying it does not understand.
 
 Once the sentence is completely resolved and translated into a formal
-representation (a human desire in this example, fig.~\ref{dialogs|ex1-d}), we
+representation (a human desire in this example, figure~\ref{dialogs|ex1-d}), we
 store it in the knowledge base. The robot's decisional/executive layers can
 then decide whether to execute the order or not. 
  
@@ -1452,7 +1452,7 @@ activities~\cite{Breazeal2001,Burger2008}.
 Also, when interacting with humans, robots need to incorporate communication
 and collaboration abilities. Several theories dealing with
 collaboration~\cite{Cohen1991,Grosz1996,Clark1996} emphasize that collaborative
-tasks have specific requirements compared to individual ones, {\it e.g.}, since the
+tasks have specific requirements compared to individual ones, \eg since the
 robot and the person share a common goal, they have to agree on the manner to
 realize it, they must show their commitment to the goal during execution, etc.
 Several robotic systems have already been built based on these
@@ -1563,7 +1563,7 @@ tightly bound to the embodied nature of the interaction.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\bibliographystyle{spbasic}
+\bibliographystyle{abbrv}
 \bibliography{chapter}
 
 
