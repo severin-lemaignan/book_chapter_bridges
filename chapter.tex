@@ -386,8 +386,19 @@ currently computed by the system.
 
 \label{facts|sprelations}
 \end{table}
-Spatial relations computations and reasoning are simplified in comparison to other work in the field. As mentioned above, these computations are based purely on the bounding box and center of mass of the
-objects. Coventry et al in ~\cite{Coventry2005} strongly advocate to also consider extra-geometric influences. They came in two flavours. Dynamic-kinematic routines implicating knowledge of what will happen to scenes over time should be take into account. Conceptual knowledge regarding the specific functions associated with specific objects is also relevant. In ~\cite{SjooIcar2011} Sjoo et al propose an axiomatic system for the relation \emph{in} and \emph{on} that allow to infer new relations from existing ones. In our current system, spatial relations are only produced from geometric computations and cannot be reasoned about to infer new spatial relations. 
+
+Spatial relations computations and reasoning are simplified in comparison to
+other work in the field. As mentioned above, these computations are based
+purely on the bounding box and center of mass of the objects. Coventry et al. in
+~\cite{Coventry2005} strongly advocate to also consider extra-geometric
+influences. They came in two flavours. Dynamic-kinematic routines implicating
+knowledge of what will happen to scenes over time should be take into account.
+Conceptual knowledge regarding the specific functions associated with specific
+objects is also relevant. In~\cite{SjooIcar2011} Sjoo et al. propose an
+axiomatic system for the relation \emph{in} and \emph{on} that allow to infer
+new relations from existing ones. In our current system, spatial relations are
+only produced from geometric computations and cannot be reasoned about to infer
+new spatial relations.
 
 SPARK also compute symbolic facts related to agent independent world dynamics.
 The predicate \concept{isMoving} states, for each tracked entity, whether it is
