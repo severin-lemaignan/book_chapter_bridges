@@ -44,9 +44,10 @@
 \newcommand{\setstmt}[1]{{\footnotesize [\setstmttt#1\relax]}}
 \def\setstmttt#1,#2\relax{\rawstmt{#1}, \rawstmt{#2}}
 
-\newcommand{\ie}{{\textit{i.e.~}}}
-\newcommand{\cf}{{\textit{cf~}}}
-\newcommand{\eg}{{\textit{e.g.~}}}
+\usepackage{xspace}
+\newcommand{\ie}{i.e.\xspace}
+\newcommand{\cf}{cf\xspace}
+\newcommand{\eg}{e.g.\xspace}
 
 %------------------------------------------------------------------------- 
 
@@ -92,7 +93,7 @@ Julien Guitton
 at the empty table. ``{\em Hey robot, put two glasses and this bottle on the
 tray!}'' ``{\em And bring that over there.}''. The robot asks ``{\em The
 Martini or the Porto?}'' ``{\em Bring both!}'' answers Tom. The robot prepares
-the order and smoothly brings the tray to the table.} (figure~\ref{fig|vpt}).
+the order and smoothly brings the tray to the table.} (Fig.~\ref{fig|vpt}).
 
 \begin{figure}%[!ht] 
 	\centering
@@ -211,14 +212,14 @@ declared unachievable or is abandoned by the human.
 \subsubsection*{On object identification and localization}
 
 This architecture makes one important assumption (hidden in the
-\emph{Sensorimotor layer} box in figure~\ref{fig|archi}): world entities are
+\emph{Sensorimotor layer} box in Fig.~\ref{fig|archi}): world entities are
 assumed to be correctly \emph{perceived}, \emph{localized}, \emph{resolved} and
 \emph{uniquely identified} in a robust way.
 
 This means that we assume all relevant entities (\ie the objects the robot has
 to interact with) to be actually perceived by the robot when they enter its
 field of view, that the perception enables a \emph{good enough} 6D
-localization, that the objects are properly resolved (\eg, two bottles next to
+localization, that the objects are properly resolved (\eg two bottles next to
 each other are perceived as two different bottles), and most importantly, that
 the objects are robustly identified: each time the exact same object is seen
 (possibly under a different angle), it is always labelled with the same,
@@ -227,7 +228,7 @@ be known at runtime only).
 
 This assumption translates during experiments into technical solutions based on
 objects tagging with barcode-like labels (for example, some ARToolkit tags can
-be seen on figure~\ref{fig|vpt}) that allows the robot to localize and identify
+be seen on Fig.~\ref{fig|vpt}) that allows the robot to localize and identify
 these objects.
 
 Numerous work, some of them presented earlier in this book, focus on dealing
@@ -332,7 +333,7 @@ representation).
 We can refer to object locations with respect to other objects in the
 environment, such as \emph{above, next to, in}, etc. In this work we compute
 three main relations based on the bounding box and center of mass of the
-objects (figure~\ref{fig|sprelations}): 
+objects (Fig.~\ref{fig|sprelations}): 
 
 \begin{itemize}
 	\item \concept{isOn}: computes if an object $O_1$ is on another object $O_2$ by
@@ -575,7 +576,7 @@ able to compute this information can then act accordingly. An example would be
 a clarification scenario where the human is searching for an object and the
 robot is able to infer that he/she is looking for the one that is not visible
 (otherwise the user would not be searching for it).  In
-figure~\ref{fig::sparkRepresentations}\emph{a} the field of view of a person is
+Fig.~\ref{fig::sparkRepresentations}\emph{a} the field of view of a person is
 illustrated with a grey cone (broader one). While he is able to see the two
 small boxes on the table in front of him, the big box on his right is out of
 his FOV, and therefore, he is not able to see it. 
@@ -728,7 +729,7 @@ This section explains how potential manipulation actions can be computed for
 the human and represented as so-called \emph{Mightability Maps}~\cite{Pandey2010}.
 
 In human movement and behavioral psychology literatures, different types of
-reach actions (figure~\ref{fig|reaches_taxonomy}) of the human have been
+reach actions (Fig.~\ref{fig|reaches_taxonomy}) of the human have been
 identified and analyzed, \cite{Gardner2001, Choi2004}.
 
 \begin{figure}
@@ -777,7 +778,7 @@ provides intra-body and inter-body collisions checking for the robot and for
 the human models. The robot uses the kinematic structures of the agents and
 performs various virtual actions until the joint limits of the neck and/or
 torso are reached or the collision of the torso of the agent with the
-environment is detected (figure~\ref{fig|mightabilities}).
+environment is detected (Fig.~\ref{fig|mightabilities}).
 
 \begin{figure}[ht!]
    \begin{center}
@@ -873,13 +874,13 @@ task and the desired efforts of the agents.
 
 In this example, the maximum desired effort for the human is to lean forward.
 As the task requires a hand-over operation, we compute positions visible and
-reachable by both agents (figure~\ref{fig|mightabilities-steps}{\it c}) from
-each agent's respective maps (figures~\ref{fig|mightabilities-steps}{\it a} and
+reachable by both agents (Fig.~\ref{fig|mightabilities-steps}{\it c}) from
+each agent's respective maps (Figs.~\ref{fig|mightabilities-steps}{\it a} and
 {\it b}).
 
 Further based on various criteria such as comfort, preferences, etc. weights
 are assigned to the raw candidate points
-(figure~\ref{fig|mightabilities-steps}{\it d}), and the resulting candidates are
+(Fig.~\ref{fig|mightabilities-steps}{\it d}), and the resulting candidates are
 iteratively tested for feasibility by introducing computationally expensive
 constraints such as existence of a collision-free trajectory.
 
@@ -1012,7 +1013,7 @@ Animal}).
 \subsection{Representation of Alternative Cognitive Models}
 \label{alterite}
 
-As pictured in figure~\ref{fig|oro-overview}, ORO stores independent cognitive
+As pictured in Fig.~\ref{fig|oro-overview}, ORO stores independent cognitive
 models for each agent it interacts with. When ORO actually identifies a new
 agent (or infers that some instance is an agent), it automatically creates a
 new, separate, in-memory OWL model for that agent. Thus, different robot
@@ -1173,7 +1174,7 @@ preferences. The social rules we have defined so far deal with:
 \end{figure}
 
 Figure~\ref{plan_hatp2} illustrates an alternative plan to the previous 
-one (figure~\ref{plan_hatp1}) if the wasted time social rule is used.
+one (Fig.~\ref{plan_hatp1}) if the wasted time social rule is used.
 The obtained shared plan is the best plan according to a global evaluation of
 these multiple criteria.
 
@@ -1255,7 +1256,7 @@ leading to more robust interpretation.
 \end{figure}
 
 Dialogue processing is done in our architecture by a module called {\sc
-Dialogs}\cite{Lemaignan2011a} (figure~\ref{fig|dialog}) that processes human
+Dialogs}\cite{Lemaignan2011a} (Fig.~\ref{fig|dialog}) that processes human
 input in natural language, grounds the concepts in the robot's knowledge and
 eventually translates the discourse in a set of queries or declarative OWL/RDF
 statements.  
@@ -1303,7 +1304,7 @@ disambiguated and grounded (noun phrase resolution), and {\it(iii)}
 verbal groups are resolved and their associated \emph{thematic roles} are
 retrieved (verb phrase resolution).
 
-As represented in figure~\ref{fig|dialog}, interpretation tightly relies on the
+As represented in Fig.~\ref{fig|dialog}, interpretation tightly relies on the
 communication with the knowledge base. All the concepts the robot manipulates
 are stored in the ontology server and retrieved through logical
 queries, except for the verbs that are currently stored in a dedicated library
@@ -1311,7 +1312,7 @@ queries, except for the verbs that are currently stored in a dedicated library
 
 We next describe the grounding of ``Put that bottle on the tray'' as a simple
 illustrative case. To simplify, we assume that some initial facts are already
-present in the knowledge base (figure~\ref{dialogs|ex1}), both in the robot's own
+present in the knowledge base (Fig.~\ref{dialogs|ex1}), both in the robot's own
 model and in the human's model.  Since the robot tries to ground a human
 utterance, all queries are sent to the human model in order to interpret it
 from the human perspective. 
@@ -1356,7 +1357,7 @@ from the human perspective.
 \end{figure}
 
 Nouns are first resolved by generating requests to the knowledge base, using
-the original nouns as the concept class (figure~\ref{dialogs|ex1-c}) and eventual
+the original nouns as the concept class (Fig.~\ref{dialogs|ex1-c}) and eventual
 pronouns and adjectives as supplementary qualifiers.
 
 In this example, two instances of the concept \concept{Bottle} would match the
@@ -1389,7 +1390,7 @@ object. Thus, if the concept that the robot finds for the thematic role
 back to the human saying it does not understand.
 
 Once the sentence is completely resolved and translated into a formal
-representation (a human desire in this example, figure~\ref{dialogs|ex1-d}), we
+representation (a human desire in this example, Fig.~\ref{dialogs|ex1-d}), we
 store it in the knowledge base. The robot's decisional/executive layers can
 then decide whether to execute the order or not. 
  
